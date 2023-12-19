@@ -1,0 +1,12 @@
+C:\Git\VidiView_Client\VidiView.Client.Api\bin\Debug\net7.0\VidiView.Client.Api.deps.json
+C:\Git\VidiView_Client\VidiView.Client.Api\bin\Debug\net7.0\VidiView.Client.Api.dll
+C:\Git\VidiView_Client\VidiView.Client.Api\bin\Debug\net7.0\VidiView.Client.Api.pdb
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.AssemblyInfoInputs.cache
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.AssemblyInfo.cs
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.csproj.CoreCompileInputs.cache
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.sourcelink.json
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.dll
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\refint\VidiView.Client.Api.dll
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\VidiView.Client.Api.pdb
+C:\Git\VidiView_Client\VidiView.Client.Api\obj\Debug\net7.0\ref\VidiView.Client.Api.dll

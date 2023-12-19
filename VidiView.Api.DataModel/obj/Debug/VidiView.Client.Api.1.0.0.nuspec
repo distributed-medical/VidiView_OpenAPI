@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>VidiView.Client.Api</id>
+    <version>1.0.0</version>
+    <authors>VidiView.Client.Api</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="635dd47d553d15e378ec52a8aa5df821c877da1f" />
+    <dependencies>
+      <group targetFramework="net7.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Git\VidiView_Client\VidiView.Client.Api\bin\Debug\net7.0\VidiView.Client.Api.dll" target="lib\net7.0\VidiView.Client.Api.dll" />
+  </files>
+</package>

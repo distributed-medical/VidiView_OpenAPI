@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "UkH1ICfVkeCGtsUWnC8MN+OZTWA1Eeoqpf1Qlf2V+NE2xd2cmboV6wkIQMXo7OH6awOqWDSB+A9K6MVSWnYclw==",
+  "success": true,
+  "projectFilePath": "C:\\Git\\VidiView_API\\VidiView.Api.Access\\VidiView.Api.Access.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\bjorn\\.nuget\\packages\\identitymodel\\6.1.0\\identitymodel.6.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

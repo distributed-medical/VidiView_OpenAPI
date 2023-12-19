@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VidiView.Api.Access\VidiView.Api.Access.csproj" />
+    <ProjectReference Include="..\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj" />
+  </ItemGroup>
+
+</Project>
