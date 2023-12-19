@@ -9,3 +9,4 @@ C:\Git\VidiView_API\VidiView.Api.DataModel\obj\Debug\net7.0\VidiView.Api.DataMod
 C:\Git\VidiView_API\VidiView.Api.DataModel\obj\Debug\net7.0\refint\VidiView.Api.DataModel.dll
 C:\Git\VidiView_API\VidiView.Api.DataModel\obj\Debug\net7.0\VidiView.Api.DataModel.pdb
 C:\Git\VidiView_API\VidiView.Api.DataModel\obj\Debug\net7.0\ref\VidiView.Api.DataModel.dll
+C:\Git\VidiView_API\VidiView.Api.DataModel\obj\Debug\net7.0\VidiView.Api.DataModel.sourcelink.json

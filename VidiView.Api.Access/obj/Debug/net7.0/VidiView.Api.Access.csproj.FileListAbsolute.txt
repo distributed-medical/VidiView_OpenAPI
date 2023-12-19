@@ -13,3 +13,4 @@ C:\Git\VidiView_API\VidiView.Api.Access\obj\Debug\net7.0\VidiView.Api.Access.dll
 C:\Git\VidiView_API\VidiView.Api.Access\obj\Debug\net7.0\refint\VidiView.Api.Access.dll
 C:\Git\VidiView_API\VidiView.Api.Access\obj\Debug\net7.0\VidiView.Api.Access.pdb
 C:\Git\VidiView_API\VidiView.Api.Access\obj\Debug\net7.0\ref\VidiView.Api.Access.dll
+C:\Git\VidiView_API\VidiView.Api.Access\obj\Debug\net7.0\VidiView.Api.Access.sourcelink.json

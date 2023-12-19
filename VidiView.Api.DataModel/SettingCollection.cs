@@ -19,6 +19,20 @@ public class SettingCollection
     public SettingValue? this[string key]
     {
         get => Embedded.Settings.FirstOrDefault((i) => i.Key == key);
+        set
+        {
+            ArgumentNullException.ThrowIfNull(key, nameof(key));
+            ArgumentNullException.ThrowIfNull(value, nameof(value));
+
+            for (var i = 0; i < Embedded.Settings.Length; ++i)
+            {
+                if (Embedded.Settings[i].Key == key)
+                {
+                    Embedded.Settings[i] = value;
+                    break;
+                }
+            }
+        }
     }
 
     public class EmbeddedArray

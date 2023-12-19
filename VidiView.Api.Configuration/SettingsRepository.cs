@@ -31,13 +31,15 @@ public class SettingsRepository
         var settings = await GetSettingsAsync();
         var setting = settings[key] ?? throw new KeyNotFoundException($"The setting key {key} does not exist");
 
-        //if (setting.Value != value)
+        if (setting.Value != value)
         {
             Debug.WriteLine($"Updating setting {key} value to {value}");
             var link = settings.Links.GetRequired(Rel.Update);
 
             var updated = setting with { Value = value };
             await _http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(updated));
+
+            settings[key] = updated;
             return true;
         }
 
