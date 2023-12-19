@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
+using VidiView.Api.DataModel;
 
-namespace VidiView.Api.DataModel.Exceptions;
+namespace VidiView.Api.Exceptions;
 
 /// <summary>
 /// This is the base VidiView exception class
@@ -22,7 +23,7 @@ public class VidiViewException : Exception
 
         if (error != null)
         {
-            var typeName = "VidiView.Api.DataModel.Exceptions." + error.Type;
+            var typeName = "VidiView.Api.Exceptions." + error.Type;
             var type = Type.GetType(typeName, false, true);
             if (type != null)
             {
@@ -52,6 +53,11 @@ public class VidiViewException : Exception
 
     public VidiViewException(string message)
         : base(message)
+    {
+    }
+
+    protected VidiViewException(string message, Exception? innerException)
+        : base(message, innerException)
     {
     }
 

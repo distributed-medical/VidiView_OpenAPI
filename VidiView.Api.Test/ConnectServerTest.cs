@@ -1,5 +1,5 @@
 using System.Net;
-using VidiView.Api.Access;
+using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Test;
@@ -57,7 +57,7 @@ public class ConnectServerTest
             DeviceName = Dns.GetHostName(),
         };
 
-        deviceInfo = await DeviceRegistrationHelper.RegisterAsync(client, deviceInfo);
+        deviceInfo = await DeviceRegistration.RegisterAsync(client, deviceInfo);
         Assert.IsNotNull(deviceInfo);
 
         if (!deviceInfo.IsGranted)
