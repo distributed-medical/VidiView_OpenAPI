@@ -49,7 +49,7 @@ public static class HttpResponseMessageExtension
             }
             catch
             {
-                Debug.Assert(false, "Failed to deserialize ErrorDetails");
+                //Debug.Assert(false, "Failed to deserialize ErrorDetails");
             }
 
             if (exc != null)

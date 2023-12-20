@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VidiView.Api.DataModel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+83a5e9f522a943badd81a2b14d7270e25b78d982")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+43a26be520ea297fc0f0594990736dab2b0001a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("VidiView.Api.DataModel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VidiView.Api.DataModel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

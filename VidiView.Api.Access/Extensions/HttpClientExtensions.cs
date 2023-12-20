@@ -1,4 +1,5 @@
-﻿using VidiView.Api.DataModel;
+﻿using VidiView.Api.Access.Headers;
+using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Access;
 
@@ -77,4 +78,28 @@ public static class HttpClientExtensions
     {
         _cache.Remove(http);
     }
+
+    /// <summary>
+    /// Provide an api key
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="applicationId"></param>
+    /// <param name="thumbprint"></param>
+    /// <param name="key"></param>
+    public static void SetApiKey(this HttpClient http, Guid applicationId, byte[] thumbprint, byte[] key)
+    {
+        SetApiKey(http, new ApiKeyHeader(applicationId, thumbprint, key));
+    }
+
+    /// <summary>
+    /// Provide an api key
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="apikey"></param>
+    public static void SetApiKey(this HttpClient http, ApiKeyHeader apikey)
+    {
+        http.DefaultRequestHeaders.Remove(apikey.Name);
+        http.DefaultRequestHeaders.Add(apikey.Name, apikey.Value);
+    }
+
 }
