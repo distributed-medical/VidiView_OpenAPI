@@ -1,0 +1,83 @@
+# Ignore our build output folder
+/build
+
+# Ignore lib/bin/obj in output
+lib
+bin
+obj
+*.obj
+
+# Ignore Visual studio files
+*.vs
+*.suo
+*.user
+
+# Ignore app.config
+/VidiView R4 Controller/app.config
+
+# Hmmm..
+/VidiView.Native.Capture/x64/Debug
+/VidiView.Native.Capture/x64/Release
+
+# Ignore packages
+*.msi
+
+# Ignore NuGet stuff (from https://docs.microsoft.com/en-us/nuget/consume-packages/packages-and-source-control)
+# Ignore NuGet Packages
+*.nupkg
+
+**/[Gg]enerated [Ff]iles/*
+*.pdb
+*.ilk
+*.metagen
+
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/[Pp]ackages/repositories.config
+
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Ignore other intermediate files that NuGet might create. project.lock.json is used in conjunction
+# with project.json (NuGet v3); project.assets.json is used in conjunction with the PackageReference
+# format (NuGet v4 and .NET Core).
+project.lock.json
+project.assets.json
+/VidiView Core/vv_capture/intermediate
+/VidiView Core/vv_core/intermediate
+/VidiView Core/VidiView.Capture/intermediate
+/VidiView Core/vv_app/intermediate
+/VidiView Core/vv_core_unit_test/x64
+/VidiView Core/vv_dxvr/intermediate
+/VidiView Core/VidiView.VideoPlayer/src/resource.aps
+/VidiView Core/VidiView.VideoPlayer/intermediate
+/VidiView Core/vv_playback/intermediate
+/VidiView Core/vv_live_streaming/intermediate
+/VidiView Core/vv_live_streaming/vv_live_streaming.aps
+/VidiView Core/vv_genicam/vv_genicam.aps
+/x64
+/VidiView Core/vv_dxvr/vv_dxvr.aps
+/VidiView.Media.Server/code/Resource.aps
+/VidiView Core/vv_genicam/intermediate
+/VidiView Core/vv_core_unit_test/intermediate
+/VidiView Core/vv_core_unit_test/Debug
+/VidiView Core/vv_core_unit_test/x64
+/VidiView Core/build
+Debug
+VidiView Core/VidiView.Core.Audio/src/app.aps
+VidiView Core/VidiView.Core.Devices/src/app.aps
+VidiView Core/VidiView.Core.VideoTrimming/resource.aps
+VidiView Core/VidiView.Core.Media/src/resource.aps
+/VidiView Core/VidiView.Core.WinRT.VideoTrimmer/x64/Release
+VidiView Core/vv_console/x64/Release/
+VidiView Core/VidiView.Core.MediaMerger/src/VidiView.Core.MediaMerger.aps
+External API/magewell_sdk_3.3.1.1303/EULA.rtf
+External API/magewell_sdk_3.3.1.1303/Readme.html.lnk
+External API/magewell_sdk_3.3.1.1303/Runtime/MWCaptureRT.exe
+External API/magewell_sdk_3.3.1.1303/Runtime/RedistLicense.rtf

@@ -56,8 +56,16 @@ public static class HttpClientExtensions
     /// <returns></returns>
     public static async Task<T> GetAsync<T>(this HttpClient http, Link link)
     {
-        var result = await http.GetAsync(link.ToUrl());
-        return result.AssertSuccess().Deserialize<T>();
+        var response = await http.GetAsync(link.ToUrl());
+        if (typeof(T) == typeof(string))
+        {
+            // Don't deserialize
+            return (T)(object) await response.AssertSuccess().Content.ReadAsStringAsync();
+        }
+        else
+        {
+            return response.AssertSuccess().Deserialize<T>();
+        }
     }
 
     /// <summary>
