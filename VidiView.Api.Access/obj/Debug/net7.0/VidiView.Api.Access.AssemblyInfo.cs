@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VidiView.Api.Access")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87d1a288fd3bbd146253056f472b9ae16d1883cf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+83a5e9f522a943badd81a2b14d7270e25b78d982")]
 [assembly: System.Reflection.AssemblyProductAttribute("VidiView.Api.Access")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VidiView.Api.Access")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,7 +1,7 @@
 ﻿using VidiView.Api.Access;
 using VidiView.Api.DataModel;
 
-namespace System.Net.Http;
+namespace VidiView.Api.Access;
 
 public static class HttpClientExtensions
 {
@@ -19,11 +19,32 @@ public static class HttpClientExtensions
         if (!forceReload && _cache.TryGetValue(http, out var home))
             return home;
 
-        var result = await http.GetAsync(""); // Utilizes BaseAddress
+        HttpResponseMessage result;
+        try
+        {
+            result = await http.GetAsync(""); // Utilizes BaseAddress
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
         home = result.AssertSuccess().Deserialize<ApiHome>();
 
         _cache[http] = home;
         return home;
+    }
+
+    /// <summary>
+    /// Return the cached ApiHome (or null if no cached document exists)
+    /// </summary>
+    /// <param name="http"></param>
+    /// <returns></returns>
+    public static ApiHome? CachedHome(this HttpClient http)
+    {
+        if (_cache.TryGetValue(http, out var home))
+            return home;
+        else
+            return null;
     }
 
     /// <summary>
