@@ -26,19 +26,15 @@ public class UsernamePasswordAuthenticator : IAuthenticator
     /// <remarks>If successfull, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(string username, string password)
     {
-        Clear();
+        var api = await _http.HomeAsync();
+        if (api.IsAuthenticated())
+            throw new InvalidOperationException("Already authenticated");
+        api.AssertRegistered();
 
         try
         {
-            var api = await _http.HomeAsync();
-
             if (!api.Links.TryGet(Rel.AuthenticatePassword, out var link))
-            {
-                if (!api.Links.Exists(Rel.ClientDeviceRegistration))
-                    throw new Exception("Device is not registered");
-
                 throw new E1813_LogonMethodNotAllowedException("Username/password authentication is not enabled");
-            }
 
             _http.DefaultRequestHeaders.Authorization =
                 new BasicAuthenticationHeaderValue(username, password);
@@ -50,11 +46,11 @@ public class UsernamePasswordAuthenticator : IAuthenticator
             _http.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", Token.Token);
 
-            api = await _http.HomeAsync(forceReload: true);
+            _http.InvalidateHome();
         }
         catch
         {
-            _http.DefaultRequestHeaders.Authorization = null;
+            Clear();
             throw;
         }
     }
@@ -62,10 +58,10 @@ public class UsernamePasswordAuthenticator : IAuthenticator
     /// <summary>
     /// Clear authentication
     /// </summary>
-    public void Clear()
+    void Clear()
     {
-        _http.DefaultRequestHeaders.Authorization = null;
         User = null;
         Token = null;
+        _http.DefaultRequestHeaders.Authorization = null;
     }
 }

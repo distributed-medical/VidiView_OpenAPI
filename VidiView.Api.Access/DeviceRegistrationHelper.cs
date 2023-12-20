@@ -16,11 +16,13 @@ public static class DeviceRegistrationHelper
     /// <returns></returns>
     public static async Task<ClientDevice> RegisterAsync(HttpClient http, ClientDevice device)
     {
-        var result = await http.GetAsync(""); // Utilizes BaseAddress
-        var home = result.AssertSuccess().Deserialize<ApiHome>();
-        var link = home!.Links.GetRequired(Rel.RegisterClientDevice);
+        var api = await http.HomeAsync();
+        var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
         var response = await http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(device));
-        return response.AssertSuccess().Deserialize<ClientDevice>();
+        var result = response.AssertSuccess().Deserialize<ClientDevice>();
+        http.InvalidateHome();
+
+        return result;
     }
 }

@@ -1,5 +1,4 @@
-﻿using VidiView.Api.Access;
-using VidiView.Api.DataModel;
+﻿using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Access;
 
@@ -60,4 +59,22 @@ public static class HttpClientExtensions
         return result.AssertSuccess().Deserialize<T>();
     }
 
+    /// <summary>
+    /// Clear authentication
+    /// </summary>
+    /// <param name="http"></param>
+    public static void ClearAuthentication(this HttpClient http)
+    {
+        http.DefaultRequestHeaders.Authorization = null;
+        InvalidateHome(http);
+    }
+
+    /// <summary>
+    /// Invalidate the start page forcing a reload on next attempt
+    /// </summary>
+    /// <param name="http"></param>
+    public static void InvalidateHome(this HttpClient http)
+    {
+        _cache.Remove(http);
+    }
 }
