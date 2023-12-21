@@ -25,6 +25,7 @@ public class VidiViewConfigurator
 
         DeviceRegistration = new DeviceRegistration(_http, _configurationHome);
         Settings = new SettingsRepository(_http, _configurationHome);
+        ServiceHosts = new ServiceHosts(_http, _configurationHome);
     }
 
     /// <summary>
@@ -41,4 +42,9 @@ public class VidiViewConfigurator
     /// Settings repository
     /// </summary>
     public SettingsRepository Settings { get; private set; }
+
+    /// <summary>
+    /// Service hosts
+    /// </summary>
+    public ServiceHosts ServiceHosts { get; private set; }
 }

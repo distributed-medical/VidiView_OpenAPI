@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class IdentityProvider
+public record IdentityProvider
 {
     /// <summary>
     /// The friendly name

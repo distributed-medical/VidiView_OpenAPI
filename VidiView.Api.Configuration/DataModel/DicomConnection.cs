@@ -1,16 +1,17 @@
 ﻿namespace VidiView.Configuration.Api;
 
-public class DicomConnection
+public record DicomConnection
 {
-    public string Host { get; set; }
-    public int Port { get; set; }
-    public bool RequireTLS { get; set; }
-    public string CallingAeTitle { get; set; }
-    public string RemoteAeTitle { get; set; }
-    public int MaxReceivePduLength { get; set; } = 65536;
-    public TimeSpan ConnectionTimeout { get; set; } = TimeSpan.FromSeconds(20);
+    public string Host { get; init; }
+    public int Port { get; init; }
+    public bool RequireTLS { get; init; }
+    public string CallingAeTitle { get; init; }
+    public string RemoteAeTitle { get; init; }
 
-    public TimeSpan CommandTimeout { get; set; } = TimeSpan.FromMinutes(30);
+    public int MaxReceivePduLength { get; init; } = 65536;
+    public TimeSpan ConnectionTimeout { get; init; } = TimeSpan.FromSeconds(20);
 
-    public int MaxConnections { get; set; } = 4;
+    public TimeSpan CommandTimeout { get; init; } = TimeSpan.FromMinutes(30);
+
+    public int MaxConnections { get; init; } = 4;
 }

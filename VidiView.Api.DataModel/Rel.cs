@@ -52,6 +52,7 @@ public static class Rel
     public const string IssueSamlToken = "issue-saml-token";
     public const string JoinAudioLegacy = "join-av-legacy";
     public const string LeaveAudioLegacy = "leave-av-legacy";
+    public const string Load = "load";
     public const string LookupPatient = "lookup-patient";
     public const string MimeTypes = "mime-types";
     public const string MyPersonalWorklists = "personal-worklists";

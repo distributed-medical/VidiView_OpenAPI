@@ -46,6 +46,54 @@ public static class HttpClientExtensions
         }
     }
 
+    /// <summary>
+    /// Helper method to put content using a link
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="content"></param>
+    /// <returns></returns>
+    public static async Task<HttpResponseMessage> PutAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
+    {
+        var response = await http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
+        return response.AssertSuccess();
+    }
+
+    public static async Task<HttpResponseMessage> PostAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
+    {
+        var response = await http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
+        return response.AssertSuccess();
+    }
+
+    public static async Task<HttpResponseMessage> DeleteAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
+    {
+        var response = await http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
+        return response.AssertSuccess();
+    }
+
+    public static async Task<HttpResponseMessage> HeadAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
+    {
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Head,
+            RequestUri = link.ToUri()
+        };
+        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return response.AssertSuccess();
+    }
+
+    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
+    {
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Patch,
+            RequestUri = link.ToUri()
+        };
+        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return response.AssertSuccess();
+    }
+
+
     static bool IsConnectionRefused(Exception ex)
     {
         return (ex.InnerException is System.Net.Sockets.SocketException sexc

@@ -2,7 +2,7 @@
 
 namespace VidiView.Configuration.Api;
 
-public class ServiceHostCollection<TEntity>
+public class ServiceHostCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -15,7 +15,7 @@ public class ServiceHostCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Items;
+    public ServiceHost[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -34,7 +34,7 @@ public class ServiceHostCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Items
+        public ServiceHost[] Items
         {
             get; init;
         }
