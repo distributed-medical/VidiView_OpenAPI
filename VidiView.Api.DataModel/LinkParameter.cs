@@ -152,6 +152,27 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
         return value != null;
     }
 
+    /// <summary>
+    /// Update existing parameter, or add a query string parameter if it does not already exist
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    public void AddOrUpdate(string name, string value)
+    {
+        var p = _parameters.FirstOrDefault((p) => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (p == null)
+        {
+            _parameters.Add(new LinkParam(name, -1, false)
+            {
+                Value = value
+            });
+        }
+        else
+        {
+            p.Value = value;
+        }
+    }
+
     public IEnumerator<LinkParam> GetEnumerator()
     {
         return ((IEnumerable<LinkParam>)_parameters).GetEnumerator();

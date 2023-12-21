@@ -55,6 +55,11 @@ public class VidiViewException : Exception
     {
     }
 
+    protected VidiViewException(string message, Exception? innerException)
+        : base(message, innerException)
+    {
+    }
+
     /// <summary>
     /// VidiView error code
     /// </summary>
