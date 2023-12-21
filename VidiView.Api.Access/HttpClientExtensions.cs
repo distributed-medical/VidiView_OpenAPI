@@ -1,103 +1,26 @@
-﻿using System.Net.Http.Headers;
-using VidiView.Api.DataModel;
+﻿using VidiView.Api.Access.Headers;
 
 namespace VidiView.Api.Access;
 
 public static class HttpClientExtensions
 {
     /// <summary>
-    /// Helper method to get and response, verify success and then deserialize result
+    /// Enable or disable API level pseudonymization 
     /// </summary>
-    /// <typeparam name="T">The type to deserialize</typeparam>
     /// <param name="http"></param>
-    /// <param name="link">The link to read</param>
-    /// <param name="cancellationToken">Optional cancellation token</param>
-    /// <returns></returns>
-    public static async Task<T> GetAsync<T>(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
+    /// <param name="enabled"></param>
+    public static void EnablePseudonymization(this HttpClient http, bool enabled)
     {
-        var response = await http.GetAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
-        if (typeof(T) == typeof(string))
+        if (enabled)
         {
-            // Don't deserialize
-            return (T)(object)await response.AssertSuccess().Content.ReadAsStringAsync();
+            if (!http.DefaultRequestHeaders.Contains(PseudonymizeHeader.Name))
+            {
+                http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
+            }
         }
         else
         {
-            return response.AssertSuccess().Deserialize<T>();
+            http.DefaultRequestHeaders.Remove(PseudonymizeHeader.Name);
         }
     }
-
-    public static async Task<HttpContentStream> GetStreamAsync(this HttpClient http, Link link, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
-    {
-        using var request = new HttpRequestMessage(HttpMethod.Get, link.ToUri());
-        request.Headers.Range = range;
-
-        try
-        {
-            var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-            response.AssertSuccess();
-            return await HttpContentStream.CreateFromResponse(http, response);
-        }
-        catch (Exception ex)
-        {
-            //if (IsConnectionRefused(ex))
-            //    throw new E1404_ServiceUnavailableException(uri, ex);
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Helper method to put content using a link
-    /// </summary>
-    /// <param name="http"></param>
-    /// <param name="link"></param>
-    /// <param name="content"></param>
-    /// <returns></returns>
-    public static async Task<HttpResponseMessage> PutAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
-    }
-
-    public static async Task<HttpResponseMessage> PostAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
-    }
-
-    public static async Task<HttpResponseMessage> DeleteAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
-    }
-
-    public static async Task<HttpResponseMessage> HeadAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
-    {
-        var request = new HttpRequestMessage()
-        {
-            Method = HttpMethod.Head,
-            RequestUri = link.ToUri()
-        };
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
-    }
-
-    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
-    {
-        var request = new HttpRequestMessage()
-        {
-            Method = HttpMethod.Patch,
-            RequestUri = link.ToUri()
-        };
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
-    }
-
-
-    static bool IsConnectionRefused(Exception ex)
-    {
-        return (ex.InnerException is System.Net.Sockets.SocketException sexc
-            && sexc.SocketErrorCode == System.Net.Sockets.SocketError.ConnectionRefused);
-    }
-
 }

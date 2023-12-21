@@ -2,7 +2,7 @@
 
 namespace VidiView.Api.Access.Authentication;
 
-public static class HttpClientExtensions
+public static class HttpAuthenticationExtensions
 {
     /// <summary>
     /// Clear authentication
@@ -35,5 +35,10 @@ public static class HttpClientExtensions
     {
         http.DefaultRequestHeaders.Remove(apikey.Name);
         http.DefaultRequestHeaders.Add(apikey.Name, apikey.Value);
+    }
+
+    public static void SetActingRole(this HttpClient http, string id)
+    {
+        throw new NotImplementedException();
     }
 }
