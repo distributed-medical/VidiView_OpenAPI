@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class DepartmentCollection<TEntity>
+public class DepartmentCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -10,7 +10,7 @@ public class DepartmentCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Departments;
+    public Department[] Items => Embedded.Departments;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -23,6 +23,6 @@ public class DepartmentCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Departments { get; init; }
+        public Department[] Departments { get; init; }
     }
 }
