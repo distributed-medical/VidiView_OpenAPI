@@ -27,8 +27,7 @@ public class DeviceRegistration
         link.Parameters["deviceId"].Value = deviceId.ToString("N");
         link.Parameters["isGranted"].Value = granted.ToString();
 
-        var response = await _http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(null));
-        response.AssertSuccess();
+        var response = await _http.PutAsync(link, null);
     }
 
     /// <summary>
@@ -46,6 +45,6 @@ public class DeviceRegistration
         link.Parameters["eraseRecord"].Value = erase.ToString();
 
         var response = await _http.DeleteAsync(link.ToUrl());
-        response.AssertSuccess();
+        await response.AssertSuccessAsync();
     }
 }

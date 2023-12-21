@@ -19,8 +19,8 @@ public static class DeviceRegistrationHelper
         var api = await http.HomeAsync();
         var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
-        var response = await http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(device));
-        var result = response.AssertSuccess().Deserialize<ClientDevice>();
+        var response = await http.PutAsync(link, device);
+        var result = response.Deserialize<ClientDevice>();
         http.InvalidateHome();
 
         return result;

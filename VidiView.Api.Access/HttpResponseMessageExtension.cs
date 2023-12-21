@@ -26,14 +26,14 @@ public static class HttpResponseMessageExtension
     /// Check if response is successful, otherwise throw appropriate exception
     /// </summary>
     /// <param name="response"></param>
-    public static HttpResponseMessage AssertSuccess(this HttpResponseMessage response)
+    public static async Task AssertSuccessAsync(this HttpResponseMessage response)
     {
         ArgumentNullException.ThrowIfNull(response, nameof(response));
 
         if (response.IsSuccessStatusCode == true)
         {
             // Success. No more processing required
-            return response;
+            return;
         }
         else
         {
@@ -56,6 +56,8 @@ public static class HttpResponseMessageExtension
             {
                 throw exc;
             }
+
+            await MaintenanceModeHelper.ThrowIfMaintenanceModeAsync(response);
 
             // Just throw default error
             response.EnsureSuccessStatusCode();

@@ -37,7 +37,7 @@ public class SettingsRepository
             var link = settings.Links.GetRequired(Rel.Update);
 
             var updated = setting with { Value = value };
-            await _http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(updated));
+            await _http.PutAsync(link, updated);
 
             settings[key] = updated;
             return true;

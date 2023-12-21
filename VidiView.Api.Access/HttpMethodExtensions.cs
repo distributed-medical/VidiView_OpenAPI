@@ -20,14 +20,16 @@ public static class HttpMethodExtensions
     public static async Task<T> GetAsync<T>(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
     {
         var response = await http.GetAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
+        await response.AssertSuccessAsync();
+
         if (typeof(T) == typeof(string))
         {
             // Don't deserialize
-            return (T)(object)await response.AssertSuccess().Content.ReadAsStringAsync();
+            return (T)(object)await response.Content.ReadAsStringAsync();
         }
         else
         {
-            return response.AssertSuccess().Deserialize<T>();
+            return response.Deserialize<T>();
         }
     }
 
@@ -39,7 +41,7 @@ public static class HttpMethodExtensions
         try
         {
             var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-            response.AssertSuccess();
+            await response.AssertSuccessAsync();
             return await HttpContentStream.CreateFromResponse(http, response);
         }
         catch (Exception ex)
@@ -60,19 +62,22 @@ public static class HttpMethodExtensions
     public static async Task<HttpResponseMessage> PutAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
     {
         var response = await http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
+        await response.AssertSuccessAsync();
+        return response;
     }
 
     public static async Task<HttpResponseMessage> PostAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
     {
         var response = await http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
+        await response.AssertSuccessAsync();
+        return response;
     }
 
     public static async Task<HttpResponseMessage> DeleteAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
     {
         var response = await http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
+        await response.AssertSuccessAsync();
+        return response;
     }
 
     public static async Task<HttpResponseMessage> HeadAsync(this HttpClient http, Link link, CancellationToken? cancellationToken = null)
@@ -83,7 +88,8 @@ public static class HttpMethodExtensions
             RequestUri = link.ToUri()
         };
         var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
+        await response.AssertSuccessAsync();
+        return response;
     }
 
     public static async Task<HttpResponseMessage> PatchAsync(this HttpClient http, Link link, object? content, CancellationToken? cancellationToken = null)
@@ -94,7 +100,8 @@ public static class HttpMethodExtensions
             RequestUri = link.ToUri()
         };
         var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        return response.AssertSuccess();
+        await response.AssertSuccessAsync();
+        return response;
     }
 
 
