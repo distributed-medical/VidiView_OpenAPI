@@ -1,9 +1,6 @@
 ﻿using System.Net.Http.Headers;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
 
 namespace VidiView.Api.Access.Authentication;
 public class X509Authenticator : IAuthenticator
@@ -86,6 +83,7 @@ public class X509Authenticator : IAuthenticator
                 try
                 {
                     User = await _http.GetAsync<User>(link);
+                    authenticationException = null;
                 }
                 catch (Exception exc)
                 {
@@ -98,6 +96,7 @@ public class X509Authenticator : IAuthenticator
                 try
                 {
                     User = await _http.GetAsync<User>(link);
+                    authenticationException = null;
                 }
                 //catch (E1816_CertificateNotMappedToAnyUserException exc)
                 //{

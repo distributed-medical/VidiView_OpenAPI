@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class LoginSessionCollection<TEntity>
+public class LoginSessionCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -13,7 +13,7 @@ public class LoginSessionCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Sessions;
+    public LoginSession[] Items => Embedded.Sessions;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -32,7 +32,7 @@ public class LoginSessionCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Sessions
+        public LoginSession[] Sessions
         {
             get; init;
         }

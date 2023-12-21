@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <authors>VidiView.Api.DataModel</authors>
     <description>Package Description</description>
-    <repository type="git" commit="43a26be520ea297fc0f0594990736dab2b0001a3" />
+    <repository type="git" commit="649dfa0765bcb79799b6846e57f85d659362bc44" />
     <dependencies>
       <group targetFramework="net7.0" />
     </dependencies>
