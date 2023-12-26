@@ -2,7 +2,7 @@
 using System.Buffers.Binary;
 using System.Security.Cryptography;
 
-namespace VidiView.Api.Access.Headers;
+namespace VidiView.Api.Headers;
 
 /// <summary>
 /// This is the official implementation of the Api key provider.

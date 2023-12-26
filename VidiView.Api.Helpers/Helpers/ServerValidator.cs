@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 /// <summary>
 /// Default HttpClient handler for accepting the VidiView Server certificate

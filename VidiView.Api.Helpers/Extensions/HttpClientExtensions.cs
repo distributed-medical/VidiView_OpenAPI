@@ -1,6 +1,6 @@
-﻿using VidiView.Api.Access.Headers;
+﻿using VidiView.Api.Headers;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 public static class HttpClientExtensions
 {

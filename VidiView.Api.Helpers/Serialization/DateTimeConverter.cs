@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace VidiView.Api.Access.Serialization;
+namespace VidiView.Api.Serialization;
 
 public class DateTimeConverter : JsonConverter<DateTime>
 {

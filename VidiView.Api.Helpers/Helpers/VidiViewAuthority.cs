@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 public static class VidiViewAuthority
 {

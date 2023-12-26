@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using VidiView.Api.DataModel;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 /// <summary>
 /// This class provides extensions to execute common

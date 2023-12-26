@@ -1,4 +1,4 @@
-﻿using VidiView.Api.Access.Headers;
+﻿using VidiView.Api.Headers;
 
 namespace VidiView.Api.Test;
 internal static class ApiKeyHelper

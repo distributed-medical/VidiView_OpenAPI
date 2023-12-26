@@ -1,9 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
+using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 
-namespace VidiView.Api.Access.Authentication;
-public class X509Authenticator : IAuthenticator
+namespace VidiView.Api.Authentication;
+public class X509Authenticator
 {
     readonly HttpClient _http;
 

@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
+using VidiView.Api.Serialization;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 public static class HttpResponseMessageExtension
 {
@@ -57,7 +58,7 @@ public static class HttpResponseMessageExtension
                 throw exc;
             }
 
-            await MaintenanceModeHelper.ThrowIfMaintenanceModeAsync(response);
+            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response);
 
             // Just throw default error
             response.EnsureSuccessStatusCode();

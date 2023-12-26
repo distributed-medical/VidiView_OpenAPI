@@ -1,6 +1,6 @@
-﻿using VidiView.Api.Access;
+﻿using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
 using VidiView.Configuration.Api;
 
 namespace VidiView.Api.Configuration;

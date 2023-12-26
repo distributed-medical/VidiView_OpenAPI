@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 /// <summary>
 /// This is a helper stream that supports seeking using range headers

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
+using VidiView.Api.DataModel;
 
-namespace VidiView.Api.DataModel.Exceptions;
+namespace VidiView.Api.Exceptions;
 
 /// <summary>
 /// This is the base VidiView exception class

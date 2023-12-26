@@ -1,4 +1,4 @@
-﻿namespace VidiView.Api.Access.Headers;
+﻿namespace VidiView.Api.Headers;
 
 public class ActingRoleHeader
 {

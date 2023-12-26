@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
-namespace VidiView.Api.Access.Serialization;
+namespace VidiView.Api.Serialization;
 
 public class VidiViewNamingPolicy : JsonNamingPolicy
 {

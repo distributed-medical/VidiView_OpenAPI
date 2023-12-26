@@ -1,9 +1,10 @@
 ﻿using System.Net.Http.Headers;
+using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
 
-namespace VidiView.Api.Access.Authentication;
-public class PinCodeAuthenticator : IAuthenticator
+namespace VidiView.Api.Authentication;
+public class PinCodeAuthenticator
 {
     readonly HttpClient _http;
     Link? _authenticationLink;

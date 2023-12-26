@@ -1,4 +1,4 @@
-﻿namespace VidiView.Api.DataModel.Exceptions;
+﻿namespace VidiView.Api.Exceptions;
 
 public class E1404_ServiceUnavailableException : VidiViewException
 {

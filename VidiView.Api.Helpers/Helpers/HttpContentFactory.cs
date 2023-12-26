@@ -1,7 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using VidiView.Api.Serialization;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 public static class HttpContentFactory
 {

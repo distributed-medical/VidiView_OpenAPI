@@ -1,6 +1,7 @@
-﻿using VidiView.Api.Access.Headers;
+﻿using VidiView.Api.Helpers;
+using VidiView.Api.Headers;
 
-namespace VidiView.Api.Access.Authentication;
+namespace VidiView.Api.Authentication;
 
 public static class HttpAuthenticationExtensions
 {

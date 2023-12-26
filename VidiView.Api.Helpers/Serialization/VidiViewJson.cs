@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using VidiView.Api.Access.Serialization;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Serialization;
 
 public static class VidiViewJson
 {

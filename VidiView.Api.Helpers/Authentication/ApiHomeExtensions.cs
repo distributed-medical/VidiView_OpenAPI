@@ -1,7 +1,7 @@
 ﻿using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
 
-namespace VidiView.Api.Access.Authentication;
+namespace VidiView.Api.Authentication;
 
 public static class ApiHomeExtensions
 {

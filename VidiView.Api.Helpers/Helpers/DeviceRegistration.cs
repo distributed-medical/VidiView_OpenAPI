@@ -1,11 +1,11 @@
 ﻿using VidiView.Api.DataModel;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
 /// <summary>
 /// This class can be used to register a device with a VidiView Server
 /// </summary>
-public static class DeviceRegistrationHelper
+public static class DeviceRegistration
 {
     /// <summary>
     /// Register client device with server

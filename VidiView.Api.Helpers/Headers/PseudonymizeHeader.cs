@@ -1,4 +1,4 @@
-﻿namespace VidiView.Api.Access.Headers;
+﻿namespace VidiView.Api.Headers;
 
 /// <summary>
 /// Add this header to request the server to pseudonymize patient information

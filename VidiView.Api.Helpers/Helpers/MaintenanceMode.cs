@@ -1,9 +1,9 @@
 ﻿using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
 
-namespace VidiView.Api.Access;
+namespace VidiView.Api.Helpers;
 
-public static class MaintenanceModeHelper
+public static class MaintenanceMode
 {
     /// <summary>
     /// Check if the response failed due to maintenance mode

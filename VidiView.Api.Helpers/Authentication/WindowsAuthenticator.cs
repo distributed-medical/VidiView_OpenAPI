@@ -1,9 +1,10 @@
 ﻿using System.Net.Http.Headers;
+using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
-using VidiView.Api.DataModel.Exceptions;
+using VidiView.Api.Exceptions;
 
-namespace VidiView.Api.Access.Authentication;
-public class WindowsAuthenticator : IAuthenticator
+namespace VidiView.Api.Authentication;
+public class WindowsAuthenticator
 {
     readonly HttpClient _http;
 
