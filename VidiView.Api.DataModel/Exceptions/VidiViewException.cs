@@ -23,7 +23,7 @@ public class VidiViewException : Exception
 
         if (error != null)
         {
-            var typeName = "VidiView.Api.DataModel.Exceptions." + error.Type;
+            var typeName = "VidiView.Api.Exceptions." + error.Type;
             var type = Type.GetType(typeName, false, true);
             if (type != null)
             {
