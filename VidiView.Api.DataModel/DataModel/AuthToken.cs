@@ -6,7 +6,7 @@ public record AuthToken
     /// The id of this token
     /// </summary>
     [JsonPropertyName("assertion-id")]
-    public string Id { get; init; }
+    public string? Id { get; init; }
 
     /// <summary>
     /// The time when this token expires
@@ -16,7 +16,7 @@ public record AuthToken
     /// <summary>
     /// The token itself
     /// </summary>
-    public string Token { get; init; }
+    public string Token { get; init; } = string.Empty;
 
     /// <summary>
     /// Returns the current pseudonymization state
@@ -27,7 +27,7 @@ public record AuthToken
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")] 
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
 
 }

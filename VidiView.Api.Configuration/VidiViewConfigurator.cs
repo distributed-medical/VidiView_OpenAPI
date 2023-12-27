@@ -6,7 +6,6 @@ namespace VidiView.Api.Configuration;
 public class VidiViewConfigurator
 {
     readonly HttpClient _http;
-    ApiHome? _configurationHome;
 
     public VidiViewConfigurator(HttpClient http)
     {
@@ -21,17 +20,20 @@ public class VidiViewConfigurator
     {
         var api = await _http.HomeAsync();
         var link = api.Links.GetRequired(Rel.Configuration);
-        _configurationHome = await _http.GetAsync<ApiHome>(link);
+        Home = await _http.GetAsync<ApiHome>(link);
 
-        DeviceRegistration = new DeviceRegistration(_http, _configurationHome);
-        Settings = new SettingsRepository(_http, _configurationHome);
-        ServiceHosts = new ServiceHosts(_http, _configurationHome);
+        DeviceRegistration = new DeviceRegistration(_http, Home);
+        Settings = new SettingsRepository(_http, Home);
+        ServiceHosts = new ServiceHosts(_http, Home);
+        Users = new UserManager(_http, Home);
     }
+
+    public HttpClient Http => _http;
 
     /// <summary>
     /// Server information
     /// </summary>
-    public ApiHome? Home => _configurationHome;
+    public ApiHome? Home { get; private set; }
 
     /// <summary>
     /// Device registration 
@@ -47,4 +49,9 @@ public class VidiViewConfigurator
     /// Service hosts
     /// </summary>
     public ServiceHosts ServiceHosts { get; private set; }
+
+    /// <summary>
+    /// Users
+    /// </summary>
+    public UserManager Users { get; private set; }
 }

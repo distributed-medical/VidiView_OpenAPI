@@ -1,4 +1,4 @@
-﻿namespace VidiView.Configuration.Api;
+﻿namespace VidiView.Api.Configuration.DataModel;
 
 /// <summary>
 /// This class represents a VidiView setting

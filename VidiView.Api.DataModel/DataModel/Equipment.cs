@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// This class defines equipment that may have been used during a study
+/// This record defines equipment that may have been used during a study
 /// </summary>
 public record Equipment
 {
@@ -13,7 +13,7 @@ public record Equipment
     /// <summary>
     /// The department in which this equipment is defined
     /// </summary>
-    public IdAndName Department { get; init; }
+    public IdAndName Department { get; init; } = null!;
 
     /// <summary>
     /// Equipment identification (serial-number / bar-code etc)
@@ -39,7 +39,7 @@ public record Equipment
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; set; }
+    public LinkCollection? Links { get; init; }
 
     public override string ToString()
     {

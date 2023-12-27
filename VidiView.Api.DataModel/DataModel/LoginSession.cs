@@ -56,7 +56,7 @@ public record LoginSession
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
     public override string ToString()
     {

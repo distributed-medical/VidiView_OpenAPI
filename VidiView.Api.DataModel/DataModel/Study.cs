@@ -26,7 +26,7 @@ public record Study
     /// The department info
     /// </summary>
     /// <remarks>Only used by remote parties</remarks>
-    public IdAndName Department { get; init; }
+    public IdAndName Department { get; init; } = null!;
 
     /// <summary>
     /// Study external ID 
@@ -108,5 +108,5 @@ public record Study
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 }

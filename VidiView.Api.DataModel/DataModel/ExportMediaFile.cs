@@ -3,21 +3,21 @@
 /// <summary>
 /// Export status of a media file
 /// </summary>
-public class ExportMediaFile
+public record ExportMediaFile
 {
-    public Guid ItemId { get; set; }
-    public Guid StudyId { get; set; }
-    public Guid ImageId { get; set; }
-    public IdAndName AddedBy { get; set; }
-    public DateTimeOffset AddedDate { get; set; }
-    public string ContentType { get; set; }
-    public Department Department { get; set; }
-    public IdAndName Queue { get; set; }
-    public ExportQueueStatus TransferStatus { get; set; }
+    public Guid ItemId { get; init; }
+    public Guid StudyId { get; init; }
+    public Guid ImageId { get; init; }
+    public IdAndName AddedBy { get; init; } = null!;
+    public DateTimeOffset AddedDate { get; init; }
+    public string ContentType { get; init; }
+    public IdAndName Department { get; init; } = null!;
+    public IdAndName Queue { get; init; } = null!;
+    public ExportQueueStatus TransferStatus { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; set; }
+    public LinkCollection? Links { get; init; }
 }

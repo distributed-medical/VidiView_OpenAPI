@@ -16,7 +16,7 @@ public class PatientCollection<TEntity>
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
     [JsonPropertyName("_embedded")]
     public EmbeddedArray Embedded { get; init; }

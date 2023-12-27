@@ -1,4 +1,4 @@
-﻿namespace VidiView.Configuration.Api;
+﻿namespace VidiView.Api.DataModel;
 
 [Flags]
 public enum ServiceHostType

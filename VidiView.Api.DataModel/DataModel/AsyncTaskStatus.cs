@@ -21,7 +21,7 @@ public record AsyncTaskStatus
 
     public AsyncTaskType Task { get; init; }
 
-    public IdAndName CreatedBy { get; init; }
+    public IdAndName CreatedBy { get; init; } = null!;
 
     public TaskState State { get; init; } = TaskState.WaitingForExecution;
 
@@ -41,5 +41,5 @@ public record AsyncTaskStatus
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 }

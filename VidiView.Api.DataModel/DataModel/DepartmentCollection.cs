@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class DepartmentCollection
+public record DepartmentCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -16,12 +16,12 @@ public class DepartmentCollection
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
     [JsonPropertyName("_embedded")]
     public EmbeddedArray Embedded { get; init; }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
         public Department[] Departments { get; init; }
     }

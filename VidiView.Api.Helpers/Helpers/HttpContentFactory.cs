@@ -23,7 +23,7 @@ public static class HttpContentFactory
         result.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
         // The stream might not support length
-        try { result.Headers.ContentLength = content.Length; } catch { }
+        try { result.Headers.ContentLength = content.Length - content.Position; } catch { }
 
         return result;
     }
@@ -48,6 +48,9 @@ public static class HttpContentFactory
 
             case Stream stream:
                 throw new NotImplementedException("You should call another overload of this method");
+
+            case HttpContent hc:
+                return hc;
 
             default:
                 var jsonBytes = JsonSerializer.SerializeToUtf8Bytes(content, content.GetType(), Options);

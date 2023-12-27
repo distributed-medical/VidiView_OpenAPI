@@ -46,6 +46,10 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
 
     readonly List<LinkParam> _parameters = new();
 
+    public ParameterCollection() : this(Array.Empty <LinkParam>()) 
+    {
+    }
+
     public ParameterCollection(ref string template)
     {
         try
@@ -181,10 +185,5 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)_parameters).GetEnumerator();
-    }
-
-    internal ParameterCollection Clone()
-    {
-        return new ParameterCollection(from lp in _parameters select lp.Clone());
     }
 }

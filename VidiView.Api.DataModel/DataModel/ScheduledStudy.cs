@@ -15,7 +15,7 @@ public record ScheduledStudy
     /// <summary>
     /// The associated department
     /// </summary>
-    public IdAndName Department { get; init; }
+    public IdAndName Department { get; init; } = null!;
 
     /// <summary>
     /// The scheduled start time of this study
@@ -56,13 +56,13 @@ public record ScheduledStudy
     /// <summary>
     /// Sop instace to be used for creating this study
     /// </summary>
-    public string SopInstance { get; init; } = null;
+    public string? SopInstance { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
     public override string ToString() => $"{ScheduledTime:HH.mm} {AccessionNumber ?? StudyInstanceUid}";
 }

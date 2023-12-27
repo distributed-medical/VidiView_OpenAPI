@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// Extends the study class with properties assigned to personal worklist items
+/// Extends the study record with properties assigned to personal worklist items
 /// </summary>
 public record BookmarkedStudy : Study
 {

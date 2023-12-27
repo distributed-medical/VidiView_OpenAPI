@@ -1,27 +1,27 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public record PersonalWorklist
+public record ServiceHost
 {
     /// <summary>
-    /// The id of this worklist
+    /// The service host id
     /// </summary>
     public Guid Id { get; init; }
 
     /// <summary>
-    /// User's name of this worklist
+    /// The service host name
     /// </summary>
     public string Name { get; init; } = string.Empty;
 
     /// <summary>
-    /// User's description of this worklist
+    /// Service host type
     /// </summary>
-    public string? Description { get; init; }
+    public ServiceHostType Type { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
-    [JsonPropertyName("_links")] 
-    public LinkCollection? Links { get; init; }
+    [JsonPropertyName("_links")]
+    public LinkCollection Links { get; init; }
 
-    public override string ToString() => Name;
+    public override string ToString() => $"{Type} ({Name})";
 }

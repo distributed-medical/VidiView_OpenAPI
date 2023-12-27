@@ -1,9 +1,9 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class PatchString
+public record PatchString
 {
-    public string? OldValue { get; set; }
-    public string? NewValue { get; set; }
+    public string? OldValue { get; init; }
+    public string? NewValue { get; init; }
 
     public override string ToString()
     {

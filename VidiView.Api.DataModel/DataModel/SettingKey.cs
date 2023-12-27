@@ -1,8 +1,4 @@
-﻿using System;
-
-// Should be a copy of VidiView.Data.SettingKey.cs
-
-namespace VidiView.Api.DataModel;
+﻿namespace VidiView.Api.DataModel;
 
 public static class SettingKey
 {

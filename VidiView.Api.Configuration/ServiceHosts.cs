@@ -1,7 +1,8 @@
 ﻿using VidiView.Api.Helpers;
-using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
-using VidiView.Configuration.Api;
+using VidiView.Api.DataModel;
+using ServiceHost = VidiView.Api.Configuration.DataModel.ServiceHost;
+using ServiceHostCollection = VidiView.Api.Configuration.DataModel.ServiceHostCollection;
 
 namespace VidiView.Api.Configuration;
 
@@ -50,7 +51,7 @@ public class ServiceHosts
     public async Task<ServiceHost> LoadAsync(Guid serviceHostId)
     {
         var list = await ListAsync();
-        var link = list.Links.GetRequired(Rel.Load);
+        var link = list.Links.GetRequired(Rel.Load).AsTemplatedLink();
         link.Parameters["id"].Value = serviceHostId.ToString("N");
 
         return await _http.GetAsync<ServiceHost>(link);
@@ -73,6 +74,8 @@ public class ServiceHosts
         }
 
         var response = await _http.PutAsync(link, serviceHost);
+        await response.AssertSuccessAsync();
+
         return response.Deserialize<ServiceHost>();
     }
 }

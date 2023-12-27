@@ -8,21 +8,38 @@ namespace VidiView.Api.DataModel;
 /// </summary>
 public class LinkCollection : IDictionary<string, Link>
 {
-    readonly Dictionary<string, Link>? _links = new();
+    readonly Dictionary<string, Link> _links = new();
 
     /// <summary>
     /// Return the number of Links in the collection
     /// </summary>
-    public int Count { get; init; }
+    public int Count => _links.Count;
 
-    bool ICollection<KeyValuePair<string, Link>>.IsReadOnly => false;
+    /// <summary>
+    /// This implementation is hidden to prefer the TryGet extension
+    /// </summary>
+    /// <param name="rel">Name of link (relation)</param>
+    /// <param name="result">The Link object if it exists</param>
+    /// <returns>True if the relation e</returns>
+    bool IDictionary<string, Link>.TryGetValue(string key, out Link value)
+    {
+        return _links.TryGetValue(key, out value);
+    }
 
+    /// <summary>
+    /// Access to the underlying dictionary
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
     Link IDictionary<string, Link>.this[string key] {
         get => _links[key];
         set => _links[key] = value;
     }
 
     #region Implementation of Read-only Dictionary
+    bool ICollection<KeyValuePair<string, Link>>.IsReadOnly => false;
+
+
     void IDictionary<string, Link>.Add(string key, Link value)
     {
         throw new NotSupportedException();
@@ -38,11 +55,6 @@ public class LinkCollection : IDictionary<string, Link>
         throw new NotSupportedException();
     }
 
-    bool IDictionary<string, Link>.TryGetValue(string key, out Link value)
-    {
-        return _links.TryGetValue(key, out value);
-    }
-
     void ICollection<KeyValuePair<string, Link>>.Add(KeyValuePair<string, Link> item)
     {
         throw new NotSupportedException();
@@ -55,7 +67,7 @@ public class LinkCollection : IDictionary<string, Link>
 
     bool ICollection<KeyValuePair<string, Link>>.Contains(KeyValuePair<string, Link> item)
     {
-        throw new NotImplementedException();
+        return _links.Contains(item);
     }
 
     void ICollection<KeyValuePair<string, Link>>.CopyTo(KeyValuePair<string, Link>[] array, int arrayIndex)
@@ -82,5 +94,4 @@ public class LinkCollection : IDictionary<string, Link>
     {
         return _links.GetEnumerator();
     }
-
 }

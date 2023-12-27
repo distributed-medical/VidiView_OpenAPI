@@ -86,11 +86,6 @@ public record User
     }
 
     /// <summary>
-    /// The acting role of an authenticated user
-    /// </summary>
-    public UserRole? ActingRole { get; init; }
-
-    /// <summary>
     /// Time of last successful login
     /// </summary>
     public DateTimeOffset? LastLoginDate { get; init; }
@@ -110,7 +105,7 @@ public record User
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 
     public override string ToString() => Name;
 }

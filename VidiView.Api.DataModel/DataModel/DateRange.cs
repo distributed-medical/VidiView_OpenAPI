@@ -1,13 +1,11 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// This class represents a date range 
+/// This record represents a date range 
 /// </summary>
 /// <remarks>Only used for date range excluding time information</remarks>
-public record struct DateRange 
+public record DateRange 
 {
-    public static readonly DateRange Empty = new();
-
     public DateRange()
     { }
 

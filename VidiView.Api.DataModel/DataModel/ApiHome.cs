@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// This class represents the information provided by the 
+/// This record represents the information provided by the 
 /// VidiView Server when requesting the Api starting address
 /// </summary>
 public record ApiHome
@@ -50,5 +50,5 @@ public record ApiHome
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")] 
-    public LinkCollection Links { get; init; }
+    public LinkCollection? Links { get; init; }
 }

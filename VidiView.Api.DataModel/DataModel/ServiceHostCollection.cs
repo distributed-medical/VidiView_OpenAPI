@@ -1,6 +1,6 @@
-﻿namespace VidiView.Api.Configuration.DataModel;
+﻿namespace VidiView.Api.DataModel;
 
-public class ServiceHostCollection
+public record ServiceHostCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -19,7 +19,7 @@ public class ServiceHostCollection
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public Api.DataModel.LinkCollection Links
+    public LinkCollection Links
     {
         get; init;
     }
@@ -30,7 +30,7 @@ public class ServiceHostCollection
         get; init;
     }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
         public ServiceHost[] Items
         {
