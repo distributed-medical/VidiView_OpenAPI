@@ -5,8 +5,6 @@ namespace VidiView.Api.DataModel;
 
 public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
 {
-    public static ParameterCollection Empty { get; } = new ParameterCollection();
-
     public class LinkParam
     {
         internal LinkParam(string name, int startPos, bool isPath)
@@ -48,7 +46,7 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
 
     readonly List<LinkParam> _parameters = new();
 
-    private ParameterCollection() : this(Array.Empty <LinkParam>()) 
+    public ParameterCollection() : this(Array.Empty <LinkParam>()) 
     {
     }
 

@@ -44,7 +44,7 @@ public class TemplatedLink
         }
         else
         {
-            _params = ParameterCollection.Empty;
+            _params = new ParameterCollection();
         }
     }
 
@@ -77,7 +77,7 @@ public class TemplatedLink
     /// <exception cref="ArgumentException">Thrown if any required parameter is missing a value</exception>
     public string ToUrl()
     {
-        if (!_link.Templated)
+        if (_params.Count == 0)
             return _link.Href;
 
         int offset = 0;
@@ -123,8 +123,15 @@ public class TemplatedLink
                 querySeparatorAdded = true;
             }
 
-            var startOffset = p.StartPos + offset;
-            sb.Insert(startOffset, value);
+            if (p.StartPos == -1)
+            {
+                sb.Append(value);
+            }
+            else
+            {
+                var startOffset = p.StartPos + offset;
+                sb.Insert(startOffset, value);
+            }
             offset += value.Length;
         }
 
