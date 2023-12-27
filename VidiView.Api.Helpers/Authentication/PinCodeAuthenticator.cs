@@ -32,11 +32,13 @@ public class PinCodeAuthenticator
 
         if (!api.Links.TryGet(Rel.AuthenticatePinEnabled, out var link))
             throw new E1813_LogonMethodNotAllowedException("Pin authentication not supported");
-       
-        if (!link.TrySetParameterValue("username", username))
+
+        var tl = link.AsTemplatedLink();
+
+        if (!tl.TrySetParameterValue("username", username))
             throw new Exception("The expected parameter could not be set");
 
-        var result = await _http.GetAsync<LoginPin>(link);
+        var result = await _http.GetAsync<LoginPin>(tl.ToUrl());
         result.Links.TryGet(Rel.AuthenticatePin, out _authenticationLink);
 
         return result;

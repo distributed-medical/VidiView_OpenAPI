@@ -23,7 +23,7 @@ public class DeviceRegistration
     /// <returns></returns>
     public async Task SetGrantedAsync(Guid deviceId, bool granted)
     {
-        var link = _api.Links.GetRequired(Rel.GrantDevice);
+        var link = _api.Links.GetRequired(Rel.GrantDevice).AsTemplatedLink();
         link.Parameters["deviceId"].Value = deviceId.ToString("N");
         link.Parameters["isGranted"].Value = granted.ToString();
 
@@ -39,7 +39,7 @@ public class DeviceRegistration
     /// <returns></returns>
     public async Task DeleteAsync(Guid deviceId, bool erase)
     {
-        var link = _api.Links.GetRequired(Rel.DeleteDevice);
+        var link = _api.Links.GetRequired(Rel.DeleteDevice).AsTemplatedLink();
 
         link.Parameters["deviceId"].Value = deviceId.ToString("N");
         link.Parameters["eraseRecord"].Value = erase.ToString();

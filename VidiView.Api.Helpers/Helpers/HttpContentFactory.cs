@@ -49,6 +49,9 @@ public static class HttpContentFactory
             case Stream stream:
                 throw new NotImplementedException("You should call another overload of this method");
 
+            case HttpContent hc:
+                return hc;
+
             default:
                 var jsonBytes = JsonSerializer.SerializeToUtf8Bytes(content, content.GetType(), Options);
                 result = new ByteArrayContent(jsonBytes);

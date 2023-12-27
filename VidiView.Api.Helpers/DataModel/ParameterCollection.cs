@@ -5,6 +5,8 @@ namespace VidiView.Api.DataModel;
 
 public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
 {
+    public static ParameterCollection Empty { get; } = new ParameterCollection();
+
     public class LinkParam
     {
         internal LinkParam(string name, int startPos, bool isPath)
@@ -45,6 +47,10 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
     }
 
     readonly List<LinkParam> _parameters = new();
+
+    private ParameterCollection() : this(Array.Empty <LinkParam>()) 
+    {
+    }
 
     public ParameterCollection(ref string template)
     {
@@ -181,10 +187,5 @@ public class ParameterCollection : IEnumerable<ParameterCollection.LinkParam>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)_parameters).GetEnumerator();
-    }
-
-    internal ParameterCollection Clone()
-    {
-        return new ParameterCollection(from lp in _parameters select lp.Clone());
     }
 }

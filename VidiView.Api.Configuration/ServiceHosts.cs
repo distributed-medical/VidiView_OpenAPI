@@ -50,7 +50,7 @@ public class ServiceHosts
     public async Task<ServiceHost> LoadAsync(Guid serviceHostId)
     {
         var list = await ListAsync();
-        var link = list.Links.GetRequired(Rel.Load);
+        var link = list.Links.GetRequired(Rel.Load).AsTemplatedLink();
         link.Parameters["id"].Value = serviceHostId.ToString("N");
 
         return await _http.GetAsync<ServiceHost>(link);
