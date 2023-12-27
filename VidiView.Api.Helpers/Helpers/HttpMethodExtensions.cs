@@ -1,5 +1,4 @@
-﻿using IdentityModel.Client;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
@@ -15,25 +14,12 @@ public static class HttpMethodExtensions
     /// </summary>
     /// <typeparam name="T">The type to deserialize</typeparam>
     /// <param name="http"></param>
-    /// <param name="link">The link to read</param>
+    /// <param name="link">The url to read</param>
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns></returns>
-    public static Task<T> GetAsync<T>(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
+    public static async Task<T> GetAsync<T>(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
-        return GetAsync<T>(http, link.ToUrl(), cancellationToken);
-    }
-
-    /// <summary>
-    /// Helper method to get response, verify success and then deserialize result
-    /// </summary>
-    /// <typeparam name="T">The type to deserialize</typeparam>
-    /// <param name="http"></param>
-    /// <param name="requestUri">The url to read</param>
-    /// <param name="cancellationToken">Optional cancellation token</param>
-    /// <returns></returns>
-    public static async Task<T> GetAsync<T>(this HttpClient http, string requestUri, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.GetAsync(requestUri, cancellationToken ?? CancellationToken.None);
+        var response = await http.GetAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
         await response.AssertSuccessAsync();
 
         if (typeof(T) == typeof(string))
@@ -47,14 +33,17 @@ public static class HttpMethodExtensions
         }
     }
 
-    public static Task<HttpContentStream> GetStreamAsync(this HttpClient http, TemplatedLink link, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
+    /// <summary>
+    /// Get a stream from the server. This may support seeking
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="range"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static async Task<HttpContentStream> GetStreamAsync(this HttpClient http, TemplatedLink link, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
     {
-        return GetStreamAsync(http, link.ToUrl(), range, cancellationToken);
-    }
-
-    public static async Task<HttpContentStream> GetStreamAsync(this HttpClient http, string requestUri, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
-    {
-        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(requestUri));
+        using var request = new HttpRequestMessage(HttpMethod.Get,  (Uri)link);
         request.Headers.Range = range;
 
         try
@@ -71,10 +60,18 @@ public static class HttpMethodExtensions
         }
     }
 
+    /// <summary>
+    /// Helper method to delete a resource indicated by a link
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> DeleteAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
         return http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
     }
+
 
     public static Task<HttpResponseMessage> HeadAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
@@ -87,6 +84,14 @@ public static class HttpMethodExtensions
         return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
+    /// <summary>
+    /// Helper method to patch a resource indicated by a link with a specific content
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="content"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> PatchAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
         var request = new HttpRequestMessage()
@@ -99,11 +104,27 @@ public static class HttpMethodExtensions
         return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
+    /// <summary>
+    /// Helper method to create a resource indicated by a link with a specific content
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="content"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
         return http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
     }
 
+    /// <summary>
+    /// Helper method to create/update a resource indicated by a link with a specific content
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="content"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
         return http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
