@@ -21,7 +21,7 @@ public class TemplatedLink
     /// Implicit cast to Uri
     /// </summary>
     /// <param name="link"></param>
-    public static implicit operator Uri(TemplatedLink link)
+    public static explicit operator Uri(TemplatedLink link)
     {
         return new Uri(link.ToUrl());
     }

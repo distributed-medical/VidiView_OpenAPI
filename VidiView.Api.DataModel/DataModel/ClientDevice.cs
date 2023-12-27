@@ -5,18 +5,17 @@ public record ClientDevice
     /// <summary>
     /// The app id
     /// </summary>
-    public string AppId { get; init; }
+    public string? AppId { get; init; } 
 
     /// <summary>
     /// Application version
     /// </summary>
-    public string AppVersion { get; init; }
+    public string? AppVersion { get; init; }
 
     /// <summary>
     /// The device id
     /// </summary>
-    /// <remarks>This might not be the same as the DeviceId supplied in the Api-key header</remarks>
-    public string DeviceId { get; init; }
+    public string? DeviceId { get; init; }
 
     /// <summary>
     /// Device model
@@ -26,7 +25,7 @@ public record ClientDevice
     /// <summary>
     /// Operating system on which the client is running
     /// </summary>
-    public string OSVersion { get; init; }
+    public string? OSVersion { get; init; }
 
     /// <summary>
     /// This token is used to manually identify

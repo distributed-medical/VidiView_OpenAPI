@@ -20,5 +20,5 @@ public record AnatomicRegion
     /// <summary>
     /// The Snomed CT expression
     /// </summary>
-    public Snomed Snomed { get; init; }
+    public Snomed Snomed { get; init; } = null!;
 }
