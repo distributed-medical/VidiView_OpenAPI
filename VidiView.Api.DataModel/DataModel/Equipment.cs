@@ -39,7 +39,7 @@ public record Equipment
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links { get; set; }
+    public LinkCollection? Links { get; set; }
 
     public override string ToString()
     {
