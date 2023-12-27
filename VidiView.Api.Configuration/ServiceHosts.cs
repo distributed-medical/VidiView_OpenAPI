@@ -73,6 +73,8 @@ public class ServiceHosts
         }
 
         var response = await _http.PutAsync(link, serviceHost);
+        await response.AssertSuccessAsync();
+
         return response.Deserialize<ServiceHost>();
     }
 }

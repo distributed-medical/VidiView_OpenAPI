@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using IdentityModel.Client;
+using System.Net.Http.Headers;
 using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
@@ -70,89 +71,41 @@ public static class HttpMethodExtensions
         }
     }
 
-    public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
-    {
-        return PutAsync(http, link.ToUrl(), content, cancellationToken);
-    }
-
-    /// <summary>
-    /// Helper method to put content using a link
-    /// </summary>
-    /// <param name="http"></param>
-    /// <param name="link"></param>
-    /// <param name="content"></param>
-    /// <returns></returns>
-    public static async Task<HttpResponseMessage> PutAsync(this HttpClient http, string requestUri, object? content, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.PutAsync(requestUri, HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
-        return response;
-    }
-
-    public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
-    {
-        return PostAsync(http, link.ToUrl(), content, cancellationToken);
-    }
-
-    public static async Task<HttpResponseMessage> PostAsync(this HttpClient http, string requestUri, object? content, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.PostAsync(requestUri, HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
-        return response;
-    }
-
     public static Task<HttpResponseMessage> DeleteAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
-        return DeleteAsync(http, link.ToUrl(), cancellationToken);
-    }
-
-    public static async Task<HttpResponseMessage> DeleteAsync(this HttpClient http, string requestUri, CancellationToken? cancellationToken = null)
-    {
-        var response = await http.DeleteAsync(requestUri, cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
-        return response;
+        return http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
     }
 
     public static Task<HttpResponseMessage> HeadAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
-        return HeadAsync(http, link.ToUrl(), cancellationToken);
-    }
-
-    public static async Task<HttpResponseMessage> HeadAsync(this HttpClient http, string requestUri, CancellationToken? cancellationToken = null)
-    {
         var request = new HttpRequestMessage()
         {
             Method = HttpMethod.Head,
-            RequestUri = new Uri(requestUri)
+            RequestUri = (Uri)link,
         };
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
-        return response;
+
+        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
     public static Task<HttpResponseMessage> PatchAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
-        return PatchAsync(http, link.ToUrl(), content, cancellationToken);
-    }
-
-
-    public static async Task<HttpResponseMessage> PatchAsync(this HttpClient http, string requestUri, object? content, CancellationToken? cancellationToken = null)
-    {
         var request = new HttpRequestMessage()
         {
             Method = HttpMethod.Patch,
-            RequestUri = new Uri(requestUri)
+            RequestUri = (Uri)link,
+            Content = HttpContentFactory.CreateBody(content),
         };
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
-        return response;
+
+        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
-
-    static bool IsConnectionRefused(Exception ex)
+    public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
-        return (ex.InnerException is System.Net.Sockets.SocketException sexc
-            && sexc.SocketErrorCode == System.Net.Sockets.SocketError.ConnectionRefused);
+        return http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
     }
 
+    public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
+    {
+        return http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
+    }
 }

@@ -28,6 +28,8 @@ public class DeviceRegistration
         link.Parameters["isGranted"].Value = granted.ToString();
 
         var response = await _http.PutAsync(link, null);
+        await response.AssertSuccessAsync();
+
     }
 
     /// <summary>

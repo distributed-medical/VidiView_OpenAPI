@@ -19,7 +19,8 @@ public static class DeviceRegistration
         var api = await http.HomeAsync();
         var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
-        var response = await http.PutAsync(link.Href, device);
+        var response = await http.PutAsync(link, device);
+        await response.AssertSuccessAsync();
         var result = response.Deserialize<ClientDevice>();
         http.InvalidateHome();
 
