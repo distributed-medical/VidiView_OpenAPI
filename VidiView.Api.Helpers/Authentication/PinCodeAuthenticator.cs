@@ -38,7 +38,7 @@ public class PinCodeAuthenticator
         if (!tl.TrySetParameterValue("username", username))
             throw new Exception("The expected parameter could not be set");
 
-        var result = await _http.GetAsync<LoginPin>(tl.ToUrl());
+        var result = await _http.GetAsync<LoginPin>(tl);
         result.Links.TryGet(Rel.AuthenticatePin, out _authenticationLink);
 
         return result;

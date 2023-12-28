@@ -4,11 +4,11 @@ using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
 
-public class FileUpload
+public class UploadHelper
 {
     readonly HttpClient _http;
 
-    public FileUpload(HttpClient http)
+    public UploadHelper(HttpClient http)
     {
         _http = http;        
     }
@@ -21,14 +21,28 @@ public class FileUpload
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<HttpResponseMessage> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<HttpResponseMessage> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         // We should start by checking resumability of this request
         var resumePosition = await GetResumePositionAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
         stream.Position = resumePosition;
 
-        // Indicate with a content range header the position we start uploading from
+        return await UploadAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Upload a file stream to server, starting at the current stream position
+    /// </summary>
+    /// <param name="link"></param>
+    /// <param name="stream"></param>
+    /// <param name="contentType"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<HttpResponseMessage> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    {
         var httpContent = HttpContentFactory.CreateBody(stream, contentType);
+
+        // Indicate with a content range header the position we start uploading from
         httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Length - stream.Position - 1, stream.Length);
 
         var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
@@ -36,6 +50,7 @@ public class FileUpload
 
         return response;
     }
+
 
     /// <summary>
     /// Check if we may resume this upload
@@ -49,23 +64,22 @@ public class FileUpload
         httpContent.Headers.ContentRange = new ContentRangeHeaderValue(content.Length);
 
         var response = await _http.PostAsync((Uri)link, httpContent, cancellationToken).ConfigureAwait(false);
-        await response.AssertSuccessAsync().ConfigureAwait(false);
-
-        // Verify if the response has headers indicating we can resume upload
-        if (response.StatusCode == HttpStatusCode.Accepted)
+        if (response.IsSuccessStatusCode)
         {
-            var header = response.Content.Headers.ContentRange;
-            if (header?.Unit.Equals("bytes", StringComparison.OrdinalIgnoreCase) == true
-                && header?.To != null)
+            // Verify if the response has headers indicating we can resume upload
+            if (response.StatusCode == HttpStatusCode.Accepted)
             {
-                // The To value is inclusive for some strange reason..
-                return header.To.Value + 1;
+                var header = response.Content.Headers.ContentRange;
+                if (header?.Unit.Equals("bytes", StringComparison.OrdinalIgnoreCase) == true
+                    && header?.To != null)
+                {
+                    // The To value is inclusive for some strange reason..
+                    return header.To.Value + 1;
+                }
             }
         }
 
         // Start from the beginning (no resume)
         return 0;
     }
-
-
 }

@@ -13,7 +13,7 @@ public class LinkCollection : IDictionary<string, Link>
     /// <summary>
     /// Return the number of Links in the collection
     /// </summary>
-    public int Count { get; init; }
+    public int Count => _links.Count;
 
     /// <summary>
     /// This implementation is hidden to prefer the TryGet extension
