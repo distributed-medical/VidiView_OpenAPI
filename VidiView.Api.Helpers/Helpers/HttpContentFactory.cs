@@ -23,7 +23,7 @@ public static class HttpContentFactory
         result.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
         // The stream might not support length
-        try { result.Headers.ContentLength = content.Length; } catch { }
+        try { result.Headers.ContentLength = content.Length - content.Position; } catch { }
 
         return result;
     }

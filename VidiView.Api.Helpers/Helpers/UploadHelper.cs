@@ -21,10 +21,10 @@ public class UploadHelper
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<HttpResponseMessage> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<Image> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         // We should start by checking resumability of this request
-        var resumePosition = await GetResumePositionAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
+        var resumePosition = await GetResumePositionAsync(link, stream.Length, contentType, cancellationToken).ConfigureAwait(false);
         stream.Position = resumePosition;
 
         return await UploadAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
@@ -38,7 +38,7 @@ public class UploadHelper
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<HttpResponseMessage> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<Image> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         var httpContent = HttpContentFactory.CreateBody(stream, contentType);
 
@@ -48,20 +48,23 @@ public class UploadHelper
         var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
 
-        return response;
+        return response.Deserialize<Image>();
     }
 
-
     /// <summary>
-    /// Check if we may resume this upload
+    /// Returns the resume position for this upload
     /// </summary>
+    /// <param name="link">Destination resource Uri</param>
+    /// <param name="streamLength">The total length of the file to upload</param>
+    /// <param name="contentType">The content type to upload</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<long> GetResumePositionAsync(TemplatedLink link, Stream content, string contentType, CancellationToken cancellationToken)
+    public async Task<long> GetResumePositionAsync(TemplatedLink link, long streamLength, string contentType, CancellationToken cancellationToken)
     {
         // Send empty request indicating only file length,
         // to check if we can resume this upload
         var httpContent = HttpContentFactory.CreateBody(new MemoryStream(0), contentType);
-        httpContent.Headers.ContentRange = new ContentRangeHeaderValue(content.Length);
+        httpContent.Headers.ContentRange = new ContentRangeHeaderValue(streamLength);
 
         var response = await _http.PostAsync((Uri)link, httpContent, cancellationToken).ConfigureAwait(false);
         if (response.IsSuccessStatusCode)
