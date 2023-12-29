@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class SettingCollection
+public record SettingCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -14,11 +14,13 @@ public class SettingCollection
     public LinkCollection? Links { get; init; }
 
     [JsonPropertyName("_embedded")]
-    public EmbeddedArray Embedded { get; init; }
+    public EmbeddedArray Embedded { get; init; } = null!;
 
-    public SettingValue? this[string key]
+    public SettingValue this[string key]
     {
-        get => Embedded.Settings.FirstOrDefault((i) => i.Key == key);
+        get => Embedded.Settings.FirstOrDefault((i) => i.Key == key)
+            ?? throw new ArgumentException($"The setting {key} does not exist.");
+
         set
         {
             ArgumentNullException.ThrowIfNull(key, nameof(key));
@@ -29,9 +31,11 @@ public class SettingCollection
                 if (Embedded.Settings[i].Key == key)
                 {
                     Embedded.Settings[i] = value;
-                    break;
+                    return;
                 }
             }
+
+            throw new KeyNotFoundException("The specified setting does not exist");
         }
     }
 
