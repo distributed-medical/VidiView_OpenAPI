@@ -86,11 +86,6 @@ public record User
     }
 
     /// <summary>
-    /// The acting role of an authenticated user
-    /// </summary>
-    public UserRole? ActingRole { get; init; }
-
-    /// <summary>
     /// Time of last successful login
     /// </summary>
     public DateTimeOffset? LastLoginDate { get; init; }

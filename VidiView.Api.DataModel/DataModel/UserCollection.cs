@@ -1,26 +1,16 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ScheduledStudyCollection<TEntity>
+public record UserCollection
 {
     /// <summary>
     /// Number of items in this collection
     /// </summary>
     public int Count { get; init; }
 
-    public DateTime FromDate { get; init; }
-    public DateTime ToDateExclusive { get; init; }
-
-    /// <summary>
-    /// The configured interval to be used for auto-refresh
-    /// </summary>
-    public TimeSpan? RefreshInterval { get; init; }
-
-    public int MaximumHits { get; init; }
-
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.ScheduledStudies;
+    public User[] Items => Embedded.Users;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -33,6 +23,6 @@ public class ScheduledStudyCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] ScheduledStudies { get; init; }
+        public User[] Users { get; init; }
     }
 }

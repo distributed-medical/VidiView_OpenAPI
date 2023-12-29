@@ -1,6 +1,4 @@
-﻿using VidiView.Api.DataModel;
-
-namespace VidiView.Api.Configuration.DataModel;
+﻿namespace VidiView.Api.Configuration.DataModel;
 
 public class ServiceHostCollection
 {
@@ -21,7 +19,7 @@ public class ServiceHostCollection
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links
+    public Api.DataModel.LinkCollection Links
     {
         get; init;
     }

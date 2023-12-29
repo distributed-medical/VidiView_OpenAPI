@@ -1,7 +1,8 @@
 ﻿using VidiView.Api.Helpers;
-using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
-using VidiView.Api.Configuration.DataModel;
+using VidiView.Api.DataModel;
+using ServiceHost = VidiView.Api.Configuration.DataModel.ServiceHost;
+using ServiceHostCollection = VidiView.Api.Configuration.DataModel.ServiceHostCollection;
 
 namespace VidiView.Api.Configuration;
 

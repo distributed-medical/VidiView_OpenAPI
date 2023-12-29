@@ -25,6 +25,7 @@ public class VidiViewConfigurator
         DeviceRegistration = new DeviceRegistration(_http, Home);
         Settings = new SettingsRepository(_http, Home);
         ServiceHosts = new ServiceHosts(_http, Home);
+        Users = new UserManager(_http, Home);
     }
 
     public HttpClient Http => _http;
@@ -48,4 +49,9 @@ public class VidiViewConfigurator
     /// Service hosts
     /// </summary>
     public ServiceHosts ServiceHosts { get; private set; }
+
+    /// <summary>
+    /// Users
+    /// </summary>
+    public UserManager Users { get; private set; }
 }

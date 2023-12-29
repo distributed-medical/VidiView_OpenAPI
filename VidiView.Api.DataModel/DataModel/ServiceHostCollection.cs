@@ -1,28 +1,40 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class UserCollection<TEntity>
+public class ServiceHostCollection
 {
     /// <summary>
     /// Number of items in this collection
     /// </summary>
-    public int Count { get; init; }
+    public int Count
+    {
+        get; init;
+    }
 
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Users;
+    public ServiceHost[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection? Links { get; init; }
+    public LinkCollection Links
+    {
+        get; init;
+    }
 
     [JsonPropertyName("_embedded")]
-    public EmbeddedArray Embedded { get; init; }
+    public EmbeddedArray Embedded
+    {
+        get; init;
+    }
 
     public class EmbeddedArray
     {
-        public TEntity[] Users { get; init; }
+        public ServiceHost[] Items
+        {
+            get; init;
+        }
     }
 }

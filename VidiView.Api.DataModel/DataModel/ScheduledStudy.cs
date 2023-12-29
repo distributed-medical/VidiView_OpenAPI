@@ -56,7 +56,7 @@ public record ScheduledStudy
     /// <summary>
     /// Sop instace to be used for creating this study
     /// </summary>
-    public string SopInstance { get; init; } = null;
+    public string? SopInstance { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
