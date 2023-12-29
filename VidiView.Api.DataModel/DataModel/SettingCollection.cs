@@ -20,23 +20,6 @@ public record SettingCollection
     {
         get => Embedded.Settings.FirstOrDefault((i) => i.Key == key)
             ?? throw new ArgumentException($"The setting {key} does not exist.");
-
-        set
-        {
-            ArgumentNullException.ThrowIfNull(key, nameof(key));
-            ArgumentNullException.ThrowIfNull(value, nameof(value));
-
-            for (var i = 0; i < Embedded.Settings.Length; ++i)
-            {
-                if (Embedded.Settings[i].Key == key)
-                {
-                    Embedded.Settings[i] = value;
-                    return;
-                }
-            }
-
-            throw new KeyNotFoundException("The specified setting does not exist");
-        }
     }
 
     public class EmbeddedArray

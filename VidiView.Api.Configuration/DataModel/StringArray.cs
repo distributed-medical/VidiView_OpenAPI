@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace VidiView.Configuration.Api;
+namespace VidiView.Api.Configuration.DataModel;
 
 public class StringArray : IEnumerable<string>
 {

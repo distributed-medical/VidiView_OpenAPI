@@ -1,7 +1,7 @@
 ﻿using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
-using VidiView.Configuration.Api;
+using VidiView.Api.Configuration.DataModel;
 
 namespace VidiView.Api.Configuration;
 

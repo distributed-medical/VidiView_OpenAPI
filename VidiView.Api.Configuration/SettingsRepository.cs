@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using VidiView.Api.Helpers;
-using VidiView.Api.DataModel;
 using System.Text;
+using VidiView.Api.DataModel;
+using SettingCollection = VidiView.Api.Configuration.DataModel.SettingCollection;
+using VidiView.Api.Configuration.DataModel;
 
 namespace VidiView.Api.Configuration;
 public class SettingsRepository
@@ -10,7 +12,7 @@ public class SettingsRepository
     readonly ApiHome _api;
     SettingCollection _settings;
 
-    public SettingsRepository(HttpClient http, ApiHome api)
+    public SettingsRepository(HttpClient http, Api.DataModel.ApiHome api)
     {
         _http = http;
         _api = api;
@@ -88,6 +90,37 @@ public class SettingsRepository
         }
 
         return false;
+    }
+
+    public async Task SetOverrideAsync(string key, SettingValueOverride value)
+    {
+        // Read settings if not already done
+        var settings = await GetSettingsAsync();
+
+        var link = settings.Links.GetRequired(Rel.UpdateOverride).AsTemplatedLink();
+        link.Parameters["key"].Value = key;
+
+        var response = await _http.PutAsync(link, value);
+        await response.AssertSuccessAsync();
+    }
+
+    public Task DeleteOverrideAsync(string key, SettingValueOverride value)
+    {
+        return DeleteOverrideAsync(key, value.OverriddenBy, value.Id);
+    }
+
+    public async Task DeleteOverrideAsync(string key, SettingFlags overriddenBy, string id)
+    {
+        // Read settings if not already done
+        var settings = await GetSettingsAsync();
+
+        var link = settings.Links.GetRequired(Rel.DeleteOverride).AsTemplatedLink();
+        link.Parameters["key"].Value = key;
+        link.Parameters["type"].Value = overriddenBy.ToString();
+        link.Parameters["id"].Value = id;
+
+        var response = await _http.DeleteAsync(link);
+        await response.AssertSuccessAsync();
     }
 
     public async Task<SettingCollection> GetSettingsAsync(bool forceReload = false)

@@ -1,60 +1,46 @@
-﻿using VidiView.Api.DataModel;
+﻿namespace VidiView.Api.Configuration.DataModel;
 
-namespace VidiView.Configuration.Api;
-
-public class SettingCollection
+public record SettingCollection
 {
-    Dictionary<string, SettingValue> _index = new Dictionary<string, SettingValue>();
-    SettingValue[] _settings;
-
     /// <summary>
     /// Number of items in this collection
     /// </summary>
-    public int Count
-    {
-        get; init;
-    }
-
-    /// <summary>
-    /// The items
-    /// </summary>
-    public SettingValue[] Items => _settings;
-
-    public SettingValue this[string key] => _index[key];
+    public int Count { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links
-    {
-        get; init;
-    }
+    public Api.DataModel.LinkCollection? Links { get; init; }
 
     [JsonPropertyName("_embedded")]
-    public EmbeddedArray Embedded
+    public EmbeddedArray Embedded { get; init; } = null!;
+
+    public SettingValue this[string key]
     {
-        get => new EmbeddedArray { Settings = _settings };
+        get => Embedded.Settings.FirstOrDefault((i) => i.Key == key)
+            ?? throw new ArgumentException($"The setting {key} does not exist.");
+
         set
         {
-            if (_settings != null)
-                throw new ArgumentException("Embedded property is read-only");
-            if (value?.Settings != null)
+            ArgumentNullException.ThrowIfNull(key, nameof(key));
+            ArgumentNullException.ThrowIfNull(value, nameof(value));
+
+            for (var i = 0; i < Embedded.Settings.Length; ++i)
             {
-                _settings = value.Settings;
-                var d = new Dictionary<string, SettingValue>();
-                foreach (var s in _settings)
-                    d.Add(s.Key, s);
-                _index = d;
+                if (Embedded.Settings[i].Key == key)
+                {
+                    Embedded.Settings[i] = value;
+                    return;
+                }
             }
+
+            throw new KeyNotFoundException("The specified setting does not exist");
         }
     }
 
     public class EmbeddedArray
     {
-        public SettingValue[] Settings
-        {
-            get; init;
-        }
+        public SettingValue[] Settings { get; init; }
     }
 }

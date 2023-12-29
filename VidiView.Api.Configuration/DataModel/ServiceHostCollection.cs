@@ -1,6 +1,6 @@
 ﻿using VidiView.Api.DataModel;
 
-namespace VidiView.Configuration.Api;
+namespace VidiView.Api.Configuration.DataModel;
 
 public class ServiceHostCollection
 {
