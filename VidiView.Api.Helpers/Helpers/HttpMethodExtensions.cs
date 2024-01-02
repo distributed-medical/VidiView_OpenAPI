@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
@@ -19,7 +20,13 @@ public static class HttpMethodExtensions
     /// <returns></returns>
     public static async Task<T> GetAsync<T>(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
-        var response = await http.GetAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Get,
+            RequestUri = (Uri)link,
+        };
+
+        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
         await response.AssertSuccessAsync();
 
         if (typeof(T) == typeof(string))
@@ -43,7 +50,11 @@ public static class HttpMethodExtensions
     /// <returns></returns>
     public static async Task<HttpContentStream> GetStreamAsync(this HttpClient http, TemplatedLink link, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get,  (Uri)link);
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Get,
+            RequestUri = (Uri)link,
+        };
         request.Headers.Range = range;
 
         try
@@ -52,7 +63,7 @@ public static class HttpMethodExtensions
             await response.AssertSuccessAsync();
             return await HttpContentStream.CreateFromResponse(http, response);
         }
-        catch (Exception ex)
+        catch
         {
             //if (IsConnectionRefused(ex))
             //    throw new E1404_ServiceUnavailableException(uri, ex);
@@ -69,7 +80,13 @@ public static class HttpMethodExtensions
     /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> DeleteAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
-        return http.DeleteAsync(link.ToUrl(), cancellationToken ?? CancellationToken.None);
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = (Uri)link,
+        };
+
+        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
 
@@ -114,7 +131,14 @@ public static class HttpMethodExtensions
     /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
-        return http.PostAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Post,
+            RequestUri = (Uri)link,
+            Content= HttpContentFactory.CreateBody(content),
+        };
+
+        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 
     /// <summary>
@@ -127,6 +151,13 @@ public static class HttpMethodExtensions
     /// <returns>The raw response, which should be checked for success</returns>
     public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
     {
-        return http.PutAsync(link.ToUrl(), HttpContentFactory.CreateBody(content), cancellationToken ?? CancellationToken.None);
+        var request = new HttpRequestMessage()
+        {
+            Method = HttpMethod.Put,
+            RequestUri = (Uri)link,
+            Content = HttpContentFactory.CreateBody(content),
+        };
+
+        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
     }
 }

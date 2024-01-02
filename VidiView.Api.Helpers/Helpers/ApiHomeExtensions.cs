@@ -1,11 +1,23 @@
-﻿using VidiView.Api.DataModel;
-using VidiView.Api.Exceptions;
+﻿using System.Net.Http;
+using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
 
 public static class ApiHomeExtensions
 {
     static Dictionary<HttpClient, ApiHome> _cache = new();
+
+    /// <summary>
+    /// Specify the VidiView Server's host name
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="hostName"></param>
+    /// <param name="port"></param>
+    public static void SetHostName(this HttpClient http, string hostName, int port = 443)
+    {
+        Uri baseAddress = port == 443 ? new Uri($"https://{hostName}/vidiview/api/") : new Uri($"https://{hostName}:{port}/vidiview/api/");
+        http.BaseAddress = baseAddress;
+    }
 
     /// <summary>
     /// Helper extension to get the API starting point. The result will 
@@ -36,6 +48,32 @@ public static class ApiHomeExtensions
         _cache.Remove(http);
     }
 
+    public static ApiCompatibility CheckApiCompatibility(this ApiHome home)
+    {
+        if (home == null)
+            throw new ArgumentNullException(nameof(home));
+
+        if (!Version.TryParse(home.ApiVersion, out var serverApiVersion))
+            return ApiCompatibility.InvalidResponse;
+        if (!Version.TryParse(home.CompatibleApiVersion, out var serverApiCompatibleVersion))
+            return ApiCompatibility.InvalidResponse;
+
+        // Check if the server is too old or too new
+        if (serverApiVersion < ApiVersion.MinimumServerApiVersion)
+            return ApiCompatibility.ClientApiNewerThanSupported;
+        if (serverApiCompatibleVersion > ApiVersion.TestedApiVersion) 
+            return ApiCompatibility.ClientApiOlderThanSupported;
+
+        // It is probably compatible
+        if (serverApiVersion.Major > ApiVersion.TestedApiVersion.Major)
+            return ApiCompatibility.ClientApiOldButSupported; // Difference in major version!
+
+        if (serverApiVersion < ApiVersion.TestedApiVersion)
+            return ApiCompatibility.ClientApiNewButSupported;
+
+        return ApiCompatibility.UpToDate;
+    }
+
     /// <summary>
     /// Return the cached ApiHome (or null if no cached document exists)
     /// This is used internally
@@ -49,5 +87,4 @@ public static class ApiHomeExtensions
         else
             return null;
     }
-
 }

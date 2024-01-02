@@ -2,6 +2,8 @@
 using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
+using System.Net.Http;
+using System.Text;
 
 namespace VidiView.Api.Authentication;
 public class UsernamePasswordAuthenticator
@@ -37,8 +39,7 @@ public class UsernamePasswordAuthenticator
             if (!api.Links.TryGet(Rel.AuthenticatePassword, out var link))
                 throw new E1813_LogonMethodNotAllowedException("Username/password authentication is not enabled");
 
-            _http.DefaultRequestHeaders.Authorization =
-                new BasicAuthenticationHeaderValue(username, password);
+            _http.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(username, password);
 
             User = await _http.GetAsync<User>(link);
             link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
@@ -54,6 +55,16 @@ public class UsernamePasswordAuthenticator
             Clear();
             throw;
         }
+    }
+
+    AuthenticationHeaderValue CreateBasicAuthenticationHeader(string username, string password)
+    {
+        ArgumentNullException.ThrowIfNull(username, nameof(username));
+        if (username.Contains(':'))
+            throw new ArgumentException("Username may not contain the colon (:) character");
+
+        var bytes = Encoding.UTF8.GetBytes($"{username}:{password}");
+        return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(bytes));
     }
 
     /// <summary>

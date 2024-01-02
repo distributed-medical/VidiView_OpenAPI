@@ -1,21 +1,16 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class StudyCollection<TEntity>
+public class PatientCollection
 {
     /// <summary>
     /// Number of items in this collection
     /// </summary>
     public int Count { get; init; }
 
-    public DateTime FromDate { get; init; }
-    public DateTime ToDateExclusive { get; init; }
-    public Guid? DepartmentId { get; init; }
-    public int MaximumHits { get; init; }
-
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Studies;
+    public Patient[] Items => Embedded.Patients;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -28,6 +23,6 @@ public class StudyCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Studies { get; init; }
+        public Patient[] Patients { get; init; }
     }
 }

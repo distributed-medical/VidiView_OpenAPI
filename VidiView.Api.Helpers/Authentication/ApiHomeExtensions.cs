@@ -12,10 +12,13 @@ public static class ApiHomeExtensions
     /// <returns>True if any authentication rel exists among the links</returns>
     public static bool CanAuthenticate(this ApiHome home)
     {
-        foreach (var kvp in home.Links)
+        if (home?.Links != null)
         {
-            if (kvp.Value.Rel?.StartsWith("authenticate-") == true)
-                return true;
+            foreach (var kvp in home.Links)
+            {
+                if (kvp.Value.Rel?.StartsWith("authenticate-") == true)
+                    return true;
+            }
         }
 
         return false;

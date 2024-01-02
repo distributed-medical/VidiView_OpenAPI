@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public record PersonalWorklist
+public record Worklist
 {
     /// <summary>
     /// The id of this worklist

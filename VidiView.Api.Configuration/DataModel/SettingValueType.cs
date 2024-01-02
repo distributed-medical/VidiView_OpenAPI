@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Xml;
 
 namespace VidiView.Api.Configuration.DataModel;

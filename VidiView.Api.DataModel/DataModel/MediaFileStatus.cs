@@ -1,5 +1,5 @@
 ﻿namespace VidiView.Api.DataModel;
-public enum ImageStatus
+public enum MediaFileStatus
 {
     /// <summary>
     /// Image metadata announced, 

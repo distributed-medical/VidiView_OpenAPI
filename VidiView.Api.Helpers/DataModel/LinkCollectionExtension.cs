@@ -14,7 +14,9 @@ public static class LinkCollectionExtension
     {
         var dict = (IDictionary<string, Link>?)links;
         value = null!;
+#pragma warning disable CS8601 // Possible null reference assignment.
         return dict?.TryGetValue(rel, out value) == true;
+#pragma warning restore CS8601 // Possible null reference assignment.
     }
 
     /// <summary>

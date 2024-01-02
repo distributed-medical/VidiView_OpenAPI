@@ -105,6 +105,12 @@ public record Study
     public long? EffectivePermissionSet { get; init; }
 
     /// <summary>
+    /// The time this study was last reviewed by the current user
+    /// </summary>
+    /// <remarks>This is only set when retrieving the recently used studies</remarks>
+    public DateTimeOffset? LastReviewDate { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]

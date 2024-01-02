@@ -2,6 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
+using System.Net.Http;
 
 namespace VidiView.Api.Authentication;
 public class X509Authenticator

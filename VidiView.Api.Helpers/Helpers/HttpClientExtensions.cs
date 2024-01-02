@@ -1,4 +1,5 @@
 ﻿using VidiView.Api.Headers;
+using System.Net.Http;
 
 namespace VidiView.Api.Helpers;
 
