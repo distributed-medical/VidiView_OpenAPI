@@ -45,7 +45,7 @@ public record ScheduledStudy
     /// <summary>
     /// Any procedure codes
     /// </summary>
-    public CodedValue[]? ProcedureCodes { get; init; }
+   // public CodedValue[]? ProcedureCodes { get; init; }
 
     /// <summary>
     /// The id of an existing study 
@@ -63,6 +63,4 @@ public record ScheduledStudy
     /// </summary>
     [JsonPropertyName("_links")]
     public LinkCollection? Links { get; init; }
-
-    public override string ToString() => $"{ScheduledTime:HH.mm} {AccessionNumber ?? StudyInstanceUid}";
 }
