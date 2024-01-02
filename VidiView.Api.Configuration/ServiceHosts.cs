@@ -3,6 +3,7 @@ using VidiView.Api.Exceptions;
 using VidiView.Api.DataModel;
 using ServiceHost = VidiView.Api.Configuration.DataModel.ServiceHost;
 using ServiceHostCollection = VidiView.Api.Configuration.DataModel.ServiceHostCollection;
+using System.Net.Http;
 
 namespace VidiView.Api.Configuration;
 

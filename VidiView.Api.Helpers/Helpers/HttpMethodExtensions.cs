@@ -53,7 +53,7 @@ public static class HttpMethodExtensions
             await response.AssertSuccessAsync();
             return await HttpContentStream.CreateFromResponse(http, response);
         }
-        catch (Exception ex)
+        catch
         {
             //if (IsConnectionRefused(ex))
             //    throw new E1404_ServiceUnavailableException(uri, ex);

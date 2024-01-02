@@ -1,4 +1,5 @@
-﻿using VidiView.Api.DataModel;
+﻿using System.Net.Http;
+using VidiView.Api.DataModel;
 using VidiView.Api.Helpers;
 
 namespace VidiView.Api.Configuration;

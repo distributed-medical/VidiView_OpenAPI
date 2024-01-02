@@ -4,6 +4,7 @@ using System.Text;
 using VidiView.Api.DataModel;
 using SettingCollection = VidiView.Api.Configuration.DataModel.SettingCollection;
 using VidiView.Api.Configuration.DataModel;
+using System.Net.Http;
 
 namespace VidiView.Api.Configuration;
 public class SettingsRepository
