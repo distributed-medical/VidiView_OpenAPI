@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 
@@ -13,16 +14,16 @@ public static class MaintenanceMode
     /// <param name="response"></param>
     /// <returns></returns>
     /// <exception cref="E1405_ServiceMaintenanceModeException">Thrown if the server is in maintenance mode</exception>
-    public static async Task ThrowIfMaintenanceModeAsync(HttpResponseMessage response)
+    public static async Task ThrowIfMaintenanceModeAsync(HttpStatusCode statusCode, Uri requestedUri)
     {
-        if (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+        if (statusCode == HttpStatusCode.ServiceUnavailable)
         {
             // This indicates the computer is responding, but no service is found on the expected url
             MaintenanceInfo? maintenanceMode = null;
             try
             {
                 using var http = new HttpClient();
-                maintenanceMode = await GetMaintenanceModeState(http, response.RequestMessage.RequestUri);
+                maintenanceMode = await GetMaintenanceModeState(http, requestedUri);
             }
             catch
             {

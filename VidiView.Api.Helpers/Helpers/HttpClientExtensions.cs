@@ -1,5 +1,9 @@
-﻿using System.Net.Http;
-using VidiView.Api.Headers;
+﻿using VidiView.Api.Headers;
+#if WINRT
+using Windows.Web.Http;
+#else
+using System.Net.Http;
+#endif
 
 namespace VidiView.Api.Helpers;
 
@@ -14,9 +18,13 @@ public static class HttpClientExtensions
     {
         if (enabled)
         {
+#if WINRT
+            if (!http.DefaultRequestHeaders.ContainsKey(PseudonymizeHeader.Name))
+#else
             if (!http.DefaultRequestHeaders.Contains(PseudonymizeHeader.Name))
-            {
-                http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
+#endif
+                {
+                    http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
             }
         }
         else

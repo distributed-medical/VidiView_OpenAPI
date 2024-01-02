@@ -1,6 +1,6 @@
-﻿using System.Net.Http;
-using System.Net.Http.Headers;
+﻿#if WINRT
 using VidiView.Api.DataModel;
+using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
@@ -8,7 +8,7 @@ namespace VidiView.Api.Helpers;
 /// This class provides extensions to execute common
 /// http methods using a Hal-link instead of Uri.
 /// </summary>
-public static class HttpMethodExtensions
+public static class HttpMethodExtensionsWinRT
 {
     /// <summary>
     /// Helper method to get response, verify success and then deserialize result
@@ -25,8 +25,7 @@ public static class HttpMethodExtensions
             Method = HttpMethod.Get,
             RequestUri = (Uri)link,
         };
-
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        var response = await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
         await response.AssertSuccessAsync();
 
         if (typeof(T) == typeof(string))
@@ -48,27 +47,9 @@ public static class HttpMethodExtensions
     /// <param name="range"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static async Task<HttpContentStream> GetStreamAsync(this HttpClient http, TemplatedLink link, RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
+    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, System.Net.Http.Headers.RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
     {
-        var request = new HttpRequestMessage()
-        {
-            Method = HttpMethod.Get,
-            RequestUri = (Uri)link,
-        };
-        request.Headers.Range = range;
-
-        try
-        {
-            var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-            await response.AssertSuccessAsync();
-            return await HttpContentStream.CreateFromResponse(http, response);
-        }
-        catch
-        {
-            //if (IsConnectionRefused(ex))
-            //    throw new E1404_ServiceUnavailableException(uri, ex);
-            throw;
-        }
+        return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link);
     }
 
     /// <summary>
@@ -86,7 +67,7 @@ public static class HttpMethodExtensions
             RequestUri = (Uri)link,
         };
 
-        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
     }
 
 
@@ -98,7 +79,7 @@ public static class HttpMethodExtensions
             RequestUri = (Uri)link,
         };
 
-        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
     }
 
     /// <summary>
@@ -115,10 +96,10 @@ public static class HttpMethodExtensions
         {
             Method = HttpMethod.Patch,
             RequestUri = (Uri)link,
-            Content = HttpContentFactory.CreateBody(content),
+            Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
     }
 
     /// <summary>
@@ -135,10 +116,10 @@ public static class HttpMethodExtensions
         {
             Method = HttpMethod.Post,
             RequestUri = (Uri)link,
-            Content= HttpContentFactory.CreateBody(content),
+            Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
     }
 
     /// <summary>
@@ -155,9 +136,10 @@ public static class HttpMethodExtensions
         {
             Method = HttpMethod.Put,
             RequestUri = (Uri)link,
-            Content = HttpContentFactory.CreateBody(content),
+            Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
     }
 }
+#endif

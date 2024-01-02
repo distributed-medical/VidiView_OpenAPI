@@ -60,7 +60,7 @@ public static class HttpResponseMessageExtension
                 throw exc;
             }
 
-            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response);
+            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage.RequestUri);
 
             switch (response.StatusCode)
             {

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<RootNamespace>VidiView.Api</RootNamespace>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
 </Project>
