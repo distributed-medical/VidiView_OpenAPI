@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ExportQueueCollection<TEntity>
+public record ExportQueueCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -13,7 +13,7 @@ public class ExportQueueCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Items;
+    public ExportMediaFile[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -30,9 +30,9 @@ public class ExportQueueCollection<TEntity>
         get; init;
     }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
-        public TEntity[] Items
+        public ExportMediaFile[] Items
         {
             get; init;
         }

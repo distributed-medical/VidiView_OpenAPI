@@ -15,7 +15,7 @@ public record ScheduledStudy
     /// <summary>
     /// The associated department
     /// </summary>
-    public IdAndName Department { get; init; }
+    public IdAndName Department { get; init; } = null!;
 
     /// <summary>
     /// The scheduled start time of this study

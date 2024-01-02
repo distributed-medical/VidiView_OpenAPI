@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// This class represents the information provided by the 
+/// This record represents the information provided by the 
 /// VidiView Server when requesting the Api starting address
 /// </summary>
 public record ApiHome

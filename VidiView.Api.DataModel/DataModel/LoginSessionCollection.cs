@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class LoginSessionCollection
+public record LoginSessionCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -30,7 +30,7 @@ public class LoginSessionCollection
         get; init;
     }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
         public LoginSession[] Sessions
         {

@@ -26,7 +26,7 @@ public record Study
     /// The department info
     /// </summary>
     /// <remarks>Only used by remote parties</remarks>
-    public IdAndName Department { get; init; }
+    public IdAndName Department { get; init; } = null!;
 
     /// <summary>
     /// Study external ID 

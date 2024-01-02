@@ -21,7 +21,7 @@ public record AsyncTaskStatus
 
     public AsyncTaskType Task { get; init; }
 
-    public IdAndName CreatedBy { get; init; }
+    public IdAndName CreatedBy { get; init; } = null!;
 
     public TaskState State { get; init; } = TaskState.WaitingForExecution;
 

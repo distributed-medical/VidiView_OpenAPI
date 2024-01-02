@@ -1,7 +1,21 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public record struct IdAndName
+public record IdAndName
 {
+    public static implicit operator IdAndName(Guid id)
+    {
+        return new IdAndName(id);
+    }
+
+    public IdAndName()
+    {
+    }
+
+    public IdAndName(Guid id)
+    {
+        Id = id;
+    }
+
     public Guid Id { get; init; }
     public string? Name { get; init; }
 

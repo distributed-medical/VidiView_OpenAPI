@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// This class represents an annotation in an image
+/// This record represents an annotation in an image
 /// </summary>
 public record Annotation
 {
@@ -40,7 +40,7 @@ public record Annotation
 
     public int? FontSize { get; init; }
 
-    public IdAndName UpdatedBy { get; init; }
+    public IdAndName UpdatedBy { get; init; } = null!;
 
     /// <summary>
     /// Any HAL Rest links associated with this object

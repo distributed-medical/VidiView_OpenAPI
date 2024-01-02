@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ServiceHostCollection
+public record ServiceHostCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -30,7 +30,7 @@ public class ServiceHostCollection
         get; init;
     }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
         public ServiceHost[] Items
         {

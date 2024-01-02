@@ -80,7 +80,7 @@ public record Image
     /// <summary>
     /// The origin of this image (Controller / Capture etc..)
     /// </summary>
-    public Guid OriginId { get; set; }
+    public Guid OriginId { get; init; }
 
     /// <summary>
     /// Image rotation. If null - check for Exif tags to determine rotation

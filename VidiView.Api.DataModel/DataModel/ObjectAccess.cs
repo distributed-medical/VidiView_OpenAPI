@@ -1,31 +1,26 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ObjectAccess
+public record ObjectAccess
 {
     /// <summary>
     /// The unique id of the user or group this ACL applies to
     /// </summary>
-    public Guid? UserId { get; set; }
+    public Guid? UserId { get; init; }
 
     /// <summary>
-    /// Department id (if this instance applies to a department)
+    /// Department (if this instance applies to a department)
     /// </summary>
-    public Guid? DepartmentId { get; set; }
-
-    /// <summary>
-    /// Name of entity this instance applies to
-    /// </summary>
-    public string? Name { get; set; }
+    public IdAndName? Department { get; init; }
 
     /// <summary>
     /// The granted flags
     /// </summary>
-    public long Granted { get; set; }
+    public long Granted { get; init; }
 
     /// <summary>
     /// The explicitly denied flags
     /// </summary>
-    public long Denied { get; set; }
+    public long Denied { get; init; }
 
     /// <summary>
     /// The effective permission
