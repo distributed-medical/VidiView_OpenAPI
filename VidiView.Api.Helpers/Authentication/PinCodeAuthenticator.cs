@@ -2,6 +2,7 @@
 using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
+using System.Net.Http;
 
 namespace VidiView.Api.Authentication;
 public class PinCodeAuthenticator

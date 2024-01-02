@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
@@ -60,11 +62,28 @@ public static class HttpResponseMessageExtension
 
             await MaintenanceMode.ThrowIfMaintenanceModeAsync(response);
 
-            // Just throw default error
-            response.EnsureSuccessStatusCode();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.RequestTimeout:
+                    throw new E1004_TimeoutException("Request timeout");
 
-            Debug.Assert(false, "We should not get here ever..");
-            throw new Exception("E_FAIL");
+                case HttpStatusCode.MethodNotAllowed:
+                    throw new E1030_NotSupportedException("This method is not implemented in the server service");
+
+                case HttpStatusCode.RequestedRangeNotSatisfiable:
+                    throw new ArgumentOutOfRangeException("Position is out of range");
+
+                case HttpStatusCode.Forbidden:
+                    throw new E1003_AccessDeniedException(!string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : "403 Forbidden");
+
+                default:
+                    // Just throw default error
+                    response.EnsureSuccessStatusCode();
+
+                    Debug.Assert(false, "We should not get here ever..");
+                    throw new Exception("E_FAIL");
+
+            }
         }
     }
 }
