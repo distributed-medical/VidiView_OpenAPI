@@ -9,7 +9,7 @@ using Windows.Web.Http.Headers;
 
 namespace VidiView.Api.Helpers;
 
-internal static class HttpContentFactoryWinRT
+public static class HttpContentFactoryWinRT
 {
     public static JsonSerializerOptions Options { get; set; } = VidiViewJson.DefaultOptions;
 
