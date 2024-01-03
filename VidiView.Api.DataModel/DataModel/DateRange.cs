@@ -40,19 +40,4 @@ public record DateRange
     /// </summary>
     public DateTime? ToDate { get; init; }
 
-    public bool IsEmpty =>
-        (FromDate == null || FromDate == DateTime.MinValue)
-        && (ToDate == null || ToDate == DateTime.MinValue || ToDate == DateTime.MaxValue);
-
-    public bool IsSingleDate => !IsEmpty && FromDate == ToDate;
-
-    public override string ToString()
-    {
-        if (IsEmpty)
-            return "{DateRange IsEmpty = True}";
-        else if (IsSingleDate)
-            return $"{{DateRange {FromDate?.ToShortDateString()}}}";
-        else
-            return $"{{DateRange {(FromDate?.ToShortDateString() ?? "-")} to {(ToDate?.ToShortDateString() ?? "-" )}}}";
-    }
 }

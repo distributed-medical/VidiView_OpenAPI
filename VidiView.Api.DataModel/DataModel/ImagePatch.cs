@@ -4,25 +4,25 @@ public record ImagePatch
     /// <summary>
     /// Image description
     /// </summary>
-    public PatchString? Description { get; init; }
+    public Patch<string?>? Description { get; init; }
 
     /// <summary>
     /// Image modality type (Dicom compliant)
     /// </summary>
-    public PatchString? Modality { get; init; }
+    public Patch<string?>? Modality { get; init; }
 
     /// <summary>
     /// Image name, given by user
     /// </summary>
-    public PatchString? Name { get; init; }
+    public Patch<string?>? Name { get; init; }
 
     /// <summary>
     /// Image rotation
     /// </summary>
-    public PatchInt? Rotation { get; init; }
+    public Patch<int>? Rotation { get; init; }
 
     /// <summary>
     /// Anatomic region
     /// </summary>
-    public PatchString? AnatomicRegionXml { get; init; }
+    public Patch<string?>? AnatomicRegionXml { get; init; }
 }
