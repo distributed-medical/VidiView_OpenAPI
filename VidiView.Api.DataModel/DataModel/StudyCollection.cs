@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class StudyCollection<TEntity>
+public record StudyCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -15,7 +15,7 @@ public class StudyCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Studies;
+    public Study[] Items => Embedded.Studies;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -26,8 +26,8 @@ public class StudyCollection<TEntity>
     [JsonPropertyName("_embedded")]
     public EmbeddedArray Embedded { get; init; }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
-        public TEntity[] Studies { get; init; }
+        public Study[] Studies { get; init; }
     }
 }

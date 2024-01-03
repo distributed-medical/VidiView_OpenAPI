@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class PatientCollection<TEntity>
+public class PatientCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -10,7 +10,7 @@ public class PatientCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Patients;
+    public Patient[] Items => Embedded.Patients;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -23,6 +23,6 @@ public class PatientCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Patients { get; init; }
+        public Patient[] Patients { get; init; }
     }
 }
