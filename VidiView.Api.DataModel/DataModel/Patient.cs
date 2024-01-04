@@ -57,6 +57,12 @@ public record Patient
     /// </summary>
     public DateTimeOffset? LastStudyDate { get; init; }
 
+    /// <summary>
+    /// When performing a patient lookup, this property may contain
+    /// additional information that is vital for creating a study.
+    /// </summary>
+    public string? SopInstance { get; init; }
+
     [JsonPropertyName("_links")]
     public LinkCollection? Links { get; init; }
 }

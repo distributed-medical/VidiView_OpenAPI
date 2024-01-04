@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class PersonalWorklistCollection<TEntity>
+public record PersonalWorklistCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -13,7 +13,7 @@ public class PersonalWorklistCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Worklists;
+    public Worklist[] Items => Embedded.Worklists;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -30,9 +30,9 @@ public class PersonalWorklistCollection<TEntity>
         get; init;
     }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
-        public TEntity[] Worklists
+        public Worklist[] Worklists
         {
             get; init;
         }
