@@ -15,7 +15,7 @@ public record Annotation
     /// <summary>
     /// Annotation type
     /// </summary>
-    public string Type { get; init; } = null!;
+    public string Type { get; init; } = "Unknown";
 
     public string? Color { get; init; }
 
@@ -29,11 +29,6 @@ public record Annotation
 
     public int ZIndex { get; init; }
 
-    /// <summary>
-    /// Annotation offset from beginning of media file
-    /// </summary>
-    public TimeSpan? Offset { get; init; }
-
     public double? Thickness { get; init; }
 
     public string? Text { get; init; }
@@ -41,6 +36,11 @@ public record Annotation
     public int? FontSize { get; init; }
 
     public IdAndName UpdatedBy { get; init; } = null!;
+
+    /// <summary>
+    /// Annotation offset from beginning of media file
+    /// </summary>
+    public TimeSpan? Offset { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
