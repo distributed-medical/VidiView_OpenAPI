@@ -16,6 +16,12 @@ public record IdAndName
         Id = id;
     }
 
+    public IdAndName(Guid id, string? name)
+    {
+        Id = id;
+        Name = name;
+    }
+
     public Guid Id { get; init; }
     public string? Name { get; init; }
 

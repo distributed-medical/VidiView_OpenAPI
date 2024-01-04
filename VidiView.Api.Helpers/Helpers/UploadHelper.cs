@@ -23,7 +23,7 @@ public class UploadHelper
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Image> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<MediaFile> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         // We should start by checking resumability of this request
         var resumePosition = await GetResumePositionAsync(link, stream.Length, contentType, cancellationToken).ConfigureAwait(false);
@@ -40,7 +40,7 @@ public class UploadHelper
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Image> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<MediaFile> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         var httpContent = HttpContentFactory.CreateBody(stream, contentType);
 
@@ -50,7 +50,7 @@ public class UploadHelper
         var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
 
-        return response.Deserialize<Image>();
+        return response.Deserialize<MediaFile>();
     }
 
     /// <summary>

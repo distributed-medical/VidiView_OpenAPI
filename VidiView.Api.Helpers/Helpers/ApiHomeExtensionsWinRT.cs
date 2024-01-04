@@ -1,11 +1,13 @@
-﻿using System.Net.Http;
+﻿#if WINRT
 using VidiView.Api.DataModel;
+using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
-public static class ApiHomeExtensions
+public static class ApiHomeExtensionsWinRT
 {
     static Dictionary<HttpClient, ApiHome> _cache = new();
+    static Dictionary<HttpClient, Uri> _baseAddress = new();
 
     /// <summary>
     /// Specify the VidiView Server's host name
@@ -16,7 +18,20 @@ public static class ApiHomeExtensions
     public static void SetHostName(this HttpClient http, string hostName, int port = 443)
     {
         Uri baseAddress = port == 443 ? new Uri($"https://{hostName}/vidiview/api/") : new Uri($"https://{hostName}:{port}/vidiview/api/");
-        http.BaseAddress = baseAddress;
+        SetBaseAddress(http, baseAddress);
+    }
+
+    /// <summary>
+    /// Specify the VidiView Server's base address
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="baseAddress"></param>
+    public static void SetBaseAddress(this HttpClient http, Uri? baseAddress)
+    {
+        if (baseAddress != null)
+            _baseAddress[http] = baseAddress;
+        else
+            _baseAddress.Remove(http);
     }
 
     /// <summary>
@@ -31,7 +46,10 @@ public static class ApiHomeExtensions
         if (!forceReload && _cache.TryGetValue(http, out var home))
             return home;
 
-        var response = await http.GetAsync(""); // Utilizes BaseAddress
+        if (!_baseAddress.TryGetValue(http, out var uri))
+            throw new InvalidOperationException("You must call SetHostName first");
+
+        var response = await http.GetAsync(uri);
         await response.AssertSuccessAsync();
         home = response.Deserialize<ApiHome>();
 
@@ -62,3 +80,4 @@ public static class ApiHomeExtensions
             return null;
     }
 }
+#endif

@@ -1,18 +1,18 @@
 ﻿namespace VidiView.Api.DataModel;
-public record ImagePatch
+public record MediaFilePatch
 {
     /// <summary>
-    /// Image description
+    /// File description
     /// </summary>
     public Patch<string?>? Description { get; init; }
 
     /// <summary>
-    /// Image modality type (Dicom compliant)
+    /// File modality type (Dicom compliant)
     /// </summary>
     public Patch<string?>? Modality { get; init; }
 
     /// <summary>
-    /// Image name, given by user
+    /// File name, given by user
     /// </summary>
     public Patch<string?>? Name { get; init; }
 

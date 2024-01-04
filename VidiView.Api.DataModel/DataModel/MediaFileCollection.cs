@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ImageCollection<TEntity>
+public class MediaFileCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -12,7 +12,7 @@ public class ImageCollection<TEntity>
     /// <summary>
     /// The items
     /// </summary>
-    public TEntity[] Items => Embedded.Images;
+    public MediaFile[] Items => Embedded.MediaFiles;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -25,6 +25,8 @@ public class ImageCollection<TEntity>
 
     public class EmbeddedArray
     {
-        public TEntity[] Images { get; set; }
+        // This is the legacy name...
+        [JsonPropertyName("images")]
+        public MediaFile[] MediaFiles { get; set; }
     }
 }

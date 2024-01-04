@@ -43,6 +43,18 @@ public static class DeviceRegistration
     /// Register client device with server
     /// </summary>
     /// <param name="http"></param>
+    /// <param name="device"></param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterAsync(Windows.Web.Http.HttpClient http, ClientDevice device)
+    {
+        var api = await http.HomeAsync();
+        return await RegisterAsync(http, api, device);
+    }
+
+    /// <summary>
+    /// Register client device with server
+    /// </summary>
+    /// <param name="http"></param>
     /// <param name="api"></param>
     /// <param name="device"></param>
     /// <returns></returns>
