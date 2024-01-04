@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using VidiView.Api.DataModel;
-using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Helpers;
 

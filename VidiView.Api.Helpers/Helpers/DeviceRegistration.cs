@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using VidiView.Api.DataModel;
+﻿using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
 
@@ -12,12 +11,23 @@ public static class DeviceRegistration
     /// Register client device with server
     /// </summary>
     /// <param name="http"></param>
-    /// <param name="baseUrl"></param>
     /// <param name="device"></param>
     /// <returns></returns>
-    public static async Task<ClientDevice> RegisterAsync(HttpClient http, ClientDevice device)
+    public static async Task<ClientDevice> RegisterAsync(System.Net.Http.HttpClient http, ClientDevice device)
     {
         var api = await http.HomeAsync();
+        return await RegisterAsync(http, api, device);
+    }
+
+    /// <summary>
+    /// Register client device with server
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="api"></param>
+    /// <param name="device"></param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterAsync(System.Net.Http.HttpClient http, ApiHome api, ClientDevice device)
+    {
         var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
         var response = await http.PutAsync(link, device);
@@ -27,4 +37,24 @@ public static class DeviceRegistration
 
         return result;
     }
+
+#if WINRT
+    /// <summary>
+    /// Register client device with server
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="api"></param>
+    /// <param name="device"></param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterAsync(Windows.Web.Http.HttpClient http, ApiHome api, ClientDevice device)
+    {
+        var link = api.Links.GetRequired(Rel.RegisterClientDevice);
+
+        var response = await http.PutAsync(link, device);
+        await response.AssertSuccessAsync();
+        var result = response.Deserialize<ClientDevice>();
+        
+        return result;
+    }
+#endif
 }

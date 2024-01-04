@@ -1,9 +1,10 @@
-﻿using VidiView.Api.Headers;
-using System.Net.Http;
+﻿#if WINRT
+using VidiView.Api.Headers;
+using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
-public static class HttpClientExtensions
+public static class HttpClientExtensionsWinRT
 {
     /// <summary>
     /// Enable or disable API level pseudonymization 
@@ -14,9 +15,9 @@ public static class HttpClientExtensions
     {
         if (enabled)
         {
-            if (!http.DefaultRequestHeaders.Contains(PseudonymizeHeader.Name))
-            {
-                http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
+            if (!http.DefaultRequestHeaders.ContainsKey(PseudonymizeHeader.Name))
+                {
+                    http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
             }
         }
         else
@@ -25,3 +26,4 @@ public static class HttpClientExtensions
         }
     }
 }
+#endif
