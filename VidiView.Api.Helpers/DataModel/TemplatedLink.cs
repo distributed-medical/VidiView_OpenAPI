@@ -63,7 +63,7 @@ public class TemplatedLink
     {
         if (!Parameters.TryGet(parameter, out var p))
         {
-            Debug.Assert(false, "Is this really expected?");
+//            Debug.Assert(false, "Is this really expected?");
             return false;
         }
         p.Value = value;
