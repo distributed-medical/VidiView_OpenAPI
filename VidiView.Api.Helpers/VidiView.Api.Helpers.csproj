@@ -4,6 +4,7 @@
 	<TargetFrameworks>net7.0;net7.0-windows10.0.18362.0</TargetFrameworks>
  	<ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyName>VidiView.Api.Helpers</AssemblyName>
     <RootNamespace>VidiView.Api</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
@@ -13,6 +14,10 @@
 	<Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
 	<AssemblyVersion>5.0</AssemblyVersion>
 	<FileVersion>5.0</FileVersion>
+	<Authors>Distributed Medical AB</Authors>
+	<Description>VidiView helper objects for accessing VidiView API</Description>
+	<PackageTags>vidiview</PackageTags>
+	<Version>5.0.0-beta1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.18362.0'">
