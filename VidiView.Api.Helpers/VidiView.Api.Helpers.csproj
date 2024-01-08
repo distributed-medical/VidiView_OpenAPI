@@ -17,7 +17,8 @@
 	<Authors>Distributed Medical AB</Authors>
 	<Description>VidiView helper objects for accessing VidiView API</Description>
 	<PackageTags>vidiview</PackageTags>
-	<Version>5.0.0-beta1</Version>
+	<Version>5.0.0</Version>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.18362.0'">
@@ -25,7 +26,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+	
+  <ItemGroup>
 	<PackageReference Include="IdentityModel" Version="6.2.0" />
+	<PackageReference Include="NuGet.CommandLine" Version="6.8.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.18362.0'">

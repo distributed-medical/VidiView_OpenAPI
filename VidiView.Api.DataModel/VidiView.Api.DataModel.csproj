@@ -7,8 +7,8 @@
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<RootNamespace>VidiView.Api</RootNamespace>
 	<Platforms>AnyCPU</Platforms>
-	<Title>VidiView Data Model</Title>
-	<Company>Distributed Medical AB</Company>
+    <Company>Distributed Medical AB</Company>
+	<Title>VidiView OpenAPI Data Model</Title>
 	<Product>VidiView® Enterprise Imaging</Product>
 	<Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
 	<AssemblyVersion>5.0</AssemblyVersion>
@@ -16,7 +16,19 @@
 	<Authors>Distributed Medical AB</Authors>
 	<Description>VidiView data model objects for accessing VidiView API</Description>
 	<PackageTags>vidiview</PackageTags>
-	<Version>5.0.0-beta1</Version>
+	<Version>5.0.0</Version>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGet.CommandLine" Version="6.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>
