@@ -19,7 +19,7 @@ public class ServiceHostCollection
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public Api.DataModel.LinkCollection Links
+    public Api.DataModel.LinkCollection? Links
     {
         get; init;
     }

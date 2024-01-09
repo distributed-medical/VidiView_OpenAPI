@@ -19,7 +19,7 @@ public record ServiceHostCollection
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
-    public LinkCollection Links
+    public LinkCollection? Links
     {
         get; init;
     }
