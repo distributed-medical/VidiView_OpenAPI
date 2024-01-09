@@ -16,7 +16,7 @@
 	<Authors>Distributed Medical AB</Authors>
 	<Description>VidiView data model objects for accessing VidiView API</Description>
 	<PackageTags>vidiview</PackageTags>
-	<Version>5.0.1</Version>
+	<Version>5.0.2</Version>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
