@@ -31,7 +31,7 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
     public TimeSpan PollingInterval
     {
         get => _pollingInterval;
-        private set
+        set
         {
             _pollingInterval = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PollingInterval)));
