@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using VidiView.Api.DataModel;
@@ -10,8 +11,16 @@ namespace VidiView.Api.Helpers;
 /// complete on the server, while continuously reporting
 /// progress through the <see cref="CurrentStatus"/> property
 /// </summary>
-public class AsyncTaskMonitor
+public class AsyncTaskMonitor : INotifyPropertyChanged
 {
+    /// <summary>
+    /// Raised when property is changed
+    /// </summary>
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private AsyncTaskStatus? _currentStatus;
+    private TimeSpan _pollingInterval = TimeSpan.FromMilliseconds(250);
+
     public AsyncTaskMonitor()
     {
     }
@@ -19,12 +28,28 @@ public class AsyncTaskMonitor
     /// <summary>
     /// Interval to wait between status polling calls
     /// </summary>
-    public TimeSpan PollingInterval { get; set; } = TimeSpan.FromMilliseconds(250);
+    public TimeSpan PollingInterval
+    {
+        get => _pollingInterval;
+        private set
+        {
+            _pollingInterval = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PollingInterval)));
+        }
+    }
 
     /// <summary>
     /// Current task status. This gets updated after each poll
     /// </summary>
-    public AsyncTaskStatus? CurrentStatus { get; private set; }
+    public AsyncTaskStatus? CurrentStatus
+    {
+        get => _currentStatus;
+        private set
+        {
+            _currentStatus = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentStatus)));
+        }
+    }
 
     /// <summary>
     /// Wait for a task to finish. This will continuously poll the server
@@ -51,7 +76,7 @@ public class AsyncTaskMonitor
                     Content = HttpContentFactory.CreateBody(null)
                 };
 
-                var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+                var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     // Updated status
@@ -69,10 +94,10 @@ public class AsyncTaskMonitor
                 }
                 else
                 {
-                    await response.AssertSuccessAsync();
+                    await response.AssertSuccessAsync().ConfigureAwait(false);
                 }
 
-                await Task.Delay(500);
+                await Task.Delay(PollingInterval).ConfigureAwait(false);
             }
         });
     }
@@ -121,10 +146,10 @@ public class AsyncTaskMonitor
                 }
                 else
                 {
-                    await response.AssertSuccessAsync();
+                    await response.AssertSuccessAsync().ConfigureAwait(false);
                 }
 
-                await Task.Delay(500);
+                await Task.Delay(PollingInterval).ConfigureAwait(false);
             }
         });
     }
