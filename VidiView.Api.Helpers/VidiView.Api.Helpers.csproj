@@ -5,7 +5,7 @@
 		<Platforms>AnyCPU;x64</Platforms>
 		<AssemblyName>VidiView.Api.Helpers</AssemblyName>
 		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.3.0</FileVersion>
+		<FileVersion>5.0.4.0</FileVersion>
 
 		<RootNamespace>VidiView.Api</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
@@ -19,7 +19,7 @@
 		<Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
 		<Description>VidiView helper objects for accessing VidiView API</Description>
 		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.3</Version>
+		<Version>5.0.4</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>

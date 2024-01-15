@@ -21,4 +21,10 @@ public record AnatomicRegion
     /// The Snomed CT expression
     /// </summary>
     public Snomed Snomed { get; init; } = null!;
+
+    /// <summary>
+    /// The raw XML value of this anatomic region
+    /// </summary>
+    /// <remarks>This must be used to update the position</remarks>
+    public string? Xml { get; init; } 
 }

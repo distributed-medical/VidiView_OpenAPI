@@ -117,10 +117,13 @@ public record MediaFile
     public int Width { get; init; }
 
     /// <summary>
-    /// Any image annotations
+    /// Image annotations
     /// </summary>
     public Annotation[]? Annotations { get; init; }
 
+    /// <summary>
+    /// Anatomic region annotation for this media file
+    /// </summary>
     public AnatomicRegion? AnatomicRegion { get; init; }
 
     /// <summary>
