@@ -66,17 +66,17 @@ public record Study
     /// <summary>
     /// Performing nurse
     /// </summary>
-    public PersonName? PerformingNurse { get; init; }
+    public PersonName? PerformingNurseName { get; init; }
 
     /// <summary>
     /// Performing assistant
     /// </summary>
-    public PersonName? PerformingAssistant1 { get; init; }
+    public PersonName? Assistant1Name { get; init; }
 
     /// <summary>
     /// Performing assistant
     /// </summary>
-    public PersonName? PerformingAssistant2 { get; init; }
+    public PersonName? Assistant2Name { get; init; }
 
     /// <summary>
     /// Referring physicians name

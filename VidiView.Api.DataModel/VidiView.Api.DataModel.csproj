@@ -5,7 +5,7 @@
 		<Platforms>AnyCPU</Platforms>
 		<AssemblyName>VidiView.Api.DataModel</AssemblyName>
 		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.4.0</FileVersion>
+		<FileVersion>5.0.5.0</FileVersion>
 
 		<RootNamespace>VidiView.Api</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
@@ -19,7 +19,7 @@
 		<Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
 		<Description>VidiView data model objects for accessing VidiView API</Description>
 		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.4</Version>
+		<Version>5.0.5-b1</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>

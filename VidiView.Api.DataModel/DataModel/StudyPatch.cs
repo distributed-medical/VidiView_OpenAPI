@@ -23,26 +23,26 @@ public record StudyPatch
     /// <summary>
     /// Performing physician's name
     /// </summary>
-    public Patch<string?>? PerformingPhysician { get; init; }
+    public Patch<string?>? PerformingPhysicianName { get; init; }
 
     /// <summary>
     /// Performing nurse's name
     /// </summary>
-    public Patch<string?>? PerformingNurse { get; init; }
+    public Patch<string?>? PerformingNurseName { get; init; }
 
     /// <summary>
     /// Assistant 1
     /// </summary>
-    public Patch<string?>? Assistant1 { get; init; }
+    public Patch<string?>? Assistant1Name { get; init; }
 
     /// <summary>
     /// Assistant 2
     /// </summary>
-    public Patch<string?>? Assistant2 { get; init; }
+    public Patch<string?>? Assistant2Name { get; init; }
 
     /// <summary>
-    /// Referring party
+    /// Referring physician's name
     /// </summary>
-    public Patch<string?>? ReferringParty { get; init; }
+    public Patch<string?>? ReferringPhysicianName { get; init; }
 
 }
