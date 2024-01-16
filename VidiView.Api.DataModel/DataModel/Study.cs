@@ -95,6 +95,11 @@ public record Study
     public Equipment[]? Equipment { get; init; }
 
     /// <summary>
+    /// Worklist assignment for this study
+    /// </summary>
+    public WorklistAssignment[]? WorklistAssignment { get; init; }
+
+    /// <summary>
     /// If this is set, the study is deleted
     /// </summary>
     public DateTimeOffset? DeletedDate { get; init; }
