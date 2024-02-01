@@ -160,11 +160,20 @@ public static class SettingKey
     public const string CaptureServiceActiveSyncEnable = "Capture/Service/ActiveSync/Enable";
     public const string CaptureServiceStudyDeleteEmpty = "Capture/Service/Study/DeleteEmpty";
 
+    public const string CaptureOptionsScreenSaverAllowDuringActiveStudy = "Capture/Options/ScreenSaver/AllowDuringActiveStudy";
+    public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
     public const string CaptureOptionsAnatomicMap = "Capture/Options/AnatomicMap";
     public const string CaptureOptionsAnatomicTagging = "Capture/Options/AnatomicTagging";
+    public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
+    public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
+    public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";
+    public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
+    public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
+
     public const string CaptureOptionsSnapshotResolution = "Capture/Options/SnapshotResolution";
     public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
     public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
+    public const string CaptureOptionsVideoMaxLengthSeconds = "Capture/Options/VideoMaxLengthSeconds";
     public const string CaptureOptionsVideoRecordAudio = "Capture/Options/VideoRecordAudio";
     public const string CaptureOptionsVideoResolution = "Capture/Options/VideoResolution";
     public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";

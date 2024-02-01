@@ -26,4 +26,10 @@ public record SettingCollection
     {
         public SettingValue[] Settings { get; init; }
     }
+
+    /// <summary>
+    /// Used by Vidiview Capture
+    /// </summary>
+    public Dictionary<string, string>? Settings { get; init; }
+
 }
