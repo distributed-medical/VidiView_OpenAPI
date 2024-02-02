@@ -100,6 +100,11 @@ public record Study
     public WorklistAssignment[]? WorklistAssignment { get; init; }
 
     /// <summary>
+    /// Any active study assignment
+    /// </summary>
+    public Assignment[]? Assignment { get; init; }
+
+    /// <summary>
     /// If this is set, the study is deleted
     /// </summary>
     public DateTimeOffset? DeletedDate { get; init; }

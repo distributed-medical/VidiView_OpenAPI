@@ -8,6 +8,8 @@ public static class Rel
     public const string AddStudy = "add-study";
     public const string AllStudies = "all-studies";
     public const string AnnounceUpload = "announce-upload";
+    public const string Assign = "assign";
+    public const string AssignedStudies = "assigned-studies";
     public const string AuditEventsLatest = "audit-events-latest";
     public const string AuditEventsForPatient = "audit-events-for-patient";
     public const string AuditEventsForStudy = "audit-events-for-study";
@@ -41,6 +43,7 @@ public static class Rel
     public const string ScheduledStudies = "scheduled-studies";
     public const string UnidentifiedStudies = "unidentified-studies";
     public const string Enclosure = "enclosure";
+    public const string ExportStatus = "export-status";
     public const string ExportQueues = "export-queues";
     public const string ExtractFrame = "extract-frame";
     public const string FindPatient = "find-patient";
@@ -62,6 +65,7 @@ public static class Rel
     public const string Patient = "patient";
     public const string Preferences = "preferences";
     public const string RegisterClientDevice = "register-device";
+    public const string Release = "release";
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
     public const string RenewSamlToken = "renew-saml-token";
