@@ -3,6 +3,7 @@
 public static class Rel
 {
     public const string ActiveSessions = "active-sessions";
+    public const string ActiveSync = "active-sync";
     public const string AddAnnotation = "add-annotation";
     public const string AddImage = "add-image";
     public const string AddStudy = "add-study";
