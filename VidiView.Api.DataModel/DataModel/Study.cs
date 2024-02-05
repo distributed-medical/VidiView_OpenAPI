@@ -49,6 +49,11 @@ public record Study
     public int? ImageCount { get; init; }
 
     /// <summary>
+    /// The current study state
+    /// </summary>
+    public StudyState State { get; init; }
+
+    /// <summary>
     /// Study description
     /// </summary>
     public string? Description { get; init; }
