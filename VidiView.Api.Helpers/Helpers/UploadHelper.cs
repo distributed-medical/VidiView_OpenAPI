@@ -49,8 +49,7 @@ public class UploadHelper
 
         var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
-
-        return response.Deserialize<MediaFile>();
+        return await response.DeserializeAsync<MediaFile>().ConfigureAwait(false);
     }
 
     /// <summary>

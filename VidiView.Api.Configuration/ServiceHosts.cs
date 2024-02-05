@@ -74,9 +74,8 @@ public class ServiceHosts
             link = (await ListAsync()).Links.GetRequired(Rel.Create);
         }
 
-        var response = await _http.PutAsync(link, serviceHost);
-        await response.AssertSuccessAsync();
-
-        return response.Deserialize<ServiceHost>();
+        var response = await _http.PutAsync(link, serviceHost).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
+        return await response.DeserializeAsync<ServiceHost>().ConfigureAwait(false);
     }
 }

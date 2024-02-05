@@ -26,6 +26,19 @@ public static class HttpResponseMessageExtension
     }
 
     /// <summary>
+    /// Deserialize response as specific entity type
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="response"></param>
+    /// <returns></returns>
+    public static async Task<T> DeserializeAsync<T>(this HttpResponseMessage response)
+    {
+        // Deserialize as Json
+        var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        return (await JsonSerializer.DeserializeAsync<T>(stream, Options))!;
+    }
+
+    /// <summary>
     /// Check if response is successful, otherwise throw appropriate exception
     /// </summary>
     /// <param name="response"></param>
@@ -44,7 +57,7 @@ public static class HttpResponseMessageExtension
             Exception? exc = null;
             try
             {
-                var error = response.Deserialize<ErrorDetails>();
+                var error = await response.DeserializeAsync<ErrorDetails>();
                 if (error != null)
                 {
                     exc = VidiViewException.Factory(response.StatusCode, error);

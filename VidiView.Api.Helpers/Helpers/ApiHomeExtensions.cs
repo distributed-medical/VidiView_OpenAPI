@@ -31,9 +31,9 @@ public static class ApiHomeExtensions
         if (!forceReload && _cache.TryGetValue(http, out var home))
             return home;
 
-        var response = await http.GetAsync(""); // Utilizes BaseAddress
-        await response.AssertSuccessAsync();
-        home = response.Deserialize<ApiHome>();
+        var response = await http.GetAsync("").ConfigureAwait(false); // Utilizes BaseAddress
+        await response.AssertSuccessAsync().ConfigureAwait(false);
+        home = await response.DeserializeAsync<ApiHome>().ConfigureAwait(false);
 
         _cache[http] = home;
         return home;

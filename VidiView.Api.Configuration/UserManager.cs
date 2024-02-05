@@ -22,7 +22,7 @@ public class UserManager
     public async Task<UserCollection> ListAsync()
     {
         var link = _api.Links.GetRequired(Rel.Users);
-        var result = await _http.GetAsync<UserCollection>(link);
+        var result = await _http.GetAsync<UserCollection>(link).ConfigureAwait(false);
         _links = result.Links;
         return result;
     }
@@ -42,9 +42,9 @@ public class UserManager
 
         var createLink = _links.GetRequired(Rel.Create);
 
-        var response = await _http.PostAsync(createLink, user);
-        await response.AssertSuccessAsync();
-        return response.Deserialize<User>();
+        var response = await _http.PostAsync(createLink, user).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
+        return await response.DeserializeAsync<User>().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -56,9 +56,9 @@ public class UserManager
     {
         var link = user.Links.GetRequired(Rel.Update);
 
-        var response = await _http.PutAsync(link, user);
-        await response.AssertSuccessAsync();
-        return response.Deserialize<User>();
+        var response = await _http.PutAsync(link, user).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
+        return await response.DeserializeAsync<User>().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class UserManager
     {
         var link = user.Links.GetRequired(Rel.Delete);
 
-        var response = await _http.DeleteAsync(link);
-        await response.AssertSuccessAsync();
+        var response = await _http.DeleteAsync(link).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
     }
 }

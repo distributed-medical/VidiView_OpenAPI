@@ -57,7 +57,7 @@ public static class MaintenanceMode
         if (result.StatusCode == HttpStatusCode.OK)
         {
             // There is a maintenance message for us
-            return result.Deserialize<MaintenanceInfo>();
+            return await result.DeserializeAsync<MaintenanceInfo>();
         }
 
         return null;

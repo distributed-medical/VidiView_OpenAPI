@@ -80,13 +80,13 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
                 if (response.IsSuccessStatusCode)
                 {
                     // Updated status
-                    status = response.Deserialize<AsyncTaskStatus>();
+                    status = await response.DeserializeAsync<AsyncTaskStatus>();
                     CurrentStatus = status;
                 }
                 else if (response.StatusCode == HttpStatusCode.SeeOther)
                 {
                     // Completed
-                    status = response.Deserialize<AsyncTaskStatus>();
+                    status = await response.DeserializeAsync<AsyncTaskStatus>();
                     Debug.Assert(status.State == TaskState.SuccessfullyCompleted);
 
                     CurrentStatus = status;

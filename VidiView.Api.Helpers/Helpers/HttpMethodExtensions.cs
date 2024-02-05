@@ -26,8 +26,8 @@ public static class HttpMethodExtensions
             RequestUri = (Uri)link,
         };
 
-        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
-        await response.AssertSuccessAsync();
+        var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
 
         if (typeof(T) == typeof(string))
         {
@@ -36,7 +36,7 @@ public static class HttpMethodExtensions
         }
         else
         {
-            return response.Deserialize<T>();
+            return await response.DeserializeAsync<T>().ConfigureAwait(false);
         }
     }
 
