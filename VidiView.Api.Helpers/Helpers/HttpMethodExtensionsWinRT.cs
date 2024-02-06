@@ -49,8 +49,22 @@ public static class HttpMethodExtensionsWinRT
     /// <returns></returns>
     public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, System.Net.Http.Headers.RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
     {
-        return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link);
+        return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link).AsTask(cancellationToken ?? CancellationToken.None);
     }
+
+    /// <summary>
+    /// Get a stream from the server. This may support seeking
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="link"></param>
+    /// <param name="range"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, System.Net.Http.Headers.RangeHeaderValue? range, CancellationToken cancellationToken, IProgress<ulong> progress)
+    {
+        return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link).AsTask(cancellationToken, progress);
+    }
+
 
     /// <summary>
     /// Helper method to delete a resource indicated by a link
