@@ -26,12 +26,12 @@ public static class ApiHomeExtensions
     /// <param name="http"></param>
     /// <param name="forceReload">Force a reload, for instance after specifying an authentication header</param>
     /// <returns></returns>
-    public static async Task<ApiHome> HomeAsync(this HttpClient http, bool forceReload = false)
+    public static async Task<ApiHome> HomeAsync(this HttpClient http, bool forceReload = false, CancellationToken?  cancellationToken = null)
     {
         if (!forceReload && _cache.TryGetValue(http, out var home))
             return home;
 
-        var response = await http.GetAsync("").ConfigureAwait(false); // Utilizes BaseAddress
+        var response = await http.GetAsync("", cancellationToken ?? CancellationToken.None).ConfigureAwait(false); // Utilizes BaseAddress
         await response.AssertSuccessAsync().ConfigureAwait(false);
         home = await response.DeserializeAsync<ApiHome>().ConfigureAwait(false);
 
