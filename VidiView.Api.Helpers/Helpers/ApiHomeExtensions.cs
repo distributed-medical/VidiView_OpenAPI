@@ -13,11 +13,19 @@ public static class ApiHomeExtensions
     /// <param name="http"></param>
     /// <param name="hostName"></param>
     /// <param name="port"></param>
-    public static void SetHostName(this HttpClient http, string hostName, int port = 443)
+    public static void SetHostName(this HttpClient http, string hostName, int port)
     {
         Uri baseAddress = port == 443 ? new Uri($"https://{hostName}/vidiview/api/") : new Uri($"https://{hostName}:{port}/vidiview/api/");
         http.BaseAddress = baseAddress;
     }
+
+    public static void SetHostName(this HttpClient http, string hostName)
+    {
+        //if hostName contains :443 it will be omitted in resulting uri  host:443 -> https://host/vidiview/api
+        Uri baseAddress = new UriBuilder($"https://{hostName}/vidiview/api/").Uri;
+        http.BaseAddress = baseAddress;
+    }
+
 
     /// <summary>
     /// Helper extension to get the API starting point. The result will 
