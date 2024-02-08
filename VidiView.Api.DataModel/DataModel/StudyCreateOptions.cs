@@ -2,6 +2,7 @@
 
 public record StudyCreateOptions : Study
 {
+    #region Factory methods
     /// <summary>
     /// Create unidentified study
     /// </summary>
@@ -51,6 +52,7 @@ public record StudyCreateOptions : Study
 
         throw new ArgumentException("The scheduled study does not have a valid SOP instance");
     }
+    #endregion
 
     /// <summary>
     /// The SOP Instance this study is to be based on
@@ -61,4 +63,9 @@ public record StudyCreateOptions : Study
     /// Specify the patient to create this study for
     /// </summary>
     public Guid? PatientIdGuid { get; init; }
+
+    /// <summary>
+    /// Set to true to assign the newly created study to the current user
+    /// </summary>
+    public bool? AssignToSelf { get; init; }
 }

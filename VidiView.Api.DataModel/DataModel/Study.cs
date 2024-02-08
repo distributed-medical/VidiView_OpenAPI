@@ -126,6 +126,12 @@ public record Study
     public DateTimeOffset? LastReviewDate { get; init; }
 
     /// <summary>
+    /// True if the study is assigned to the current user
+    /// </summary>
+    /// <remarks>This is only set when retrieving the recently used studies</remarks>
+    public bool? IsAssigned { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
