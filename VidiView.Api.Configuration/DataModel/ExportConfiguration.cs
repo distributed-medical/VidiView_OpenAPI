@@ -49,4 +49,9 @@ public record ExportConfiguration
     /// </summary>
     /// <remarks>This is defined in Kbit/s</remarks>
     public int MaxVideoBitRate { get; init; }
+
+    /// <summary>
+    /// Enable legacy large file support. This will generate non-conformant Dicom files
+    /// </summary>
+    public bool LegacyLargeFileSupport { get; set; } = false;
 }

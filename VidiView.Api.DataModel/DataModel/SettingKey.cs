@@ -202,14 +202,21 @@ public static class SettingKey
     public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
     public const string ClientOptionsIdleLogout = "Client/Options/IdleLogout";
     public const string ClientOptionsIdleLogoutWarning = "Client/Options/IdleLogoutWarning";
+    public const string ClientFeaturesConference = "Client/Options/Features/Conference";
+    public const string ClientFeaturesLanguages = "Client/Options/Features/Languages";
     public const string ClientFeaturesPatientDemographicSearch = "Client/Options/Features/PatientDemographicSearch";
     public const string ClientFeaturesPatientPersonalWorklists = "Client/Options/Features/PersonalWorklists";
     public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
+    public const string ClientFeaturesScheduledStudies = "Client/Options/Features/ScheduledStudies";
 
     public const string ClientFeaturesVoiceCapture = "Client/Options/Features/VoiceCapture";
     public const string ClientFeaturesCameraCapture = "Client/Options/Features/CameraCapture";
     public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
     public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
+
+    public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
+    public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";
+
     #endregion
 
     public const string WebProxyStatus = "WebProxy/UseProxy";
