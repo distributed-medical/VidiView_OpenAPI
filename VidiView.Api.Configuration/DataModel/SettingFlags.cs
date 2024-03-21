@@ -1,5 +1,8 @@
-﻿namespace VidiView.Api.Configuration.DataModel;
+﻿using VidiView.Api.DataModel;
 
+namespace VidiView.Api.Configuration.DataModel;
+
+[JsonConverter(typeof(StringEnumConverterEx<SettingFlags>))]
 [Flags]
 public enum SettingFlags : long
 {

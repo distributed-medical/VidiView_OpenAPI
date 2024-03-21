@@ -1,13 +1,17 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<AsyncTaskType>))]
 public enum AsyncTaskType
 {
+    Unknown,
     VideoTrim,
     VideoTranscoding
 }
 
+[JsonConverter(typeof(StringEnumConverterEx<TaskState>))]
 public enum TaskState
 {
+    Unknown,
     WaitingForExecution,
     Running,
     SuccessfullyCompleted,

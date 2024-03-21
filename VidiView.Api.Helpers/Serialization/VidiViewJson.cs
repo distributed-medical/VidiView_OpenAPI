@@ -27,7 +27,9 @@ public static class VidiViewJson
                 options.Converters.Add(new DateTimeConverter());
                 options.Converters.Add(new DateTimeOffsetConverter());
                 options.Converters.Add(new TimeSpanConverter());
-                options.Converters.Add(new JsonStringEnumConverter());
+
+                // Don't use the default enum converter since it throws for undefined enum values
+//                options.Converters.Add(new JsonStringEnumConverter());
                 _default = options;
             }
 

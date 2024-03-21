@@ -3,6 +3,7 @@
 /// <summary>
 /// This is a subset of the flags above
 /// </summary>
+[JsonConverter(typeof(StringEnumConverterEx<UserFlags>))]
 [Flags]
 public enum UserFlags
     : long

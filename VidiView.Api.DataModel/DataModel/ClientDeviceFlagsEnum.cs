@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<ClientDeviceFlags>))]
 [Flags]
 public enum ClientDeviceFlags : long
 {

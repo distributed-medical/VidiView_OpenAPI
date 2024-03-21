@@ -1,6 +1,13 @@
 ﻿namespace VidiView.Api.DataModel;
+
+[JsonConverter(typeof(StringEnumConverterEx<MediaFileStatus>))]
 public enum MediaFileStatus
 {
+    /// <summary>
+    /// Fallback value for enum values unknown to the API
+    /// </summary>
+    Unknown = -1,
+
     /// <summary>
     /// Image metadata announced, 
     /// </summary>

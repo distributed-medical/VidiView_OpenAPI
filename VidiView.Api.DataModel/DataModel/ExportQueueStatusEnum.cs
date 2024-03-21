@@ -1,7 +1,10 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<ExportQueueStatus>))]
 public enum ExportQueueStatus
 {
+    Unknown = 0,
+
     // < 30 = Prepare phase
     AddedToQueue = 0,
     ConversionInProgress = 10,

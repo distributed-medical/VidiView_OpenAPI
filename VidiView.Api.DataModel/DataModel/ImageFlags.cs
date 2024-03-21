@@ -1,7 +1,12 @@
 ﻿namespace VidiView.Api.DataModel;
+
+[JsonConverter(typeof(StringEnumConverterEx<ImageFlags>))]
+[Flags]
 public enum ImageFlags
     : long
 {
+    None = 0,
+
     /// <summary>
     /// Image is hidden
     /// </summary>

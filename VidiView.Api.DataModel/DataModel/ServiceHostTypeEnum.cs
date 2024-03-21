@@ -1,9 +1,12 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<ServiceHostType>))]
 [Flags]
 public enum ServiceHostType
     : long
 {
+    None = 0,
+
     /// <summary>
     /// External Dicom modality from which images are received
     /// </summary>

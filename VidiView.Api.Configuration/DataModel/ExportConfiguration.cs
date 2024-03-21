@@ -1,7 +1,10 @@
 ﻿namespace VidiView.Api.Configuration.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<AnnotationOption>))]
 public enum AnnotationOption
 {
+    Unknown,
+
     /// <summary>
     /// Skip annotations when exporting
     /// </summary>

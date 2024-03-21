@@ -1,4 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
+
+[JsonConverter(typeof(StringEnumConverterEx<StudyState>))]
 public enum StudyState
 {
     Unknown = 0,

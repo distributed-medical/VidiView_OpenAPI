@@ -1,5 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
+
+[JsonConverter(typeof(StringEnumConverterEx<IdentityProviderFlags>))]
 [Flags]
 public enum IdentityProviderFlags
     : long

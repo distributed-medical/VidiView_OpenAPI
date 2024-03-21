@@ -1,7 +1,10 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<StudyDeleteReason>))]
 public enum StudyDeleteReason
 {
+    Unknown = -1,
+
     /// <summary>
     /// A user has selected to delete the study. 
     /// </summary>
