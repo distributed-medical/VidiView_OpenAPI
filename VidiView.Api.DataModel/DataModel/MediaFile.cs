@@ -119,6 +119,11 @@ public record MediaFile
     public int Width { get; init; }
 
     /// <summary>
+    /// True if this media file is marked as a favourite
+    /// </summary>
+    public bool IsFavourite { get; init; }
+
+    /// <summary>
     /// Image annotations
     /// </summary>
     public Annotation[]? Annotations { get; init; }

@@ -47,6 +47,7 @@ public static class Rel
     public const string ExportStatus = "export-status";
     public const string ExportQueues = "export-queues";
     public const string ExtractFrame = "extract-frame";
+    public const string Favourite = "favourite";
     public const string FindPatient = "find-patient";
     public const string FindStudy = "find-study";
     public const string GrantDevice = "grant-device";
