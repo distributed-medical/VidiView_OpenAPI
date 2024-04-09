@@ -2,7 +2,11 @@
 
 public record IdAndName
 {
-    public static implicit operator IdAndName(Guid id)
+    /// <summary>
+    /// Create instance with only a specific Id
+    /// </summary>
+    /// <param name="id"></param>
+    public static explicit operator IdAndName(Guid id)
     {
         return new IdAndName(id);
     }

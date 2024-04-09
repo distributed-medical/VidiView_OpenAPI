@@ -16,14 +16,14 @@ public record MediaFile
     public string ContentType { get; init; } = null!;
 
     /// <summary>
-    /// Id of Controller where this image was acquired
+    /// Controller where this image was acquired
     /// </summary>
-    public Guid? ControllerId { get; init; }
+    public IdAndName? Controller { get; init; }
 
     /// <summary>
-    /// Id of user creating this image
+    /// User creating this image
     /// </summary>
-    public Guid? CreatedBy { get; init; }
+    public IdAndName? CreatedBy { get; init; }
 
     /// <summary>
     /// If this is set, the image is deleted
@@ -33,7 +33,7 @@ public record MediaFile
     /// <summary>
     /// Id of image this image was derived from
     /// </summary>
-    public Guid? DerivedFrom { get; init; }
+    public IdAndName? DerivedFrom { get; init; }
 
     public string? Description { get; init; }
 
@@ -43,6 +43,8 @@ public record MediaFile
     public Guid? DeviceId { get; init; }
 
     public TimeSpan? Duration { get; init; }
+
+    public ExportMediaFile[]? ExportState { get; init; }
 
     public ImageFlags Flags { get; init; }
 
@@ -80,7 +82,7 @@ public record MediaFile
     /// <summary>
     /// The origin of this image (Controller / Capture etc..)
     /// </summary>
-    public Guid OriginId { get; init; }
+    public IdAndName Origin { get; init; }
 
     /// <summary>
     /// Image rotation. If null - check for Exif tags to determine rotation

@@ -10,11 +10,28 @@ public record ExportMediaFile
     public Guid ImageId { get; init; }
     public IdAndName AddedBy { get; init; } = null!;
     public DateTimeOffset AddedDate { get; init; }
-    public string ContentType { get; init; }
-    public IdAndName Department { get; init; } = null!;
     public IdAndName Queue { get; init; } = null!;
-    public ExportQueueStatus TransferStatus { get; init; }
 
+    /// <summary>
+    /// Export status
+    /// </summary>
+    public ExportQueueStatus Status { get; init; }
+    public string? StatusDescription { get; init; }
+
+    public IdAndName? Department { get; init; }
+
+    /// <summary>
+    /// Media file acquisition date
+    /// </summary>
+    public DateTimeOffset? AcquisitionDate { get; init; }
+    /// <summary>
+    /// Media file type
+    /// </summary>
+    public string? ContentType { get; init; }
+    /// <summary>
+    /// Media file size
+    /// </summary>
+    public long? FileSize { get; init; }
     /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>

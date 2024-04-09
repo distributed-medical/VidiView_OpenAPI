@@ -6,11 +6,11 @@
 		<Platforms>AnyCPU</Platforms>
 
 		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.6.0</FileVersion>
+		<FileVersion>5.0.7.0</FileVersion>
 
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.6</Version>
+		<Version>5.0.7-beta4</Version>
 
 		<Company>Distributed Medical AB</Company>
 		<Authors>Distributed Medical AB</Authors>
