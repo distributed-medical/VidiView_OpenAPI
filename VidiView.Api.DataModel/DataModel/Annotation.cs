@@ -15,22 +15,31 @@ public record Annotation
     /// <summary>
     /// Annotation type
     /// </summary>
-    public string Type { get; init; } = "Unknown";
+    public AnnotationType Type { get; init; }
 
+    /// <summary>
+    /// Hex color code
+    /// </summary>
     public string? Color { get; init; }
 
-    public int X1 { get; init; }
+    /// <summary>
+    /// Points for this annotation
+    /// </summary>
+    public PointInt[]? Points { get; init; }
 
-    public int Y1 { get; init; }
-
-    public int X2 { get; init; }
-
-    public int Y2 { get; init; }
-
+    /// <summary>
+    /// ZIndex. The higher value is in foreground
+    /// </summary>
     public int ZIndex { get; init; }
 
+    /// <summary>
+    /// Thickness of annotation
+    /// </summary>
     public double? Thickness { get; init; }
 
+    /// <summary>
+    /// Optional text
+    /// </summary>
     public string? Text { get; init; }
 
     public int? FontSize { get; init; }
