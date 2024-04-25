@@ -23,29 +23,29 @@ public class UploadHelper
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<MediaFile> ResumeUploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<MediaFile> UploadWithResumeAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         // We should start by checking resumability of this request
         var resumePosition = await GetResumePositionAsync(link, stream.Length, contentType, cancellationToken).ConfigureAwait(false);
         stream.Position = resumePosition;
 
-        return await UploadAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
+        return await UploadFromCurrentPositionAsync(link, stream, contentType, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
-    /// Upload a file stream to server, starting at the current stream position
+    /// Upload stream to the server, starting at the current stream position
     /// </summary>
     /// <param name="link"></param>
     /// <param name="stream"></param>
     /// <param name="contentType"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<MediaFile> UploadAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
+    public async Task<MediaFile> UploadFromCurrentPositionAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
         var httpContent = HttpContentFactory.CreateBody(stream, contentType);
 
         // Indicate with a content range header the position we start uploading from
-        httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Length - stream.Position - 1, stream.Length);
+        httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Length - 1, stream.Length);
 
         var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
