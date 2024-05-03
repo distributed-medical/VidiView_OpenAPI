@@ -10,7 +10,7 @@
 
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.8-beta1</Version>
+		<Version>5.0.8</Version>
 	
 		<Company>Distributed Medical AB</Company>
 		<Authors>Distributed Medical AB</Authors>
