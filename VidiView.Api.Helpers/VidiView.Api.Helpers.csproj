@@ -6,11 +6,11 @@
 		<Platforms>AnyCPU;x64</Platforms>
 
 		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.8.0</FileVersion>
+		<FileVersion>5.0.9.0</FileVersion>
 
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.8</Version>
+		<Version>5.0.9</Version>
 	
 		<Company>Distributed Medical AB</Company>
 		<Authors>Distributed Medical AB</Authors>
@@ -30,17 +30,13 @@
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.17763.0'">
 		<DefineConstants>$(DefineConstants);WINRT</DefineConstants>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.17763.0'">
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240404000" />
-	</ItemGroup>
-
 	<ItemGroup>
-	  <PackageReference Include="VidiView.Api.DataModel" Version="5.0.6" />
+	  <PackageReference Include="VidiView.Api.DataModel" Version="5.0.9" />
 	</ItemGroup>
 
 </Project>

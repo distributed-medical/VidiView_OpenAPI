@@ -215,6 +215,7 @@ public static class SettingKey
     public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
 
     public const string ClientReportLogotype = "Client/Report/Logotype";
+    public const string ClientReportLogotypeHeight = "Client/Report/LogotypeHeight";
 
     public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
     public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";
