@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[Obsolete("Use ProblemDetails instead", true)]
 public record ErrorDetails
 {
     public string ErrorCode { get; init; } = null!;

@@ -40,6 +40,27 @@ public static class HttpResponseMessageExtensionWinRT
     }
 
     /// <summary>
+    /// Deserializes any problem indicated by the server and rethrows as exception
+    /// </summary>
+    /// <param name="response"></param>
+    /// <returns></returns>
+    public static async Task ThrowIfProblemAsync(this HttpResponseMessage response)
+    {
+        if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
+        {
+            // This is an error that can be deserialized into an exception
+            var problem = await DeserializeAsync<ProblemDetails>(response);
+
+            if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
+            {
+                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem);
+            }
+
+            throw new Exception(problem.Detail);
+        }
+    }
+
+    /// <summary>
     /// Check if response is successful, otherwise throw appropriate exception
     /// </summary>
     /// <param name="response"></param>
@@ -55,27 +76,12 @@ public static class HttpResponseMessageExtensionWinRT
         else
         {
             // Check if we have any additional error information
-            Exception? exc = null;
-            try
-            {
-                var error = await response.DeserializeAsync<ErrorDetails>();
-                if (error != null)
-                {
-                    exc = VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, error);
-                }
-            }
-            catch
-            {
-                //Debug.Assert(false, "Failed to deserialize ErrorDetails");
-            }
+            await ThrowIfProblemAsync(response);
 
-            if (exc != null)
-            {
-                throw exc;
-            }
-
+            // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync((System.Net.HttpStatusCode)(int)response.StatusCode, response.RequestMessage.RequestUri);
 
+            // Check if this a generic error
             switch (response.StatusCode)
             {
                 case HttpStatusCode.RequestTimeout:

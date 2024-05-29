@@ -5,6 +5,7 @@ using System.Text.Json;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidiView.Api.Helpers;
 
@@ -39,6 +40,27 @@ public static class HttpResponseMessageExtension
     }
 
     /// <summary>
+    /// Deserializes any problem indicated by the server and rethrows as exception
+    /// </summary>
+    /// <param name="response"></param>
+    /// <returns></returns>
+    public static async Task ThrowIfProblemAsync(this HttpResponseMessage response)
+    {
+        if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
+        {
+            // This is an error that can be deserialized into an exception
+            var problem = await DeserializeAsync<ProblemDetails>(response);
+
+            if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
+            {
+                throw VidiViewException.Factory(response.StatusCode, problem);
+            }
+
+            throw new Exception(problem.Detail);
+        }
+    }
+
+    /// <summary>
     /// Check if response is successful, otherwise throw appropriate exception
     /// </summary>
     /// <param name="response"></param>
@@ -54,27 +76,12 @@ public static class HttpResponseMessageExtension
         else
         {
             // Check if we have any additional error information
-            Exception? exc = null;
-            try
-            {
-                var error = await response.DeserializeAsync<ErrorDetails>();
-                if (error != null)
-                {
-                    exc = VidiViewException.Factory(response.StatusCode, error);
-                }
-            }
-            catch
-            {
-                //Debug.Assert(false, "Failed to deserialize ErrorDetails");
-            }
+            await ThrowIfProblemAsync(response);
 
-            if (exc != null)
-            {
-                throw exc;
-            }
-
+            // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage.RequestUri);
 
+            // Check if this a generic error
             switch (response.StatusCode)
             {
                 case HttpStatusCode.RequestTimeout:
@@ -95,7 +102,6 @@ public static class HttpResponseMessageExtension
 
                     Debug.Assert(false, "We should not get here ever..");
                     throw new Exception("E_FAIL");
-
             }
         }
     }

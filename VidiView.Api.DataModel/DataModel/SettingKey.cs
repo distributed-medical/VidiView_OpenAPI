@@ -89,6 +89,7 @@ public static class SettingKey
     public const string WorkflowDicomCStoreLocalAET = "Workflow/DicomCStoreSCP/LocalAETitle";
     public const string WorkflowDicomCStoreMaxAssociations = "Workflow/DicomCStoreSCP/MaxAssociations";
     public const string WorkflowDicomCStoreAllowOverwrite = "Workflow/DicomCStoreSCP/AllowOverwrite";
+    public const string WorkflowDicomCStoreFallbackEncoding = "Workflow/DicomCStoreSCP/FallbackEncoding";
 
     public const string WorkflowMllpReceiveV1Enabled = "Workflow/MllpTransport/V1/Enabled";
     public const string WorkflowMllpReceiveV1Port = "Workflow/MllpTransport/V1/Port";
@@ -105,6 +106,9 @@ public static class SettingKey
     public const string WorkflowHL7MessageLogRetention = "Workflow/HL7/MessageLogRetention";
     public const string WorkflowHL7DefaultCharacterSet = "Workflow/HL7/DefaultCharacterSet";
     public const string WorkflowHL7SpecificAckCharacterSet = "Workflow/HL7/SpecificAckCharacterSet";
+
+    public const string WorkflowTransferQueueManualAddFromUnassignedStudy = "Workflow/TransferQueue/ManualAddFromUnassignedStudy";
+    public const string WorkflowTransferQueueExportImmediatelyWhenAssigned = "Workflow/TransferQueue/ExportImmediatelyWhenAssigned";
 
     public const string WorkflowTransferQueueConcurentTranscodeTasks = "Workflow/TransferQueue/ConcurentTranscodeTasks";
     public const string WorkflowTransferQueueMaxQueueLength = "Workflow/TransferQueue/MaxQueueLength";
