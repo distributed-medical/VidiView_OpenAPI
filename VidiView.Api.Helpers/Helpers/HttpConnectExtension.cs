@@ -11,12 +11,39 @@ public static class HttpConnectExtension
     const string DefaultPath = "/vidiview/api/";
 
     /// <summary>
-    /// Try to connect to the specific VidiView Server host
+    /// Try to connect to the specific VidiView Server host. The specified host name may be a full url, host name only or a host and path. 
+    /// The implementation will following redirects to get to the correct end point, if possible.
     /// </summary>
     /// <param name="http"></param>
     /// <param name="hostName">Host name. May include optional scheme, port and path</param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <returns>
+    /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
+    /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
+    /// </returns>
+    /// <example>
+    /// // Connect to host
+    ///var connectState = await _http.Client.ConnectAsync(hostName, cancellationToken);
+    ///if (connectState is PreauthenticateRequired preauth)
+    ///{
+    ///    switch (preauth.IdP)
+    ///    {
+    ///        case PreauthenticateRequired.Oidc:
+    ///            await PreAuthenticateUsingOidcAsync(preauth.RedirectUri, cancellationToken);
+    ///
+    ///            connectState = await _http.Client.ConnectAsync(connectState, cancellationToken);
+    ///            break;
+    ///
+    ///        default:
+    ///            throw new NotSupportedException($"The indicated authentication method is not supported by this client: {preauth.IdP ?? "<null>"}");
+    ///    }
+    ///}
+    ///
+    ///if (connectState is not ConnectionSuccessful success)
+    ///{
+    ///    throw new NotSupportedException($"Unhandled connection state returned {connectState?.GetType().Name ?? "<null>"}");
+    ///}
+    /// </example>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, string hostName, CancellationToken cancellationToken)
     {
         var state = new ConnectionRequest(hostName);
