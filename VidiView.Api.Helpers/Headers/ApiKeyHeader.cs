@@ -35,18 +35,8 @@ public sealed class ApiKeyHeader
     /// <param name="secretKey">The secret key assigned to the application</param>
     /// <exception cref="ArgumentException"></exception>
     public ApiKeyHeader(Guid appId, byte[] thumbprint, byte[] secretKey)
+        : this(appId, thumbprint, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), secretKey)
     {
-        if (appId == Guid.Empty)
-            throw new ArgumentException("Invalid appId value", nameof(appId));
-        if (thumbprint == null || thumbprint.Length < 4 || thumbprint.Length > 255)
-            throw new ArgumentException("Invalid thumbprint value");
-
-        AppId = appId;
-        Thumbprint = thumbprint;
-        InstanceTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        KeyHash = CalculateKeyHash(secretKey);
-        Value = CreateHeaderValue();
     }
 
     /// <summary>
@@ -57,7 +47,7 @@ public sealed class ApiKeyHeader
     /// <param name="instanceTime"></param>
     /// <param name="secretKey"></param>
     /// <exception cref="ArgumentException"></exception>
-    internal ApiKeyHeader(Guid appId, byte[] thumbprint, long instanceTime, byte[] secretKey)
+    public ApiKeyHeader(Guid appId, byte[] thumbprint, long instanceTime, byte[] secretKey)
     {
         if (appId == Guid.Empty)
             throw new ArgumentException("Invalid appId value", nameof(appId));

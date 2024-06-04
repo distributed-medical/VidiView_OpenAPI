@@ -14,13 +14,13 @@ public class ConnectServerTest
     {
         var client = new HttpClient(ServerValidator.TrustVidiViewAuthorityHandler);
 
-        // This call will fail since we dont have an ApiKey header
+        // This call will fail since we don't have an ApiKey header
         var result = await client.GetAsync(BaseUrl);
-        var error = result.Deserialize<ErrorDetails>();
+        var error = result.Deserialize<ProblemDetails>();
 
         Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, result.StatusCode);
         Assert.AreEqual("1820", error?.ErrorCode);
-        Assert.IsNotNull(error?.Description);
+        Assert.IsNotNull(error?.Detail);
     }
 
     [TestMethod]

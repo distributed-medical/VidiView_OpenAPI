@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VidiView.Api.Helpers", "Vid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VidiView.Api.Configuration", "VidiView.Api.Configuration\VidiView.Api.Configuration.csproj", "{B46C2AD9-C423-4A15-9B37-2EFB0F0812FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VidiView.Api.DataModel.Test", "VidiView.Api.DataModel.Test\VidiView.Api.DataModel.Test.csproj", "{BFBFC4F7-4D4B-4698-A37C-0AA4AB41C88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VidiView.Api.DataModel.Test", "VidiView.Api.DataModel.Test\VidiView.Api.DataModel.Test.csproj", "{BFBFC4F7-4D4B-4698-A37C-0AA4AB41C88C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VidiView.Api.Helpers.Test", "VidiView.Api.Helpers.Test\VidiView.Api.Helpers.Test.csproj", "{05E59674-2FEF-4333-9985-BE23DDDE5DEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{BFBFC4F7-4D4B-4698-A37C-0AA4AB41C88C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFBFC4F7-4D4B-4698-A37C-0AA4AB41C88C}.Release|x64.ActiveCfg = Release|Any CPU
 		{BFBFC4F7-4D4B-4698-A37C-0AA4AB41C88C}.Release|x64.Build.0 = Release|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Debug|x64.Build.0 = Debug|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Release|x64.ActiveCfg = Release|Any CPU
+		{05E59674-2FEF-4333-9985-BE23DDDE5DEE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
