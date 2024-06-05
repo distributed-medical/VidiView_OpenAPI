@@ -18,33 +18,43 @@ public class VidiViewException : Exception
     public static Exception Factory(HttpStatusCode httpError, ProblemDetails problem)
     {
         // Check if we can instantiate the specific exception type
-        if (!int.TryParse(problem.ErrorCode, out int errorCode))
-            errorCode = 1000;
-
-        var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
-        var type = Type.GetType(typeName, false, true);
-        if (type != null)
+        try
         {
-            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-            var ci = type.GetConstructor(flags, new[] { typeof(string) });
-            Debug.Assert(ci != null, "Our exceptions are always supposed to have a constructor accepting a string");
+            if (!int.TryParse(problem.ErrorCode, out int errorCode))
+                errorCode = 1000;
 
-            if (ci != null)
+            var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
+            var type = Type.GetType(typeName, false, true);
+            if (type != null)
             {
-                var exc = (Exception)ci.Invoke(new[] { problem.Detail });
-                type.GetProperty(nameof(ErrorCode))?
-                    .SetValue(exc, errorCode);
-                type.GetProperty(nameof(HttpStatusCode))?
-                    .SetValue(exc, httpError);
-                return exc;
-            }
-        }
+                var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                var ci = type.GetConstructor(flags, new[] { typeof(string) });
+                Debug.Assert(ci != null, "Our exceptions are always supposed to have a constructor accepting a string");
 
-        return new VidiViewException(problem?.Detail ?? $"{(int)httpError} {httpError}")
+                if (ci != null)
+                {
+                    var exc = (Exception)ci.Invoke(new[] { problem.Detail });
+                    type.GetProperty(nameof(ErrorCode))?
+                        .SetValue(exc, errorCode);
+                    type.GetProperty(nameof(HttpStatusCode))?
+                        .SetValue(exc, httpError);
+                    return exc;
+                }
+            }
+
+            return new VidiViewException(problem?.Detail ?? $"{(int)httpError} {httpError}")
+            {
+                ErrorCode = errorCode,
+                HttpStatusCode = httpError
+            };
+        }
+        catch
         {
-            ErrorCode = errorCode,
-            HttpStatusCode = httpError
-        };
+            // Failed to create exception
+            Debug.Assert(false);
+
+            return new Exception($"Failed to instantiate corresponding exception class. Details {problem?.Detail ?? "<null>"}");
+        }
     }
 
     public VidiViewException(string message)

@@ -17,7 +17,7 @@ public class ConnectionRequest : IConnectState
             throw new ArgumentException("Blank host name not supported", nameof(hostName));
 
         HostName = hostName;
-        ApiUri = ConvertToUri(hostName);
+        RequestUri = ConvertToUri(hostName);
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class ConnectionRequest : IConnectState
     /// <summary>
     /// The Uri to the Api
     /// </summary>
-    public Uri ApiUri { get; }
+    public Uri RequestUri { get; }
 
     static Uri ConvertToUri(string hostName)
     {

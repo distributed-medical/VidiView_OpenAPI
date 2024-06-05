@@ -10,19 +10,19 @@ namespace VidiView.Api.Helpers;
 /// </summary>
 public class ConnectionSuccessful : IConnectState
 {
-    public ConnectionSuccessful(Uri uri, ApiHome home, List<Uri> redirectHistory)
+    public ConnectionSuccessful(Uri uri, ApiHome home, List<Uri> callHistory)
     {
         ApiHome = home;
         Uri = uri;
-        RedirectHistory = redirectHistory;
+        CallHistory = callHistory;
     }
 
 #if WINRT
-    public ConnectionSuccessful(Uri apiUri, ApiHome home, Certificate? certificate, List<Uri> redirectHistory)
+    public ConnectionSuccessful(Uri apiUri, ApiHome home, Certificate? certificate, List<Uri> callHistory)
     {
         ApiHome = home;
         Uri = apiUri;
-        RedirectHistory = redirectHistory;
+        CallHistory = callHistory;
         Certificate = certificate;
     }
 
@@ -43,7 +43,7 @@ public class ConnectionSuccessful : IConnectState
     public ApiHome ApiHome { get; }
 
     /// <summary>
-    /// Redirections processed to reach this result
+    /// Uris processed to reach this result
     /// </summary>
-    public List<Uri> RedirectHistory { get; }
+    public List<Uri> CallHistory { get; }
 }

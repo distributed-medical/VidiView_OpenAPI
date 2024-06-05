@@ -9,8 +9,6 @@ namespace VidiView.Api.Helpers;
 
 public static class HttpConnectExtensionWinRT
 {
-    const string DefaultPath = "/vidiview/api/";
-
     /// <summary>
     /// Try to connect to the specific VidiView Server host. The specified host name may be a full url, host name only or a host and path. 
     /// The implementation will following redirects to get to the correct end point, if possible.
@@ -59,42 +57,25 @@ public static class HttpConnectExtensionWinRT
     /// <exception cref="UriFormatException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
-        List<Uri> redirectHistory;
-        Uri uri;
-        int followRedirectCount = 3;
+        var uri = HttpConnectExtension.HandleState(state, out var callHistory);
 
-        switch (state)
-        {
-            case ConnectionRequest connectionRequest:
-                // This is the initial request
-                uri = connectionRequest.ApiUri;
-                redirectHistory = new();
-                break;
-
-            case PreauthenticateRequired idp:
-                // IdP authentication completed successfully
-                uri = idp.ApiUri; // The api
-                redirectHistory = idp.RedirectHistory;
-                break;
-
-            case ConnectionSuccessful:
-                throw new InvalidOperationException("Connection already completed");
-
-            default:
-                throw new NotImplementedException();
-        }
-
-        do
+        int retryCount = 5;
+        while (retryCount-- > 0)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, uri);
             HttpResponseMessage response;
             try
             {
+                callHistory.Add(uri);
                 response = await http.SendRequestAsync(request).AsTask(cancellationToken);
             }
             catch (Exception ex)
             {
-                throw NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
+                var inner = NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
+                throw new E1002_ConnectException(inner.Message, inner)
+                {
+                    Uri = uri
+                };
             }
 
             switch (response.StatusCode)
@@ -104,49 +85,48 @@ public static class HttpConnectExtensionWinRT
                 case HttpStatusCode.Found:
                 case HttpStatusCode.PermanentRedirect:
                 case HttpStatusCode.TemporaryRedirect:
-                    redirectHistory.Add(uri); // The called URI was redirected
-
                     var redirectUri = response.Headers.Location ?? throw new Exception("No Location header provided for redirect");
-                    var queryParameters = HttpUtility.ParseQueryString(redirectUri.Query);
-                    var type = queryParameters["idp"];
-                    if (!string.IsNullOrEmpty(type))
-                    {
-                        // Redirect to external Idp
-                        return new PreauthenticateRequired(type, redirectUri, uri, redirectHistory);
-                    }
+                    uri = HttpConnectExtension.HandleRedirect(uri, redirectUri, callHistory, out var preauth);
+                    if (preauth != null)
+                        return preauth;
 
-                    // Just a redirect. Follow and see what happens
-                    if (--followRedirectCount < 0)
-                        throw new Exception("Too many redirects");
-
-                    uri = redirectUri;
                     continue;
 
                 case HttpStatusCode.NotFound:
-                    if (uri.AbsolutePath == DefaultPath)
-                        goto default;
-
-                    // Retry using our default path
-                    redirectHistory.Add(uri); // The called URI was redirected
-                    uri = new Uri(uri.Scheme + "://" + uri.Host + DefaultPath);
+                    uri = HttpConnectExtension.RetryWithDefaultPath(uri);
                     continue;
 
                 default:
                     await response.AssertSuccessAsync();
-                    var home = response.Deserialize<ApiHome>();
-                    if (home != null)
+
+                    try
                     {
-                        // Connection successful
-                        http.SetAddressAndHome(uri, home);
-                        return new ConnectionSuccessful(uri, home, request.TransportInformation.ServerCertificate, redirectHistory);
+                        // Check if we are successfully connected
+                        var home = response.Deserialize<ApiHome>();
+                        if (home != null)
+                        {
+                            // Cache the home uri and api page with this HttpClient instance
+                            http.SetAddressAndHome(uri, home);
+                            return new ConnectionSuccessful(uri, home, callHistory);
+                        }
+                    }
+                    catch
+                    {
                     }
 
-                    break;
+                    // Something other than a VidiView Server has answered
+                    uri = HttpConnectExtension.RetryWithDefaultPath(uri);
+                    continue;
             }
 
             throw new Exception($"Failed to deserialize ApiHome document");
         }
-        while (true);
+        while (retryCount-- > 0) ;
+
+        throw new E1002_ConnectException("Too many redirects")
+        {
+            Uri = callHistory.FirstOrDefault()
+        };
     }
 }
 #endif

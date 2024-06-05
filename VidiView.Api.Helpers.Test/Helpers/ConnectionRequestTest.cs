@@ -13,27 +13,27 @@ public class ConnectionRequestTest
     public void HostNameOnly()
     {
         var request = new ConnectionRequest("demo.vidiview.com");
-        Assert.AreEqual(new Uri("https://demo.vidiview.com"), request.ApiUri);
+        Assert.AreEqual(new Uri("https://demo.vidiview.com"), request.RequestUri);
     }
 
     [TestMethod]
     public void HostNameAndPort()
     {
         var request = new ConnectionRequest("demo.vidiview.com:777");
-        Assert.AreEqual(new Uri("https://demo.vidiview.com:777"), request.ApiUri);
+        Assert.AreEqual(new Uri("https://demo.vidiview.com:777"), request.RequestUri);
     }
 
     [TestMethod]
     public void UnsecureHostNameAndPort()
     {
         var request = new ConnectionRequest("http://demo.vidiview.com:80");
-        Assert.AreEqual(new Uri("http://demo.vidiview.com:80"), request.ApiUri);
+        Assert.AreEqual(new Uri("http://demo.vidiview.com:80"), request.RequestUri);
     }
 
     [TestMethod]
     public void HostNameAndPath()
     {
         var request = new ConnectionRequest("vidiview.region.se/kommun");
-        Assert.AreEqual(new Uri("https://vidiview.region.se/kommun"), request.ApiUri);
+        Assert.AreEqual(new Uri("https://vidiview.region.se/kommun"), request.RequestUri);
     }
 }

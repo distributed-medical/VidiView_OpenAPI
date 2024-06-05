@@ -44,16 +44,25 @@ public static class HttpResponseMessageExtension
     /// </summary>
     /// <param name="response"></param>
     /// <returns></returns>
-    public static async Task ThrowIfProblemAsync(this HttpResponseMessage response)
+    public static async Task AssertNotProblem(this HttpResponseMessage response)
     {
         if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
         {
-            // This is an error that can be deserialized into an exception
-            var problem = await DeserializeAsync<ProblemDetails>(response);
+            ProblemDetails problem;
+            try
+            {
+                // This is an error that can be deserialized into an exception
+                problem = await DeserializeAsync<ProblemDetails>(response);
+            }
+            catch
+            {
+                // Failed to deserialize as problem. This is really a problem
+                throw new Exception("The server responded with an indication of a problem, but the application was unable to deserialize the details");
+            }
 
             if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
             {
-                throw VidiViewException.Factory(response.StatusCode, problem);
+                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem);
             }
 
             throw new Exception(problem.Detail);
@@ -76,7 +85,7 @@ public static class HttpResponseMessageExtension
         else
         {
             // Check if we have any additional error information
-            await ThrowIfProblemAsync(response);
+            await AssertNotProblem(response);
 
             // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage.RequestUri);

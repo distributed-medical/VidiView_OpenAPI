@@ -1,4 +1,5 @@
-﻿using VidiView.Api.DataModel;
+﻿using System.Net;
+using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Helpers;
 
@@ -7,6 +8,27 @@ namespace VidiView.Api.Helpers;
 /// </summary>
 public static class DeviceRegistration
 {
+    /// <summary>
+    /// Register client device with server
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="appVersion">Application version</param>
+    /// <param name="deviceModel">Device model</param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterDeviceAsync(this System.Net.Http.HttpClient http, string appVersion, string deviceModel)
+    {
+        var api = await http.HomeAsync();
+        var device = new ClientDevice
+        {
+            AppVersion = appVersion,
+            OSVersion = Environment.OSVersion.VersionString,
+            DeviceName = Dns.GetHostName(),
+            Model = deviceModel,
+        };
+
+        return await RegisterAsync(http, api, device);
+    }
+
     /// <summary>
     /// Register client device with server
     /// </summary>
@@ -41,10 +63,30 @@ public static class DeviceRegistration
         {
             http.InvalidateHome();
         }
-
     }
 
 #if WINRT
+    /// <summary>
+    /// Register client device with server
+    /// </summary>
+    /// <param name="http"></param>
+    /// <param name="appVersion">Application version</param>
+    /// <param name="deviceModel">Device model</param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterDeviceAsync(this Windows.Web.Http.HttpClient http, string appVersion, string deviceModel)
+    {
+        var api = await http.HomeAsync();
+        var device = new ClientDevice
+        {
+            AppVersion = appVersion,
+            OSVersion = Environment.OSVersion.VersionString,
+            DeviceName = Dns.GetHostName(),
+            Model = deviceModel,
+        };
+
+        return await RegisterAsync(http, api, device);
+    }
+
     /// <summary>
     /// Register client device with server
     /// </summary>

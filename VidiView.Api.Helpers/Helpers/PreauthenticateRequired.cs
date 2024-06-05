@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VidiView.Api.Helpers;
+﻿namespace VidiView.Api.Helpers;
 public class PreauthenticateRequired : IConnectState
 {
     /// <summary>
@@ -12,12 +6,12 @@ public class PreauthenticateRequired : IConnectState
     /// </summary>
     public const string Oidc = "oidc";
 
-    public PreauthenticateRequired(string idp, Uri redirectUri, Uri apiUri, List<Uri> redirectHistory)
+    public PreauthenticateRequired(string idp, Uri redirectUri, Uri requestedUri, List<Uri> callHistory)
     {
         IdP = idp;
         RedirectUri = redirectUri;
-        ApiUri = apiUri;
-        RedirectHistory = redirectHistory;
+        RequestedUri = requestedUri;
+        CallHistory = callHistory;
     }
 
     /// <summary>
@@ -31,13 +25,13 @@ public class PreauthenticateRequired : IConnectState
     public Uri RedirectUri { get; }
 
     /// <summary>
-    /// The uri to the Api
+    /// The requested uri to the Api
     /// </summary>
-    internal Uri ApiUri { get; }
+    internal Uri RequestedUri { get; }
 
     /// <summary>
-    /// Redirections processed to reach this result
+    /// Uris processed to reach this result
     /// </summary>
-    internal List<Uri> RedirectHistory { get; }
+    internal List<Uri> CallHistory { get; }
 
 }
