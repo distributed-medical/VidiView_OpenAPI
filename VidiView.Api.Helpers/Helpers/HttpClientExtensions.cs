@@ -1,6 +1,7 @@
 ﻿using VidiView.Api.Headers;
 using System.Net.Http;
 using VidiView.Api.DataModel;
+using System.Net;
 
 namespace VidiView.Api.Helpers;
 
@@ -22,13 +23,24 @@ public static class HttpClientExtensions
     }
 
     /// <summary>
-    /// Used by unit-test
+    /// Register client device with server
     /// </summary>
     /// <param name="http"></param>
-    /// <param name="baseAddress"></param>
-    public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
+    /// <param name="appVersion">Application version</param>
+    /// <param name="deviceModel">Device model</param>
+    /// <returns></returns>
+    public static async Task<ClientDevice> RegisterDeviceAsync(this System.Net.Http.HttpClient http, string appVersion, string? deviceModel)
     {
-        _baseAddress[http] = baseAddress;
+        var api = await http.HomeAsync();
+        var device = new ClientDevice
+        {
+            AppVersion = appVersion,
+            OSVersion = Environment.OSVersion.VersionString,
+            DeviceName = Dns.GetHostName(),
+            Model = deviceModel,
+        };
+
+        return await DeviceRegistration.RegisterAsync(http, api, device);
     }
 
     /// <summary>
@@ -42,6 +54,15 @@ public static class HttpClientExtensions
         _baseAddress[http] = baseAddress;
         _cache[http] = apiHome;
     }
+
+#if (DEBUG)
+    // Only use for unit-testing
+    public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
+    {
+        _baseAddress[http] = baseAddress;
+    }
+#endif
+
 
     /// <summary>
     /// Helper extension to get the API starting point. The result will 

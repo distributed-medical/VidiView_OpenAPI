@@ -49,6 +49,7 @@ public static class HttpConnectExtension
     /// </example>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, string hostName, CancellationToken cancellationToken)
     {
+        http.Disconnect();
         var state = new ConnectionRequest(hostName);
         return await ConnectAsync(http, state, cancellationToken);
     }

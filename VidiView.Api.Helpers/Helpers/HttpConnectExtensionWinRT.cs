@@ -45,6 +45,7 @@ public static class HttpConnectExtensionWinRT
     /// </example>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, string hostName, CancellationToken cancellationToken)
     {
+        http.Disconnect();
         var state = new ConnectionRequest(hostName);
         return await ConnectAsync(http, state, cancellationToken);
     }
@@ -107,7 +108,7 @@ public static class HttpConnectExtensionWinRT
                         {
                             // Cache the home uri and api page with this HttpClient instance
                             http.SetAddressAndHome(uri, home);
-                            return new ConnectionSuccessful(uri, home, callHistory);
+                            return new ConnectionSuccessful(uri, home, request.TransportInformation.ServerCertificate, callHistory);
                         }
                     }
                     catch

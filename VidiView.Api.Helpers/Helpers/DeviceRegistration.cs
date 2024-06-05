@@ -12,27 +12,6 @@ public static class DeviceRegistration
     /// Register client device with server
     /// </summary>
     /// <param name="http"></param>
-    /// <param name="appVersion">Application version</param>
-    /// <param name="deviceModel">Device model</param>
-    /// <returns></returns>
-    public static async Task<ClientDevice> RegisterDeviceAsync(this System.Net.Http.HttpClient http, string appVersion, string deviceModel)
-    {
-        var api = await http.HomeAsync();
-        var device = new ClientDevice
-        {
-            AppVersion = appVersion,
-            OSVersion = Environment.OSVersion.VersionString,
-            DeviceName = Dns.GetHostName(),
-            Model = deviceModel,
-        };
-
-        return await RegisterAsync(http, api, device);
-    }
-
-    /// <summary>
-    /// Register client device with server
-    /// </summary>
-    /// <param name="http"></param>
     /// <param name="device"></param>
     /// <returns></returns>
     public static async Task<ClientDevice> RegisterAsync(System.Net.Http.HttpClient http, ClientDevice device)
@@ -66,27 +45,6 @@ public static class DeviceRegistration
     }
 
 #if WINRT
-    /// <summary>
-    /// Register client device with server
-    /// </summary>
-    /// <param name="http"></param>
-    /// <param name="appVersion">Application version</param>
-    /// <param name="deviceModel">Device model</param>
-    /// <returns></returns>
-    public static async Task<ClientDevice> RegisterDeviceAsync(this Windows.Web.Http.HttpClient http, string appVersion, string deviceModel)
-    {
-        var api = await http.HomeAsync();
-        var device = new ClientDevice
-        {
-            AppVersion = appVersion,
-            OSVersion = Environment.OSVersion.VersionString,
-            DeviceName = Dns.GetHostName(),
-            Model = deviceModel,
-        };
-
-        return await RegisterAsync(http, api, device);
-    }
-
     /// <summary>
     /// Register client device with server
     /// </summary>
