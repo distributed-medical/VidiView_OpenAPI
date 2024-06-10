@@ -1,0 +1,29 @@
+﻿Generate flow diagram on https://www.plantuml.com/
+
+
+@startuml
+|Connect|
+start
+:Enter server name; <<input>>
+:ConnectAsync();
+if (Preauthenticate required?) is (Yes) then
+  :Authenticate using IdP; <<procedure>>
+else (No)
+endif
+|Register|
+:CheckApiCompatibility();
+:RegisterDeviceAsync();
+if (Is granted?) is (No) then
+  :Display token; <<output>>
+  end
+else (Yes)
+end if
+|Authenticate|
+while (Authentication token valid?) is (No)
+  :Choose method; <<input>>
+  :Enter credentials; <<input>>
+  :AuthenticateAsync();
+endwhile (Yes)
+#palegreen:Completed;
+stop
+@enduml
