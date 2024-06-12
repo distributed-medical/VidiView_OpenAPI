@@ -1,0 +1,41 @@
+# Copyright (c) 2024 Distributed Medical. All rights reserved.
+
+name: Publish
+
+on:
+  push:
+    branches: [ "release" ]
+
+jobs:
+
+  build-and-publish:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x64]
+        nuget: [latest]
+
+    runs-on: [Windows, self-hosted]
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      SOLUTION: VidiView_Media.sln
+      NUGET_PKG_PATH: ${{ github.workspace }}\packages
+      NUGET_PKG_SOURCE: https://nuget.pkg.github.com/distributed-medical/index.json
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
