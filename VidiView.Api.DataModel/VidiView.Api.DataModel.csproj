@@ -1,34 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <AssemblyName>VidiView.Api.DataModel</AssemblyName>
+        <TargetFramework>net7.0</TargetFramework>
+        <Platforms>AnyCPU</Platforms>
 
-	<PropertyGroup>
-		<AssemblyName>VidiView.Api.DataModel</AssemblyName>
-		<TargetFramework>net7.0</TargetFramework>
-		<Platforms>AnyCPU</Platforms>
+        <AssemblyVersion>5.0.0.0</AssemblyVersion>
+        <FileVersion>5.0.10.0</FileVersion>
 
-		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.10.0</FileVersion>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PackageTags>VidiView OpenAPI</PackageTags>
+        <Version>5.0.10</Version>
 
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageTags>VidiView OpenAPI</PackageTags>
-		<Version>5.0.10</Version>
+        <Company>Distributed Medical AB</Company>
+        <Authors>Distributed Medical AB</Authors>
+        <Product>VidiView® Enterprise Imaging</Product>
+        <Title>VidiView OpenAPI Data Model</Title>
+        <Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
+        <Description>VidiView data model objects for accessing VidiView API</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
 
-		<Company>Distributed Medical AB</Company>
-		<Authors>Distributed Medical AB</Authors>
-		<Product>VidiView® Enterprise Imaging</Product>
-		<Title>VidiView OpenAPI Data Model</Title>
-		<Copyright>Copyright © 2023-2024 Distributed Medical AB, http://www.distributedmedical.com. All rights reserved</Copyright>
-		<Description>VidiView data model objects for accessing VidiView API</Description>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
+        <RootNamespace>VidiView.Api</RootNamespace>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
 
-		<RootNamespace>VidiView.Api</RootNamespace>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="" />
-	</ItemGroup>
-
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
 </Project>
