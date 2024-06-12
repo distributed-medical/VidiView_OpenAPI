@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build-and-publish:
+  build-test-and-publish:
     strategy:
       matrix:
         configuration: [Release]
@@ -21,9 +21,7 @@ jobs:
       packages: write
 
     env:
-      SOLUTION: VidiView_Media.sln
-      NUGET_PKG_PATH: ${{ github.workspace }}\packages
-      NUGET_PKG_SOURCE: https://nuget.pkg.github.com/distributed-medical/index.json
+      SOLUTION: VidiView.DataModel.sln
 
     steps:
     - uses: actions/checkout@v4
@@ -31,11 +29,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 7.0.x
     
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ${{env.SOLUTION}} --arch ${{ matrix.platform }} --configuration ${{ matrix.configuration }} --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
