@@ -13,6 +13,7 @@ The source code is packaged as NuGet packages for easy consumation by external p
 * https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.DataModel 
   
 📦 VidiView.Api.Helpers
+* [![Build, test and publish API helpers](https://github.com/distributed-medical/VidiView_OpenAPI/actions/workflows/api_helpers.yml/badge.svg)](https://github.com/distributed-medical/VidiView_OpenAPI/actions/workflows/api_helpers.yml)
 * https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.Helpers
 
 ### Documentation links 
