@@ -34,6 +34,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ${{env.SOLUTION}}
     - name: Build
-      run: dotnet build ${{env.SOLUTION}} --arch ${{ matrix.platform }} --configuration ${{ matrix.configuration }} --no-restore
+      run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
     - name: Test
       run: dotnet test ${{env.SOLUTION}} --no-build --verbosity normal
