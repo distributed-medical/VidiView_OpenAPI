@@ -2,15 +2,16 @@
     <PropertyGroup>
         <AssemblyName>VidiView.Api.DataModel</AssemblyName>
         <TargetFramework>net7.0</TargetFramework>
+        <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+        <PlatformTarget>x64</PlatformTarget>
         <Platforms>AnyCPU</Platforms>
-
+        
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
         <FileVersion>5.0.10.0</FileVersion>
+        <Version>5.0.10</Version>
 
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>VidiView OpenAPI</PackageTags>
-        <Version>5.0.10</Version>
-
         <Company>Distributed Medical AB</Company>
         <Authors>Distributed Medical AB</Authors>
         <Product>VidiView® Enterprise Imaging</Product>
@@ -20,12 +21,15 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
-
         <RootNamespace>VidiView.Api</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <ItemGroup>
