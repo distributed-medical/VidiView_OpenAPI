@@ -1,0 +1,54 @@
+# Copyright (c) 2024 Distributed Medical. All rights reserved.
+
+name: Build, test and publish data model
+
+on:
+  push:
+    branches: [ "CP-dev", "main", "release" ]
+
+jobs:
+
+  build-test-and-publish:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x64]
+        nuget: [latest]
+
+    runs-on: [Windows, self-hosted]
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      SOLUTION: VidiView.Api.Helpers.sln
+      NUGET_PKG_SOURCE: https://nuget.pkg.github.com/distributed-medical/index.json
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 7.0.x
+    
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: NuGet update source with credentials
+      if: always()
+      run: nuget sources Update -Name dm-vidiview -UserName "username" -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
+
+    - name: Restore dependencies
+      run: dotnet restore ${{env.SOLUTION}}
+    
+    - name: Build
+      run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
+    
+    - name: Test
+      run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
+
+    - name: Publish to Disitrbuted Medical package store
+      if: github.ref == 'refs/heads/release'
+      run: dotnet nuget push **\VidiView.Api.Helpers*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
+
