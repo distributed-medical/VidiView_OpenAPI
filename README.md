@@ -8,8 +8,12 @@ It is expected that the reader has a deep understanding of programming in genera
 ### NuGet distribution
 The source code is packaged as NuGet packages for easy consumation by external parties
 
-VidiView.Api.DataModel, https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.DataModel  
-VidiView.Api.Helpers, https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.Helpers
+📦 VidiView.Api.DataModel
+* [![Build, test and publish data model](https://github.com/distributed-medical/VidiView_OpenAPI/actions/workflows/data_model.yml/badge.svg)](https://github.com/distributed-medical/VidiView_OpenAPI/actions/workflows/data_model.yml)
+* https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.DataModel 
+  
+📦 VidiView.Api.Helpers
+* https://github.com/orgs/distributed-medical/packages/nuget/package/VidiView.Api.Helpers
 
 ### Documentation links 
 
