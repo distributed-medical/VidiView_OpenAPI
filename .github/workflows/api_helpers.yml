@@ -1,6 +1,6 @@
 # Copyright (c) 2024 Distributed Medical. All rights reserved.
 
-name: Build, test and publish data model
+name: Build, test and publish API helpers
 
 on:
   push:
