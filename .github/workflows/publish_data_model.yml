@@ -4,7 +4,7 @@ name: Publish data model
 
 on:
   push:
-    branches: [ "release" ]
+    branches: [ "main", "release" ]
 
 jobs:
 
@@ -36,4 +36,4 @@ jobs:
     - name: Build
       run: dotnet build ${{env.SOLUTION}} --arch ${{ matrix.platform }} --configuration ${{ matrix.configuration }} --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ${{env.SOLUTION}} --no-build --verbosity normal
