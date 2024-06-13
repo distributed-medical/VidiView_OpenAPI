@@ -4,7 +4,7 @@ name: Publish data model
 
 on:
   push:
-    branches: [ "main", "release" ]
+    branches: [ "CP-dev", "main", "release" ]
 
 jobs:
 
@@ -22,6 +22,8 @@ jobs:
 
     env:
       SOLUTION: VidiView.DataModel.sln
+      PROJECT: ${{ github.workspace }}\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj
+      NUGET_PKG_SOURCE: https://nuget.pkg.github.com/distributed-medical/index.json
 
     steps:
     - uses: actions/checkout@v4
@@ -31,9 +33,23 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: NuGet update source with credentials
+      if: always()
+      run: nuget sources Update -Name dm-vidiview -UserName "username" -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
+
     - name: Restore dependencies
       run: dotnet restore ${{env.SOLUTION}}
+    
     - name: Build
       run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
+    
     - name: Test
-      run: dotnet test ${{env.SOLUTION}} --no-build --verbosity normal
+      run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
+
+    - name: Publish to Disitrbuted Medical package store
+      if: github.ref == 'refs/heads/release'
+      run: dotnet nuget push **\VidiView.Api.DataModel*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
+
