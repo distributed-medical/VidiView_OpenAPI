@@ -8,7 +8,7 @@
 
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
         <FileVersion>5.0.12.0</FileVersion>
-        <Version>5.0.12-beta8</Version>
+        <Version>5.0.12</Version>
 
         <Company>Distributed Medical AB</Company>
         <Authors>Distributed Medical AB</Authors>
@@ -72,6 +72,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="VidiView.Api.DataModel" Version="5.0.12-beta2" />
+        <PackageReference Include="VidiView.Api.DataModel" Version="5.0.12" />
     </ItemGroup>
 </Project>
