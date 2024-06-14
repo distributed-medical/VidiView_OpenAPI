@@ -1,14 +1,16 @@
 ﻿#if WINRT
+using System.Runtime.Versioning;
 using VidiView.Api.Headers;
 using VidiView.Api.DataModel;
 using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpClientExtensionsWinRT
 {
-    static Dictionary<HttpClient, ApiHome> _cache = new();
-    static Dictionary<HttpClient, Uri> _baseAddress = new();
+    static readonly Dictionary<HttpClient, ApiHome> _cache = new();
+    static readonly Dictionary<HttpClient, Uri> _baseAddress = new();
 
     /// <summary>
     /// Specify the VidiView Server's base address

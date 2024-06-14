@@ -1,5 +1,6 @@
 ﻿#if WINRT
 using System.Web;
+using System.Runtime.Versioning;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.Headers;
@@ -7,6 +8,7 @@ using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpConnectExtensionWinRT
 {
     /// <summary>

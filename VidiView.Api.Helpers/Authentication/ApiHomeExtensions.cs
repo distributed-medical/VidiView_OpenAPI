@@ -43,7 +43,7 @@ public static class ApiHomeExtensions
     public static void AssertRegistered(this ApiHome home)
     {
         if (IsAuthenticated(home))
-            return; // This infers device registrated
+            return; // This infers device is registered
 
         bool isRegistered = home.Links.Exists(Rel.Start) // This must always exist
             && home.Links.Exists(Rel.ClientDeviceRegistration);

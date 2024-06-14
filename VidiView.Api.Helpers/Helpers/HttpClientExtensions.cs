@@ -2,13 +2,14 @@
 using System.Net.Http;
 using VidiView.Api.DataModel;
 using System.Net;
+using System.Collections.ObjectModel;
 
 namespace VidiView.Api.Helpers;
 
 public static class HttpClientExtensions
 {
-    static Dictionary<HttpClient, ApiHome> _cache = new();
-    static Dictionary<HttpClient, Uri> _baseAddress = new();
+    static readonly Dictionary<HttpClient, ApiHome> _cache = new();
+    static readonly Dictionary<HttpClient, Uri> _baseAddress = new();
 
     /// <summary>
     /// Specify the VidiView Server's base address

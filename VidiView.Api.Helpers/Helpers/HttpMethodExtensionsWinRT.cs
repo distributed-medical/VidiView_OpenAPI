@@ -1,6 +1,7 @@
 ﻿#if WINRT
 using VidiView.Api.DataModel;
 using Windows.Web.Http;
+using System.Runtime.Versioning;
 
 namespace VidiView.Api.Helpers;
 
@@ -8,6 +9,7 @@ namespace VidiView.Api.Helpers;
 /// This class provides extensions to execute common
 /// http methods using a Hal-link instead of Uri.
 /// </summary>
+[SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpMethodExtensionsWinRT
 {
     /// <summary>

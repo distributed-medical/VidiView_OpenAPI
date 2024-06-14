@@ -111,7 +111,7 @@ public sealed class ApiKeyHeader
         var span = new Span<byte>(buffer);
         var offset = CopyParametersToBuffer(span);
 
-        KeyHash.CopyTo(span.Slice(offset));
+        KeyHash.CopyTo(span[offset..]);
         offset += KeyHash.Length;
 
         return Convert.ToBase64String(buffer, 0, offset);
@@ -123,7 +123,7 @@ public sealed class ApiKeyHeader
         var span = new Span<byte>(buffer);
         var offset = CopyParametersToBuffer(span);
 
-        secretKey.CopyTo(span.Slice(offset));
+        secretKey.CopyTo(span[offset..]);
         offset += secretKey.Length;
 
         return SHA256.HashData(buffer.AsSpan(0, offset));
@@ -142,11 +142,11 @@ public sealed class ApiKeyHeader
         offset++;
 
         // The thumbprint itself
-        Thumbprint.CopyTo(span.Slice(offset));
+        Thumbprint.CopyTo(span[offset..]);
         offset += Thumbprint.Length;
 
         // The instance creation time
-        BinaryPrimitives.WriteInt64BigEndian(span.Slice(offset), InstanceTime);
+        BinaryPrimitives.WriteInt64BigEndian(span[offset..], InstanceTime);
         offset += 8;
 
         return offset;

@@ -1,6 +1,7 @@
 ﻿#if WINRT
 using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Versioning;
 using VidiView.Api.Exceptions;
 using Windows.Foundation;
 using Windows.Storage.Streams;
@@ -13,6 +14,7 @@ namespace VidiView.Api.Helpers;
 /// </summary>
 /// <remarks>This stream buffers the last response. 
 /// Seeks may cause a round trip to the server</remarks>
+[SupportedOSPlatform("windows10.0.17763.0")]
 public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType, IProgress<HttpProgress>, IProgress<ulong>
 {
     public static IAsyncOperationWithProgress<HttpContentStreamWinRT, ulong> CreateFromUriAsync(HttpClient httpClient, Uri uri)
@@ -142,8 +144,9 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
             uint destinationOffset = 0;
             do
             {
-                var response = _cachedResponse;
-                if (response?.PositionWithinBuffer(Position, out var sourceOffset) != true)
+                var response = _cachedResponse ?? throw new InvalidOperationException("No response in cache. Disposed?");
+
+                if (response.PositionWithinBuffer(Position, out var sourceOffset) != true)
                 {
                     if (Position < Size)
                     {

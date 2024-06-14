@@ -23,7 +23,7 @@ public class WindowsAuthenticator
     /// Authenticate with VidiView Server using current Windows credentials
     /// </summary>
     /// <returns></returns>
-    /// <remarks>If successfull, an access token is set on the HttpClient</remarks>
+    /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync()
     {
         var api = await _http.HomeAsync();

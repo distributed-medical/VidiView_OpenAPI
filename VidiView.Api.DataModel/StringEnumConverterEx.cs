@@ -52,7 +52,7 @@ public class StringEnumConverterEx<TEnum> : JsonConverter<TEnum>
                         success = Enum.TryParse(typeof(TEnum), value, out var result2);
                         if (success)
                         {
-                            return (TEnum)result2;
+                            return (TEnum)result2!;
                         }
                     }
                     else

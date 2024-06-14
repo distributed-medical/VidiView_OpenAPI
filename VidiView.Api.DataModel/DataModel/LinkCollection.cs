@@ -23,7 +23,7 @@ public class LinkCollection : IDictionary<string, Link>
     /// <returns>True if the relation e</returns>
     bool IDictionary<string, Link>.TryGetValue(string key, out Link value)
     {
-        return _links.TryGetValue(key, out value);
+        return _links.TryGetValue(key, out value!);
     }
 
     /// <summary>

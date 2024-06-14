@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Runtime.Versioning;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.Serialization;
@@ -9,6 +10,7 @@ using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpResponseMessageExtensionWinRT
 {
     public static JsonSerializerOptions Options { get; set; } = VidiViewJson.DefaultOptions;
@@ -93,7 +95,7 @@ public static class HttpResponseMessageExtensionWinRT
             await AssertNotProblem(response);
 
             // Check if server is in maintenance mode
-            await MaintenanceMode.ThrowIfMaintenanceModeAsync((System.Net.HttpStatusCode)(int)response.StatusCode, response.RequestMessage.RequestUri);
+            await MaintenanceMode.ThrowIfMaintenanceModeAsync((System.Net.HttpStatusCode)(int)response.StatusCode, response.RequestMessage?.RequestUri);
 
             // Check if this a generic error
             switch (response.StatusCode)
@@ -105,7 +107,7 @@ public static class HttpResponseMessageExtensionWinRT
                     throw new E1030_NotSupportedException("This method is not implemented in the server service");
 
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
-                    throw new ArgumentOutOfRangeException("Position is out of range");
+                    throw new ArgumentOutOfRangeException(null, "Position is out of range");
 
                 case HttpStatusCode.Forbidden:
                     throw new E1003_AccessDeniedException(!string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : "403 Forbidden");

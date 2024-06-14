@@ -23,7 +23,7 @@ public static class ProblemDetailExtension
         if (TryGetPropertyValue<TValue>(problem, propertyName, options, out var value))
             return value;
         else
-            return default(TValue);
+            return default;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public static class ProblemDetailExtension
     /// <returns>True if successful</returns>
     public static bool TryGetPropertyValue<TValue>(this ProblemDetails? problem, string propertyName, JsonSerializerOptions options, out TValue? value)
     {
-        value = default(TValue);
+        value = default;
 
         if (problem?.RawResponse == null)
             return false;
@@ -50,7 +50,7 @@ public static class ProblemDetailExtension
                 switch (typeof(TValue))
                 {
                     case Type type when type == typeof(string):
-                        value = (TValue)(object)prop.Value.Value.GetString();
+                        value = (TValue?)(object?)prop.Value.Value.GetString();
                         return true;
 
                     case Type type when type == typeof(bool):

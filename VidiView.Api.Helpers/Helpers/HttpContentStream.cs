@@ -29,10 +29,12 @@ public class HttpContentStream : Stream
         if (response == null)
             throw new ArgumentNullException(nameof(response));
 
-        var stream = new HttpContentStream(http, response.RequestMessage?.RequestUri
-            ?? throw new Exception("Expected the request uri to be set on response"));
+        var stream = new HttpContentStream(http, 
+            response.RequestMessage?.RequestUri ?? throw new Exception("Expected the request uri to be set on response"))
+        {
+            ContentType = response.Content.Headers.ContentType?.MediaType
+        };
 
-        stream.ContentType = response.Content.Headers.ContentType?.MediaType;
         if (response.StatusCode == HttpStatusCode.PartialContent
             && response.Content.Headers.ContentRange?.HasRange == true)
         {
@@ -109,7 +111,7 @@ public class HttpContentStream : Stream
     public override bool CanRead => true;
 
     /// <summary>
-    /// Returns treu if this stream is seekable
+    /// Returns true if this stream is seekable
     /// </summary>
     public override bool CanSeek => _isSeekable;
 
@@ -209,15 +211,13 @@ public class HttpContentStream : Stream
             var range = new RangeHeaderValue(Position, Position + RequestBlockSize - 1);
 
             // Create our request
-            using (var request = new HttpRequestMessage(HttpMethod.Get, _requestUri))
-            {
-                request.Headers.Range = range;
-                var response = await _http.SendAsync(request, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false)
-                    ?? throw new NullReferenceException("Response unexpectedly null after completed send request");
-                await response.AssertSuccessAsync();
+            using var request = new HttpRequestMessage(HttpMethod.Get, _requestUri);
+            request.Headers.Range = range;
+            var response = await _http.SendAsync(request, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false)
+                ?? throw new NullReferenceException("Response unexpectedly null after completed send request");
+            await response.AssertSuccessAsync();
 
-                await AssignPart(response).ConfigureAwait(false);
-            }
+            await AssignPart(response).ConfigureAwait(false);
         }
     }
     async Task AssignPart(HttpResponseMessage response)

@@ -38,7 +38,7 @@ public class ConnectionRequest : IConnectState
 
         if (!uri!.IsAbsoluteUri)
             uri = new Uri(DefaultScheme + hostName);
-        else if (string.IsNullOrEmpty(uri.Host) && hostName.IndexOf("://") == -1)
+        else if (string.IsNullOrEmpty(uri.Host) && !hostName.Contains("://", StringComparison.CurrentCulture))
             uri = new Uri(DefaultScheme + hostName);
 
         return uri;

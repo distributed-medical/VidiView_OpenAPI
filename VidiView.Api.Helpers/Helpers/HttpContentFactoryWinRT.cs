@@ -1,6 +1,7 @@
 ﻿#if WINRT
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Versioning;
 using System.Text.Json;
 using VidiView.Api.Serialization;
 using Windows.Storage.Streams;
@@ -9,6 +10,7 @@ using Windows.Web.Http.Headers;
 
 namespace VidiView.Api.Helpers;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpContentFactoryWinRT
 {
     public static JsonSerializerOptions Options { get; set; } = VidiViewJson.DefaultOptions;

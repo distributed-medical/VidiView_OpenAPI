@@ -92,7 +92,7 @@ public static class HttpResponseMessageExtension
             await AssertNotProblem(response);
 
             // Check if server is in maintenance mode
-            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage.RequestUri);
+            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage?.RequestUri);
 
             // Check if this a generic error
             switch (response.StatusCode)
@@ -104,7 +104,7 @@ public static class HttpResponseMessageExtension
                     throw new E1030_NotSupportedException("This method is not implemented in the server service");
 
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
-                    throw new ArgumentOutOfRangeException("Position is out of range");
+                    throw new ArgumentOutOfRangeException(null, "Position is out of range");
 
                 case HttpStatusCode.Forbidden:
                     throw new E1003_AccessDeniedException(!string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : "403 Forbidden");

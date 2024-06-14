@@ -58,7 +58,7 @@ public class X509Authenticator
     /// Authenticate with VidiView Server using a specific client certificate
     /// </summary>
     /// <returns></returns>
-    /// <remarks>If successfull, an access token is set on the HttpClient</remarks>
+    /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(X509Certificate certificate)
     {
         var api = await _http.HomeAsync();
@@ -113,6 +113,9 @@ public class X509Authenticator
             if (authenticationException != null)
                 throw authenticationException;
 
+            if (User == null)
+                throw new Exception("User object not retrievable");
+
             link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
 
             Token = await _http.GetAsync<AuthToken>(link);
@@ -141,13 +144,17 @@ public class X509Authenticator
         Token = null;
     }
 
-    static HttpClientHandler GetHttpClientHandler(HttpMessageHandler messageHandler)
+    static HttpClientHandler GetHttpClientHandler(HttpMessageHandler? messageHandler)
     {
         while (messageHandler is DelegatingHandler dh)
-            messageHandler = dh.InnerHandler;
+        {
+            if (messageHandler is HttpClientHandler hch)
+                return hch;
 
-        return messageHandler as HttpClientHandler
-            ?? throw new NotSupportedException("The HttpClient is expected to have an HttpClientHandler");
+            messageHandler = dh.InnerHandler!;
+        }
+
+        throw new NotSupportedException("The HttpClient is expected to have an HttpClientHandler");
     }
 
     static HttpMessageHandler GetPrivateMessageHandler(HttpClient http)

@@ -52,7 +52,7 @@ public class PinCodeAuthenticator
     /// <param name="username"></param>
     /// <param name="pin"></param>
     /// <returns></returns>
-    /// <remarks>If successfull, an access token is set on the HttpClient</remarks>
+    /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(string username, string pin)
     {
         var api = await _http.HomeAsync();
@@ -86,7 +86,7 @@ public class PinCodeAuthenticator
         }
     }
 
-    AuthenticationHeaderValue CreateBasicAuthenticationHeader(string username, string password)
+    private static AuthenticationHeaderValue CreateBasicAuthenticationHeader(string username, string password)
     {
         ArgumentNullException.ThrowIfNull(username, nameof(username));
         if (username.Contains(':'))

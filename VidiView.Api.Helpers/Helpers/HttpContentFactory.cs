@@ -48,7 +48,7 @@ public static class HttpContentFactory
                 result.Headers.ContentType = new MediaTypeHeaderValue(contentType ?? "text/plain");
                 return result;
 
-            case Stream stream:
+            case Stream:
                 throw new NotImplementedException("You should call another overload of this method");
 
             case HttpContent hc:

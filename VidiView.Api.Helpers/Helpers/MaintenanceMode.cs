@@ -14,9 +14,9 @@ public static class MaintenanceMode
     /// <param name="response"></param>
     /// <returns></returns>
     /// <exception cref="E1405_ServiceMaintenanceModeException">Thrown if the server is in maintenance mode</exception>
-    public static async Task ThrowIfMaintenanceModeAsync(HttpStatusCode statusCode, Uri requestedUri)
+    public static async Task ThrowIfMaintenanceModeAsync(HttpStatusCode statusCode, Uri? requestedUri)
     {
-        if (statusCode == HttpStatusCode.ServiceUnavailable)
+        if (statusCode == HttpStatusCode.ServiceUnavailable && requestedUri != null)
         {
             // This indicates the computer is responding, but no service is found on the expected url
             MaintenanceInfo? maintenanceMode = null;
@@ -113,6 +113,6 @@ public static class MaintenanceMode
     /// <returns></returns>
     public static bool IsMaintenanceModeEndPoint(Uri uri)
     {
-        return uri.AbsolutePath.IndexOf("/vidiview/maintenance-mode/1/info/") != -1;
+        return uri.AbsolutePath.Contains("/vidiview/maintenance-mode/1/info/", StringComparison.CurrentCulture);
     }
 }

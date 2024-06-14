@@ -26,7 +26,7 @@ public class UsernamePasswordAuthenticator
     /// <param name="username"></param>
     /// <param name="password"></param>
     /// <returns></returns>
-    /// <remarks>If successfull, an access token is set on the HttpClient</remarks>
+    /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(string username, string password)
     {
         var api = await _http.HomeAsync();
@@ -57,7 +57,7 @@ public class UsernamePasswordAuthenticator
         }
     }
 
-    AuthenticationHeaderValue CreateBasicAuthenticationHeader(string username, string password)
+    private static AuthenticationHeaderValue CreateBasicAuthenticationHeader(string username, string password)
     {
         ArgumentNullException.ThrowIfNull(username, nameof(username));
         if (username.Contains(':'))
