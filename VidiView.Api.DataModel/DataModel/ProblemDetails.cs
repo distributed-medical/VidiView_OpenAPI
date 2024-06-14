@@ -13,5 +13,9 @@ public record ProblemDetails
     public string Title { get; init; } = string.Empty;
     public string Detail { get; init; } = string.Empty;
     public string? ErrorCode { get; init; }
-    
+
+    /// <summary>
+    /// The raw response as a string. Can be used to find more details serialized into the response
+    /// </summary>
+    public string RawResponse { get; set; } = string.Empty;
 }

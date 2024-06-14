@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -52,7 +53,10 @@ public static class HttpResponseMessageExtension
             try
             {
                 // This is an error that can be deserialized into an exception
-                problem = await DeserializeAsync<ProblemDetails>(response);
+                string bufferedResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                problem = JsonSerializer.Deserialize<ProblemDetails>(bufferedResponse, Options)
+                    ?? throw new Exception("Failed to deserialize response as ProblemDetails");
+                problem.RawResponse = bufferedResponse;
             }
             catch
             {

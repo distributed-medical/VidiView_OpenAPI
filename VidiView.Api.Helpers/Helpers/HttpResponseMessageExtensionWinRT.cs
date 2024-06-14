@@ -54,7 +54,10 @@ public static class HttpResponseMessageExtensionWinRT
             try
             {
                 // This is an error that can be deserialized into an exception
-                problem = await DeserializeAsync<ProblemDetails>(response);
+                string bufferedResponse = await response.Content.ReadAsStringAsync();
+                problem = JsonSerializer.Deserialize<ProblemDetails>(bufferedResponse, Options)
+                    ?? throw new Exception("Failed to deserialize response as ProblemDetails");
+                problem.RawResponse = bufferedResponse;
             }
             catch
             {

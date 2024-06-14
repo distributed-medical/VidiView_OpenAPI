@@ -1,4 +1,7 @@
-﻿namespace VidiView.Api.Exceptions;
+﻿using VidiView.Api.DataModel;
+using VidiView.Api.Serialization;
+
+namespace VidiView.Api.Exceptions;
 
 public class E1038_FieldRequiredException : VidiViewException
 {
@@ -6,4 +9,7 @@ public class E1038_FieldRequiredException : VidiViewException
         : base(message)
     {
     }
+
+    public string? FieldLevel => Problem.GetPropertyValue<string>(nameof(FieldLevel), VidiViewJson.DefaultOptions);
+
 }

@@ -38,6 +38,9 @@ public class VidiViewException : Exception
                         .SetValue(exc, errorCode);
                     type.GetProperty(nameof(HttpStatusCode))?
                         .SetValue(exc, httpError);
+                    type.GetProperty(nameof(Problem))?
+                        .SetValue(exc, problem);
+
                     return exc;
                 }
             }
@@ -45,7 +48,8 @@ public class VidiViewException : Exception
             return new VidiViewException(problem?.Detail ?? $"{(int)httpError} {httpError}")
             {
                 ErrorCode = errorCode,
-                HttpStatusCode = httpError
+                HttpStatusCode = httpError,
+                Problem = problem
             };
         }
         catch
@@ -76,6 +80,11 @@ public class VidiViewException : Exception
     /// The corresponding Http status code
     /// </summary>
     public HttpStatusCode HttpStatusCode { get; init; }
+
+    /// <summary>
+    /// The raw problem details
+    /// </summary>
+    public ProblemDetails? Problem { get; init; }
 
     /// <summary>
     /// The requested URI that resulted in this error
