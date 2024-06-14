@@ -141,6 +141,7 @@ public static class SettingKey
     public const string StudyDeleteBlockBookmarked = "System/Study/Delete/BlockDeletionOfBookmarkedStudy";
 
     public const string SystemFieldsStudyAccessionNumber = "System/Fields/Study/AccessionNumber";
+    public const string SystemFieldsStudyDepartmentId = "System/Fields/Study/DepartmentId";
 
     public const string WebViewEnable = "WebView/Enable";
     public const string WebViewUseLicenseCertificate = "WebView/UseDefaultCertificate";

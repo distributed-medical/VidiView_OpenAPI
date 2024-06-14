@@ -7,8 +7,8 @@
         <PackageTags>VidiView OpenAPI</PackageTags>
 
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
-        <FileVersion>5.0.11.0</FileVersion>
-        <Version>5.0.11</Version>
+        <FileVersion>5.0.12.0</FileVersion>
+        <Version>5.0.12-beta8</Version>
 
         <Company>Distributed Medical AB</Company>
         <Authors>Distributed Medical AB</Authors>
@@ -40,6 +40,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="VidiView.Api.DataModel" Version="5.0.10" />
+        <PackageReference Include="VidiView.Api.DataModel" Version="5.0.12-beta2" />
     </ItemGroup>
 </Project>
