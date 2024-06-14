@@ -140,6 +140,8 @@ public static class SettingKey
     public const string StudyDeleteUnidentifiedManuallyAllowed = "System/Study/Delete/Unidentified/Manually";
     public const string StudyDeleteBlockBookmarked = "System/Study/Delete/BlockDeletionOfBookmarkedStudy";
 
+    public const string SystemFieldsStudyAccessionNumber = "System/Fields/Study/AccessionNumber";
+
     public const string WebViewEnable = "WebView/Enable";
     public const string WebViewUseLicenseCertificate = "WebView/UseDefaultCertificate";
     public const string WebViewSessionTimeout = "WebView/SessionTimeout";
@@ -202,6 +204,7 @@ public static class SettingKey
     public const string ClientPreferenceLastActingRole = "Client/Preferences/Login/LastActingRole";
     public const string ClientPreferenceUICulture = "Client/Preferences/UI/Culture";
     public const string ClientPreferenceUIThumbnailWidth = "Client/Preferences/UI/StudyView/ThumbnailPaneWidth";
+    public const string ClientPreferenceVideoMinimumRequestSize = "Client/Preferences/Video/MinimumRequestSize";
 
     public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
     public const string ClientOptionsIdleLogout = "Client/Options/IdleLogout";
@@ -218,6 +221,10 @@ public static class SettingKey
     public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
     public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
 
+    public const string ClientReportDefaultAnatomicMapWidth = "Client/Report/Default/AnatomicMapWidth";
+    public const string ClientReportDefaultHeaderFontSize = "Client/Report/Default/HeaderFontSize";
+    public const string ClientReportDefaultTextFontSize = "Client/Report/Default/TextFontSize";
+    public const string ClientReportDefaultShowIndex = "Client/Report/Default/ShowIndex";
     public const string ClientReportLogotype = "Client/Report/Logotype";
     public const string ClientReportLogotypeHeight = "Client/Report/LogotypeHeight";
 
