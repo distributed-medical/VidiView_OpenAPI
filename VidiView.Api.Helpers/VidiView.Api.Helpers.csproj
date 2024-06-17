@@ -2,13 +2,13 @@
     <PropertyGroup>
         <AssemblyName>VidiView.Api.Helpers</AssemblyName>
         <TargetFrameworks>net7.0;net7.0-windows10.0.17763.0</TargetFrameworks>
-        <Platforms>AnyCPU;x64</Platforms>
+        <Platforms>AnyCPU</Platforms>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>VidiView OpenAPI</PackageTags>
 
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
-        <FileVersion>5.0.12.0</FileVersion>
-        <Version>5.0.12</Version>
+        <FileVersion>5.0.13.0</FileVersion>
+        <Version>5.0.13-beta1</Version>
 
         <Company>Distributed Medical AB</Company>
         <Authors>Distributed Medical AB</Authors>
@@ -25,7 +25,8 @@
         <Nullable>enable</Nullable>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    </PropertyGroup>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+	</PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net7.0-windows10.0.17763.0'">
         <DefineConstants>$(DefineConstants);WINRT</DefineConstants>
