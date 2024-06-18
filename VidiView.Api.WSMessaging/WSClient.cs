@@ -17,7 +17,7 @@ public class WSClient
     readonly SemaphoreSlim _receiveLock = new SemaphoreSlim(1);
     readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1);
     readonly ILogger _logger;
-    readonly ConcurrentDictionary<string, TaskCompletionSource<ResponseMessage>> _tasks = new();
+    readonly ConcurrentDictionary<string, TaskCompletionSource<ReplyMessage>> _tasks = new();
 
     ClientWebSocket? _socket;
 
@@ -73,7 +73,7 @@ public class WSClient
             await SendMessageInternalAsync(authMessage, socket, cancellationToken);
             var message = await ReadMessageInternalAsync(socket, cancellationToken);
 
-            if (message is ResponseMessage response && response.InResponseTo == authMessage.MessageId)
+            if (message is ReplyMessage response && response.InReplyTo == authMessage.MessageId)
             {
                 // Successfully connected
                 _socket = socket;
@@ -156,7 +156,7 @@ public class WSClient
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public async Task<ResponseMessage> SendMessageAsync(WSMessage message)
+    public async Task<ReplyMessage> SendMessageAsync(WSMessage message)
     {
         try
         {
@@ -175,9 +175,9 @@ public class WSClient
     /// <param name="message"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ResponseMessage> SendMessageAsync(WSMessage message, CancellationToken cancellationToken)
+    public async Task<ReplyMessage> SendMessageAsync(WSMessage message, CancellationToken cancellationToken)
     {
-        var tcs = new TaskCompletionSource<ResponseMessage>();
+        var tcs = new TaskCompletionSource<ReplyMessage>();
         var success = _tasks.TryAdd(message.MessageId, tcs);
         if (!success)
             throw new InvalidOperationException("This message is already being awaited");
@@ -238,10 +238,10 @@ public class WSClient
             while (true)
             {
                 var message = await ReadMessageInternalAsync(socket, CancellationToken.None);
-                if (message is ResponseMessage response)
+                if (message is ReplyMessage response)
                 {
                     // Mark corresponding call as completed
-                    if (_tasks.TryRemove(response.InResponseTo, out var tcs))
+                    if (_tasks.TryRemove(response.InReplyTo, out var tcs))
                     {
                         tcs.SetResult(response);
 
