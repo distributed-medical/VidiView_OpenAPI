@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.WebSockets;
 
-namespace VidiView.Api.WSMessaging;
+namespace VidiView.Api.Exceptions;
 public class ConnectionClosedException : Exception
 {
     public ConnectionClosedException(WebSocketCloseStatus? status, string? description)
         : base($"Connection closed. {description}")
+    {
+        Status = status;
+        Description = description;
+    }
+    public ConnectionClosedException(WebSocketCloseStatus? status, string? description, Exception innerException)
+        : base($"Connection closed. {description}", innerException)
     {
         Status = status;
         Description = description;

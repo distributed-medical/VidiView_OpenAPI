@@ -27,6 +27,8 @@ namespace VidiView.Api.Headers;
 /// </example>
 public sealed class ApiKeyHeader
 {
+    public const string HeaderName = "X-Api-key";
+
     /// <summary>
     /// Default constructor of ApiKeyHeader
     /// </summary>
@@ -65,7 +67,7 @@ public sealed class ApiKeyHeader
     /// <summary>
     /// The Http header name
     /// </summary>
-    public string Name => "X-Api-key";
+    public string Name => HeaderName;
 
     /// <summary>
     /// This is the application client type

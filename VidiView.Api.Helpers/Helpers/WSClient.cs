@@ -1,30 +1,35 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
+using VidiView.Api.Exceptions;
+using VidiView.Api.WSMessaging;
 
-namespace VidiView.Api.WSMessaging;
+namespace VidiView.Api.Helpers;
 
 public class WSClient
 {
-    const string SubProtocol = "vidiview.com+json";
+    public const string DefaultSubProtocol = "vidiview.com+json";
 
     readonly byte[] _receiveBuffer = new byte[16 * 1024];
     readonly SemaphoreSlim _receiveLock = new SemaphoreSlim(1);
     readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1);
     readonly ILogger _logger;
-    readonly ConcurrentDictionary<string, TaskCompletionSource<ReplyMessage>> _tasks = new();
+    readonly ConcurrentDictionary<string, TaskCompletionSource<ReplyMessage>> _messageAwaitingReply = new();
 
     ClientWebSocket? _socket;
+    CancellationTokenSource? _cts;
 
     /// <summary>
     /// Event raised when new message arrives
     /// </summary>
     public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
+
+    /// <summary>
+    /// Raised when the connection is closed
+    /// </summary>
+    public event EventHandler<ConnectionClosedEventArgs>? ConnectionClosed;
 
     public WSClient(ILogger<WSClient>? logger = null)
     {
@@ -32,10 +37,18 @@ public class WSClient
     }
 
     /// <summary>
+    /// The sub-protocol to use
+    /// </summary>
+    public string SubProtocol { get; init; } = DefaultSubProtocol;
+
+    /// <summary>
     /// Max message size 
     /// </summary>
     public int MaxMessageSize { get; set; } = 2 * 1024 * 1024;
 
+    /// <summary>
+    /// Timeout for sending messages
+    /// </summary>
     public TimeSpan SendMessageTimeout { get; set; } = TimeSpan.FromSeconds(20);
 
     /// <summary>
@@ -43,13 +56,13 @@ public class WSClient
     /// </summary>
     public bool IsConnected => _socket != null;
 
-
     /// <summary>
-    /// Connect to VidiView WebSocket and authenticate connection
+    /// Connect to VidiView Web Socket and authenticate connection
     /// </summary>
-    /// <param name="uri"></param>
-    /// <param name="apiKey"></param>
-    /// <param name="authenticationToken"></param>
+    /// <param name="uri">The Uri to call</param>
+    /// <param name="apiKey">The application API key. This is the value of the ApiKey header to call the API</param>
+    /// <param name="authorization">Authorization token. This is the value of the authorization bearer token to call the API</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task ConnectAsync(Uri uri, string apiKey, string authorization, CancellationToken cancellationToken)
     {
@@ -77,7 +90,7 @@ public class WSClient
             {
                 // Successfully connected
                 _socket = socket;
-                ReadMessageLoop(socket);
+                ReadMessageLoop();
             }
             else
             {
@@ -92,11 +105,15 @@ public class WSClient
     }
 
     /// <summary>
-    /// Close socket connection
+    /// Close connection
     /// </summary>
     /// <returns></returns>
     public async Task CloseAsync()
     {
+        // Cancel the message loop
+        _cts?.Cancel();
+        await Task.Delay(150);
+
         switch (_socket?.State)
         {
             case null:
@@ -111,21 +128,14 @@ public class WSClient
             default:
                 _logger.LogInformation("Close socket requested");
 
-                // Close nicely
-                await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+                // Initiate Close Handshake
+                await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
+                    "Close requested",
+                    new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
 
                 try
                 {
-                    // Wait for close operation to complete
-                    var message = await ReadMessageInternalAsync(_socket,
-                        new CancellationTokenSource(TimeSpan.FromSeconds(2)).Token);
-
-                    if (message == null)
-                    {
-                        // Another read operation is in progress, which will
-                        // receive the Close response. This is OK
-                        await Task.Delay(100); // Ensure message is processed
-                    }
+                    // The ReadMessageLoop will signal connection closed event
                     _logger.LogDebug("Connection successfully closed");
                 }
                 catch (ConnectionClosedException)
@@ -142,20 +152,21 @@ public class WSClient
     }
 
     /// <summary>
-    /// Post message without waiting for any response
+    /// Post message without waiting for response
     /// </summary>
     /// <param name="message"></param>
-    /// <returns></returns>
     public async void PostMessage(WSMessage message)
     {
         await SendMessageInternalAsync(message, null, CancellationToken.None);
     }
 
     /// <summary>
-    /// Send a message and wait for response. Default timeout <see cref="SendMessageTimeout"/> is applied
+    /// Send a message and wait for reply. Default timeout <see cref="SendMessageTimeout"/> is applied
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
+    /// <exception cref="TimeoutException">Thrown if timeout</exception>
+    /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
     public async Task<ReplyMessage> SendMessageAsync(WSMessage message)
     {
         try
@@ -175,15 +186,26 @@ public class WSClient
     /// <param name="message"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
     public async Task<ReplyMessage> SendMessageAsync(WSMessage message, CancellationToken cancellationToken)
     {
         var tcs = new TaskCompletionSource<ReplyMessage>();
-        var success = _tasks.TryAdd(message.MessageId, tcs);
+        var success = _messageAwaitingReply.TryAdd(message.MessageId, tcs);
         if (!success)
             throw new InvalidOperationException("This message is already being awaited");
 
-        await SendMessageInternalAsync(message, null, cancellationToken);
-        return await tcs.Task;
+        try
+        {
+            await SendMessageInternalAsync(message, null, cancellationToken);
+
+            // No wait for reply to be received
+            return await tcs.Task.WaitAsync(cancellationToken);
+        }
+        finally
+        {
+            // Ensure we don't leave this lingering
+            _messageAwaitingReply.TryRemove(message.MessageId, out _);
+        }
     }
 
     /// <summary>
@@ -197,7 +219,7 @@ public class WSClient
     {
         ArgumentNullException.ThrowIfNull(message, nameof(message));
 
-        var data = MessageSerializer.Serialize(message);
+        var data = message.Serialize();
         if (data.Length > MaxMessageSize)
         {
             _logger.LogError("Message size too large. Message size is {bytes}, max size is {bytes}", data.Length, MaxMessageSize);
@@ -215,6 +237,18 @@ public class WSClient
                 true,
                 cancellationToken);
         }
+        catch (WebSocketException ex)
+        {
+            switch (ex.WebSocketErrorCode)
+            {
+                case WebSocketError.Faulted:
+                case WebSocketError.ConnectionClosedPrematurely:
+                case WebSocketError.InvalidState:
+                    throw new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+            }
+
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Send message failed");
@@ -230,18 +264,23 @@ public class WSClient
     /// This will read messages and fire events
     /// </summary>
     /// <param name="socket"></param>
-    private async void ReadMessageLoop(ClientWebSocket socket)
+    private async void ReadMessageLoop()
     {
+        _cts = new CancellationTokenSource();
+        var cancellationToken = _cts.Token;
+
         _logger.LogInformation("Read message loop started");
+        var socket = _socket ?? throw new InvalidOperationException("Not connected");
+
         try
         {
             while (true)
             {
-                var message = await ReadMessageInternalAsync(socket, CancellationToken.None);
+                var message = await ReadMessageInternalAsync(socket, cancellationToken);
                 if (message is ReplyMessage response)
                 {
-                    // Mark corresponding call as completed
-                    if (_tasks.TryRemove(response.InReplyTo, out var tcs))
+                    // Check if any message is waiting for reply
+                    if (_messageAwaitingReply.TryRemove(response.InReplyTo, out var tcs))
                     {
                         tcs.SetResult(response);
 
@@ -256,17 +295,30 @@ public class WSClient
                 }
             }
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
-            _logger.LogError(ex, "Error reading message");
+            // Since we are here, we are no longer connected
+            _socket = null;
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                // This is a deliberate Close called from our side
+                _logger.LogDebug(ex, "Connection closed");
+                ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(null));
+            }
+            else
+            {
+                _logger.LogWarning(ex, "Connection unexpectedly closed");
+                ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
+            }
+
+            // No use throwing here since this is declared async void
         }
         finally
         {
             _logger.LogInformation("Read message loop exited");
         }
     }
-
-
 
     /// <summary>
     /// Read next message from the socket. This call will block until a message is received
@@ -289,7 +341,8 @@ public class WSClient
 
             do
             {
-                var result = await socket.ReceiveAsync(_receiveBuffer, cancellationToken).ConfigureAwait(false);
+                // Cancelling this call will abort the socket
+                var result = await socket.ReceiveAsync(_receiveBuffer, CancellationToken.None).ConfigureAwait(false);
                 switch (result.MessageType)
                 {
                     case WebSocketMessageType.Text:
@@ -298,7 +351,7 @@ public class WSClient
                         if (result.EndOfMessage && concatenatedStream == null)
                         {
                             _logger.LogDebug("Full message received ({bytes} bytes)", result.Count);
-                            var success = MessageSerializer.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
+                            var success = WSMessageSerializer.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
                             if (!success)
                                 _logger.LogWarning("Failed to deserialize message");
 
@@ -310,18 +363,14 @@ public class WSClient
 
                             // The entire message didn't fit in our local buffer
                             // Copy to temporary stream instead
-                            if (concatenatedStream == null)
-                            {
-                                concatenatedStream = new MemoryStream(_receiveBuffer.Length * 8);
-                            }
-
+                            concatenatedStream ??= new MemoryStream(_receiveBuffer.Length * 8);
                             concatenatedStream.Write(_receiveBuffer, 0, result.Count);
                             if (concatenatedStream.Length > MaxMessageSize)
                             {
                                 _logger.LogError("Input message too large (> {bytes}). Closing connection", MaxMessageSize);
 
                                 await socket.CloseAsync(WebSocketCloseStatus.MessageTooBig, "Input message too large", CancellationToken.None);
-                                throw new Exception($"Input message larger than {MaxMessageSize} bytes");
+                                throw new ConnectionClosedException(WebSocketCloseStatus.MessageTooBig, $"Input message larger than {MaxMessageSize} bytes");
                             }
 
                             if (!result.EndOfMessage)
@@ -330,7 +379,7 @@ public class WSClient
                             concatenatedStream.Flush();
 
                             _logger.LogDebug("Full message assembled ({bytes} bytes)", concatenatedStream.Length);
-                            var success = MessageSerializer.TryDeserialize(
+                            var success = WSMessageSerializer.TryDeserialize(
                                 new ArraySegment<byte>(concatenatedStream.GetBuffer(), 0, (int)concatenatedStream.Length),
                                 out var message);
                             if (!success)
@@ -341,7 +390,6 @@ public class WSClient
 
                     case WebSocketMessageType.Close:
                         _logger.LogInformation("Connection closed. {status}: {reason}", result.CloseStatus, result.CloseStatusDescription);
-                        _socket = null; // IsConnected => False
                         throw new ConnectionClosedException(result.CloseStatus, result.CloseStatusDescription);
 
                     case WebSocketMessageType.Binary:
@@ -355,6 +403,18 @@ public class WSClient
 
                 throw new Exception("Unexpected");
             } while (true);
+        }
+        catch (WebSocketException ex)
+        {
+            switch (ex.WebSocketErrorCode)
+            {
+                case WebSocketError.Faulted:
+                case WebSocketError.ConnectionClosedPrematurely:
+                case WebSocketError.InvalidState:
+                    throw new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+            }
+
+            throw;
         }
         finally
         {

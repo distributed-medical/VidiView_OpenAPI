@@ -1,29 +1,30 @@
 using System.Text;
+using VidiView.Api.WSMessaging;
 
-namespace VidiView.Api.WSMessaging.Test;
+namespace VidiView.Api.Helpers.Test.Extension;
 
 [TestClass]
-public class MessageSerializerTest
+public class WSMessageExtensionTest
 {
     [TestMethod]
     public void TestSerializeMessage()
     {
         var authMessage = new AuthenticateMessage("abcd", "1234")
-            { MessageId = "2d4122306afd4cdb946f6e2ecbb5a99f" };
+        { MessageId = "2d4122306afd4cdb946f6e2ecbb5a99f" };
 
-        var buffer = MessageSerializer.Serialize(authMessage);
+        var buffer = authMessage.Serialize();
 
         // Assert
         string result = Encoding.UTF8.GetString(buffer);
-        Assert.AreEqual("{\"ApiKey\":\"abcd\",\"Authorization\":\"1234\",\"MessageType\":\"AuthenticateMessage\",\"MessageId\":\"2d4122306afd4cdb946f6e2ecbb5a99f\"}", result);
+        Assert.AreEqual("{\"api-key\":\"abcd\",\"authorization\":\"1234\",\"message-type\":\"AuthenticateMessage\",\"message-id\":\"2d4122306afd4cdb946f6e2ecbb5a99f\"}", result);
     }
 
     [TestMethod]
     public void TestDeserializeMessage()
     {
-        string data = "{\"ApiKey\":\"abcd\",\"Authorization\":\"1234\",\"MessageType\":\"AuthenticateMessage\",\"MessageId\":\"2d4122306afd4cdb946f6e2ecbb5a99f\"}";
+        string data = "{\"api-key\":\"abcd\",\"authorization\":\"1234\",\"message-type\":\"AuthenticateMessage\",\"message-id\":\"2d4122306afd4cdb946f6e2ecbb5a99f\"}";
         var buffer = Encoding.UTF8.GetBytes(data);
-        var success = MessageSerializer.TryDeserialize(buffer, out var message);
+        var success = WSMessageSerializer.TryDeserialize(buffer, out var message);
 
         // Assert
         Assert.IsTrue(success);

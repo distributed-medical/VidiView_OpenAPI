@@ -6,8 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <Import Project="..\..\VidiView_Server\VidiView.Api.WS.MessageDefs\VidiView.Api.WS.MessageDeclarations.projitems" Label="Shared" />
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>

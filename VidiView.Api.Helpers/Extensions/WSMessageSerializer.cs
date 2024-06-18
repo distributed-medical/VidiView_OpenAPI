@@ -1,29 +1,26 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using VidiView.Api.Serialization;
 
 namespace VidiView.Api.WSMessaging;
-public class MessageSerializer
+
+public static class WSMessageSerializer
+
 {
     /// <summary>
-    /// Options to use for Json serialization/deserialization
-    /// </summary>
-    public static JsonSerializerOptions? JsonSerializerOptions { get; set; }
-
-    /// <summary>
-    /// Serialize message to UTF8 byte array
+    /// Serialize message to Json utf-8 byte array
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public static byte[] Serialize(WSMessage message)
+    public static byte[] Serialize(this WSMessage message)
     {
         using var ms = new MemoryStream(16 * 1024);
         JsonSerializer.Serialize(
             new Utf8JsonWriter(ms),
             message,
             message.GetType(),
-            JsonSerializerOptions);
+            VidiViewJson.DefaultOptions);
 
         return ms.ToArray();
     }
@@ -36,7 +33,7 @@ public class MessageSerializer
     /// <returns></returns>
     public static bool TryDeserialize(Span<byte> buffer, out WSMessage? message)
     {
-        string propertyName = JsonSerializerOptions?.PropertyNamingPolicy?.ConvertName(nameof(WSMessage.MessageType)) 
+        string propertyName = VidiViewJson.DefaultOptions?.PropertyNamingPolicy?.ConvertName(nameof(WSMessage.MessageType))
             ?? nameof(WSMessage.MessageType);
 
         try
@@ -50,7 +47,7 @@ public class MessageSerializer
                 if (tp == null)
                     throw new NotSupportedException($"Type {typeName} is not supported");
 
-                message = JsonSerializer.Deserialize(deserializedModel, tp, JsonSerializerOptions) as WSMessage;
+                message = JsonSerializer.Deserialize(deserializedModel, tp, VidiViewJson.DefaultOptions) as WSMessage;
                 return message != null;
             }
         }
@@ -60,4 +57,5 @@ public class MessageSerializer
         message = null;
         return false;
     }
+
 }
