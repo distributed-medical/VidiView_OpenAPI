@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net.WebSockets;
+using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.WSMessaging;
 
@@ -16,7 +17,7 @@ public class WSClient
     readonly SemaphoreSlim _receiveLock = new SemaphoreSlim(1);
     readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1);
     readonly ILogger _logger;
-    readonly ConcurrentDictionary<string, TaskCompletionSource<ReplyMessage>> _messageAwaitingReply = new();
+    readonly ConcurrentDictionary<string, TaskCompletionSource<IWSReply>> _messageAwaitingReply = new();
 
     ClientWebSocket? _socket;
     CancellationTokenSource? _cts;
@@ -57,6 +58,11 @@ public class WSClient
     public bool IsConnected => _socket != null;
 
     /// <summary>
+    /// Returns the connected user
+    /// </summary>
+    public User? User { get; private set; }
+
+    /// <summary>
     /// Connect to VidiView Web Socket and authenticate connection
     /// </summary>
     /// <param name="uri">The Uri to call</param>
@@ -81,14 +87,19 @@ public class WSClient
 
             // Now we are connected. The server requires us to
             // send an authentication message first of all
-            var authMessage = new AuthenticateMessage(apiKey, authorization);
+            var authMessage = WSMessage.Factory<AuthenticateMessage>();
+            authMessage.ApiKey = apiKey;
+            authMessage.Authorization = authorization;
 
             await SendMessageInternalAsync(authMessage, socket, cancellationToken);
             var message = await ReadMessageInternalAsync(socket, cancellationToken);
 
-            if (message is ReplyMessage response && response.InReplyTo == authMessage.MessageId)
+            if (message is AuthenticateReplyMessage response 
+                && response.InReplyTo == authMessage.MessageId)
             {
                 // Successfully connected
+                User = response.User;
+
                 _socket = socket;
                 ReadMessageLoop();
             }
@@ -99,6 +110,7 @@ public class WSClient
         }
         catch
         {
+            User = null;
             socket.Dispose();
             throw;
         }
@@ -113,6 +125,7 @@ public class WSClient
         // Cancel the message loop
         _cts?.Cancel();
         await Task.Delay(150);
+        User = null;
 
         switch (_socket?.State)
         {
@@ -152,10 +165,10 @@ public class WSClient
     }
 
     /// <summary>
-    /// Post message without waiting for response
+    /// Post message without waiting for reply
     /// </summary>
     /// <param name="message"></param>
-    public async void PostMessage(WSMessage message)
+    public async Task SendAsync(IWSMessage message)
     {
         await SendMessageInternalAsync(message, null, CancellationToken.None);
     }
@@ -167,11 +180,11 @@ public class WSClient
     /// <returns></returns>
     /// <exception cref="TimeoutException">Thrown if timeout</exception>
     /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
-    public async Task<ReplyMessage> SendMessageAsync(WSMessage message)
+    public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message)
     {
         try
         {
-            return await SendMessageAsync(message,
+            return await SendAndAwaitReplyAsync(message,
                 new CancellationTokenSource(SendMessageTimeout).Token);
         }
         catch (OperationCanceledException)
@@ -187,9 +200,9 @@ public class WSClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
-    public async Task<ReplyMessage> SendMessageAsync(WSMessage message, CancellationToken cancellationToken)
+    public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message, CancellationToken cancellationToken)
     {
-        var tcs = new TaskCompletionSource<ReplyMessage>();
+        var tcs = new TaskCompletionSource<IWSReply>();
         var success = _messageAwaitingReply.TryAdd(message.MessageId, tcs);
         if (!success)
             throw new InvalidOperationException("This message is already being awaited");
@@ -198,7 +211,7 @@ public class WSClient
         {
             await SendMessageInternalAsync(message, null, cancellationToken);
 
-            // No wait for reply to be received
+            // Now wait for reply to be received
             return await tcs.Task.WaitAsync(cancellationToken);
         }
         finally
@@ -215,7 +228,7 @@ public class WSClient
     /// <param name="socket">Specific socket to use. Set to null to use connected socket</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    async Task SendMessageInternalAsync(WSMessage message, ClientWebSocket? socket, CancellationToken cancellationToken)
+    async Task SendMessageInternalAsync(IWSMessage message, ClientWebSocket? socket, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message, nameof(message));
 
@@ -277,12 +290,12 @@ public class WSClient
             while (true)
             {
                 var message = await ReadMessageInternalAsync(socket, cancellationToken);
-                if (message is ReplyMessage response)
+                if (message is IWSReply reply)
                 {
                     // Check if any message is waiting for reply
-                    if (_messageAwaitingReply.TryRemove(response.InReplyTo, out var tcs))
+                    if (_messageAwaitingReply.TryRemove(reply.InReplyTo, out var tcs))
                     {
-                        tcs.SetResult(response);
+                        tcs.SetResult(reply);
 
                         // Response has been returned. Don't raise event
                         continue;
@@ -327,7 +340,7 @@ public class WSClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    async Task<WSMessage?> ReadMessageInternalAsync(ClientWebSocket socket, CancellationToken cancellationToken)
+    async Task<IWSMessage?> ReadMessageInternalAsync(ClientWebSocket socket, CancellationToken cancellationToken)
     {
         if (!_receiveLock.Wait(0))
         {
@@ -351,7 +364,7 @@ public class WSClient
                         if (result.EndOfMessage && concatenatedStream == null)
                         {
                             _logger.LogDebug("Full message received ({bytes} bytes)", result.Count);
-                            var success = WSMessageSerializer.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
+                            var success = WSMessage.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
                             if (!success)
                                 _logger.LogWarning("Failed to deserialize message");
 
@@ -379,7 +392,7 @@ public class WSClient
                             concatenatedStream.Flush();
 
                             _logger.LogDebug("Full message assembled ({bytes} bytes)", concatenatedStream.Length);
-                            var success = WSMessageSerializer.TryDeserialize(
+                            var success = WSMessage.TryDeserialize(
                                 new ArraySegment<byte>(concatenatedStream.GetBuffer(), 0, (int)concatenatedStream.Length),
                                 out var message);
                             if (!success)
