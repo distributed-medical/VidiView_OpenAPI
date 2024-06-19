@@ -170,6 +170,7 @@ public class WSClient
     /// <param name="message"></param>
     public async Task SendAsync(IWSMessage message)
     {
+        AssertValid(message);
         await SendMessageInternalAsync(message, null, CancellationToken.None);
     }
 
@@ -202,6 +203,7 @@ public class WSClient
     /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
     public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message, CancellationToken cancellationToken)
     {
+        AssertValid(message);
         var tcs = new TaskCompletionSource<IWSReply>();
         var success = _messageAwaitingReply.TryAdd(message.MessageId, tcs);
         if (!success)
@@ -229,9 +231,7 @@ public class WSClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     async Task SendMessageInternalAsync(IWSMessage message, ClientWebSocket? socket, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(message, nameof(message));
-
+    { 
         var data = message.Serialize();
         if (data.Length > MaxMessageSize)
         {
@@ -271,6 +271,15 @@ public class WSClient
         {
             _sendLock.Release();
         }
+    }
+
+    private static void AssertValid(IWSMessage message)
+    {
+        ArgumentNullException.ThrowIfNull(message, nameof(message));
+        if (string.IsNullOrEmpty(message.MessageId))
+            throw new ArgumentException("MessageId must be specified", nameof(message.MessageId));
+        if (string.IsNullOrEmpty(message.MessageType))
+            throw new ArgumentException("MessageType must be specified", nameof(message.MessageType));
     }
 
     /// <summary>
