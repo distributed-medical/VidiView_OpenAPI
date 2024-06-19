@@ -4,7 +4,7 @@ name: Build, test and publish API helpers
 
 on:
   push:
-    branches: [ "CP-dev", "main", "release" ]
+    branches: [ ]
 
 jobs:
 
@@ -49,6 +49,6 @@ jobs:
       run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
     - name: Publish to Disitrbuted Medical package store
-      if: github.ref == 'refs/heads/release'
+      if: github.ref == 'refs/heads/main'
       run: dotnet nuget push **\VidiView.Api.Helpers*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
 
