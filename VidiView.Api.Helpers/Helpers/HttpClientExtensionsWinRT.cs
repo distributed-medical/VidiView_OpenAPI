@@ -57,13 +57,12 @@ public static class HttpClientExtensionsWinRT
         _cache[http] = apiHome;
     }
 
-#if (DEBUG)
-    // Only use for unit-testing
+    [Obsolete("Use the ConnectAsync() extension method instead")]
     public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
     {
         _baseAddress[http] = baseAddress;
+        _cache.Remove(http);
     }
-#endif
 
     /// <summary>
     /// Helper extension to get the API starting point. The result will 
@@ -78,7 +77,7 @@ public static class HttpClientExtensionsWinRT
             return home;
 
         if (!_baseAddress.TryGetValue(http, out var uri))
-            throw new InvalidOperationException("You must call SetHostName first");
+            throw new InvalidOperationException("You must call ConnectAsync()");
 
         var response = await http.GetAsync(uri);
         await response.AssertSuccessAsync();

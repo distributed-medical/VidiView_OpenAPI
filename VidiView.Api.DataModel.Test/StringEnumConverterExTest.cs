@@ -14,7 +14,7 @@ public class StringEnumConverterExTest
 {
     /// <summary>
     /// Default serialization options. 
-    /// Note! The default JsonStringEnumConverter factory overrides the explicit convertes defined on the Enums
+    /// Note! The default JsonStringEnumConverter factory overrides the explicit converters defined on the Enums
     /// </summary>
     static JsonSerializerOptions DefaultOptions
     {
