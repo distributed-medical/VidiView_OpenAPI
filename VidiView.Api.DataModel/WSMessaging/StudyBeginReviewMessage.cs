@@ -1,5 +1,8 @@
 ﻿namespace VidiView.Api.WSMessaging;
 
+/// <summary>
+/// Sent when beginning review of study
+/// </summary>
 public class StudyBeginReviewMessage : IWSMessage
 {
     public string MessageType { get; init; }
