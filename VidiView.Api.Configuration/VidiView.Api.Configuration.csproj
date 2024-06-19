@@ -8,6 +8,10 @@
 	  <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<NoWarn>8602;8618</NoWarn>
+	</PropertyGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj" />
     <ProjectReference Include="..\VidiView.Api.Helpers\VidiView.Api.Helpers.csproj" />

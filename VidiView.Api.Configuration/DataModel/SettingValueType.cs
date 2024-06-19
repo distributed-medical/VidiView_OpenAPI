@@ -33,7 +33,7 @@ public class SettingValueType
     public SettingValueType(string typeDef)
     {
         if (typeDef == null)
-            throw new ArgumentNullException("No type information has been loaded for this setting");
+            throw new ArgumentNullException(nameof(typeDef), "No type information has been loaded for this setting");
 
         try
         {
@@ -79,7 +79,7 @@ public class SettingValueType
 
     public SettingType Type { get; set; }
 
-    public string Unit { get; set; }
+    public string? Unit { get; set; }
 
     public SettingDataTypeEnumOption[] Enumeration { get; set; }
 
@@ -133,7 +133,7 @@ public class SettingValueType
     public string Validate(string value)
     {
         if (value == null)
-            throw new ArgumentException(nameof(value));
+            throw new ArgumentNullException(nameof(value));
 
         // Verify enum value
         value = AssertEnumValid(value);
@@ -150,15 +150,15 @@ public class SettingValueType
             case SettingType.String:
                 return value;
             case SettingType.Int:
-                if (int.TryParse(value, out var i2))
+                if (int.TryParse(value, out _))
                     return value;
                 break;
             case SettingType.Double:
-                if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
+                if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
                     return value;
                 break;
             case SettingType.Array:
-                var p = StringArray.Split(value);
+                _ = StringArray.Split(value);
                 return value;
             default:
                 Debug.Assert(false, "Not implemented");
@@ -173,10 +173,8 @@ public class SettingValueType
         // Check if this is an enumerated value
         if (Enumeration != null)
         {
-            var enm = Enumeration.FirstOrDefault((e) => (e.Value.Equals(value, StringComparison.OrdinalIgnoreCase)));
-            if (enm == null)
-                throw new ArgumentException("The provided value is not among the valid enumeration values");
-
+            var enm = Enumeration.FirstOrDefault((e) => (e.Value.Equals(value, StringComparison.OrdinalIgnoreCase))) 
+                ?? throw new ArgumentException("The provided value is not among the valid enumeration values");
             value = enm.Value;
         }
         return value;
@@ -189,24 +187,17 @@ public class SettingValueType
     /// <returns></returns>
     public double GetCount(TimeSpan ts)
     {
-        var u = (TimeSpanType)Enum.Parse(typeof(TimeSpanType), Unit, true);
-        switch (u)
+        var u = (TimeSpanType)Enum.Parse(typeof(TimeSpanType), Unit ?? throw new ArgumentException("Unit not specified"), true);
+        return u switch
         {
-            case TimeSpanType.Seconds:
-                return Math.Round(ts.TotalSeconds, 2);
-            case TimeSpanType.Minutes:
-                return Math.Round(ts.TotalMinutes, 2);
-            case TimeSpanType.Hours:
-                return Math.Round(ts.TotalHours, 2);
-            case TimeSpanType.Days:
-                return Math.Round(ts.TotalDays, 2);
-            case TimeSpanType.Months:
-                return Math.Round(ts.TotalDays / 30.4166D, 2);
-            case TimeSpanType.Years:
-                return Math.Round(ts.TotalDays / 365D, 2);
-            default:
-                throw new NotImplementedException();
-        }
+            TimeSpanType.Seconds => Math.Round(ts.TotalSeconds, 2),
+            TimeSpanType.Minutes => Math.Round(ts.TotalMinutes, 2),
+            TimeSpanType.Hours => Math.Round(ts.TotalHours, 2),
+            TimeSpanType.Days => Math.Round(ts.TotalDays, 2),
+            TimeSpanType.Months => Math.Round(ts.TotalDays / 30.4166D, 2),
+            TimeSpanType.Years => Math.Round(ts.TotalDays / 365D, 2),
+            _ => throw new NotImplementedException(),
+        };
     }
 
     /// <summary>
@@ -224,24 +215,17 @@ public class SettingValueType
     {
         if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
         {
-            var ts = (TimeSpanType)Enum.Parse(typeof(TimeSpanType), Unit, true);
-            switch (ts)
+            var ts = (TimeSpanType)Enum.Parse(typeof(TimeSpanType), Unit ?? throw new ArgumentException("Unit not specified"), true);
+            return ts switch
             {
-                case TimeSpanType.Seconds:
-                    return TimeSpan.FromSeconds(d);
-                case TimeSpanType.Minutes:
-                    return TimeSpan.FromMinutes(d);
-                case TimeSpanType.Hours:
-                    return TimeSpan.FromHours(d);
-                case TimeSpanType.Days:
-                    return TimeSpan.FromDays(d);
-                case TimeSpanType.Months:
-                    return TimeSpan.FromDays(d * 30.4166D);
-                case TimeSpanType.Years:
-                    return TimeSpan.FromDays(d * 365);
-                default:
-                    throw new ArgumentException($"Unit {Unit} not supported");
-            }
+                TimeSpanType.Seconds => TimeSpan.FromSeconds(d),
+                TimeSpanType.Minutes => TimeSpan.FromMinutes(d),
+                TimeSpanType.Hours => TimeSpan.FromHours(d),
+                TimeSpanType.Days => TimeSpan.FromDays(d),
+                TimeSpanType.Months => TimeSpan.FromDays(d * 30.4166D),
+                TimeSpanType.Years => TimeSpan.FromDays(d * 365),
+                _ => throw new ArgumentException($"Unit {Unit} not supported"),
+            };
         }
 
         throw new ArgumentException("A double value expected");
@@ -261,7 +245,7 @@ public class SettingDataTypeEnumOption
     {
     }
 
-    public SettingDataTypeEnumOption(string value, string description)
+    public SettingDataTypeEnumOption(string value, string? description)
     {
         Value = value;
         Description = description;
@@ -269,7 +253,7 @@ public class SettingDataTypeEnumOption
 
     public string Value { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public override string ToString()
     {
