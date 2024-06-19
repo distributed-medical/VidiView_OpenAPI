@@ -4,7 +4,7 @@ name: Build, test and publish data model
 
 on:
   push:
-    branches: [ "CP-dev", "main", "release" ]
+    branches: [ ]
 
 jobs:
 
@@ -48,7 +48,7 @@ jobs:
     - name: Test
       run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
-    - name: Publish to Disitrbuted Medical package store
-      if: github.ref == 'refs/heads/release'
+    - name: Publish to Distributed Medical package store
+      if: github.ref == 'refs/heads/main'
       run: dotnet nuget push **\VidiView.Api.DataModel*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
 
