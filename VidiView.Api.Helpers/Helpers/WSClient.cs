@@ -59,11 +59,6 @@ public class WSClient
     public bool IsConnected => _socket != null;
 
     /// <summary>
-    /// Returns the connected user
-    /// </summary>
-    public User? User { get; private set; }
-
-    /// <summary>
     /// Connect to VidiView Web Socket and authenticate connection
     /// </summary>
     /// <param name="uri">The Uri to call</param>
@@ -71,7 +66,7 @@ public class WSClient
     /// <param name="authorization">Authorization token. This is the value of the authorization bearer token to call the API</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task ConnectAsync(Uri uri, string apiKey, string authorization, CancellationToken cancellationToken)
+    public async Task<AuthenticateReplyMessage> ConnectAsync(Uri uri, string apiKey, string authorization, CancellationToken cancellationToken)
     {
         // Create a new web socket
         _logger.LogInformation("Open web socket to {uri}", uri);
@@ -99,10 +94,11 @@ public class WSClient
                 && response.InReplyTo == authMessage.MessageId)
             {
                 // Successfully connected
-                User = response.User;
 
                 _socket = socket;
-                ReadMessageLoop();
+                StartMessageReader();
+
+                return response;
             }
             else
             {
@@ -113,7 +109,6 @@ public class WSClient
         {
             _logger.LogWarning(ex, "Failed to connect web socket");
 
-            User = null;
             socket.Dispose();
             throw;
         }
@@ -128,42 +123,48 @@ public class WSClient
         // Cancel the message loop
         _cts?.Cancel();
         await Task.Delay(150);
-        User = null;
 
-        switch (_socket?.State)
+        try
         {
-            case null:
-            case WebSocketState.Closed:
-                // Do nothing;
-                break;
+            switch (_socket?.State)
+            {
+                case null:
+                case WebSocketState.Closed:
+                    // Do nothing;
+                    break;
 
-            case WebSocketState.CloseSent:
-                _socket.Abort();
-                break;
+                case WebSocketState.CloseSent:
+                    _socket.Abort();
+                    break;
 
-            default:
-                _logger.LogInformation("Close web socket requested");
+                default:
+                    _logger.LogInformation("Close web socket requested");
 
-                // Initiate Close Handshake
-                await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
-                    "Close requested",
-                    new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
+                    // Initiate Close Handshake
+                    await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
+                        "Close requested",
+                        new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
 
-                try
-                {
-                    // The ReadMessageLoop will signal connection closed event
-                    _logger.LogDebug("Web socket successfully closed");
-                }
-                catch (ConnectionClosedException)
-                {
-                    // Expected
-                    _logger.LogDebug("Web socket successfully closed");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Unexpected response on Close()");
-                }
-                break;
+                    try
+                    {
+                        // The ReadMessageLoop will signal connection closed event
+                        _logger.LogDebug("Web socket successfully closed");
+                    }
+                    catch (ConnectionClosedException)
+                    {
+                        // Expected
+                        _logger.LogDebug("Web socket successfully closed");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Unexpected response on Close()");
+                    }
+                    break;
+            }
+        }
+        finally
+        {
+            _socket = null;
         }
     }
 
@@ -260,8 +261,8 @@ public class WSClient
                 _logger.LogWarning(ex, "Web socket unexpectedly closed");
 
                 var ex2 = new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
-                ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
                 _socket = null;
+                ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
                 throw ex2;
             }
 
@@ -291,7 +292,7 @@ public class WSClient
     /// This will read messages and fire events
     /// </summary>
     /// <param name="socket"></param>
-    private async void ReadMessageLoop()
+    private async void StartMessageReader()
     {
         _cts = new CancellationTokenSource();
         var cancellationToken = _cts.Token;
