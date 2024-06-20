@@ -125,7 +125,7 @@ public static class HttpClientExtensionsWinRT
     internal static ApiHome? CachedHome(this HttpClient http)
     {
         if (_cache.TryGetValue(http, out var home))
-            return home;
+            return home!;
         else
             return null;
     }

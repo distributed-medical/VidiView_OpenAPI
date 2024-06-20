@@ -41,11 +41,15 @@ public static class HttpContentFactoryWinRT
                 return result;
 
             case IInputStream:
-                return CreateBody((IInputStream)content, contentType);
+                return CreateBody((IInputStream)content, contentType!);
 
             case Stream:
                 // Convert stream to IInputStream and continue
-                return CreateBody(((Stream)content).AsRandomAccessStream(), contentType);
+                return CreateBody(((Stream)content).AsRandomAccessStream(), contentType!);
+
+            case IHttpContent hc: 
+                // Already correct type
+                return hc;
 
             default:
                 var jsonBytes = JsonSerializer.SerializeToUtf8Bytes(content, content.GetType(), Options);
@@ -62,7 +66,7 @@ public static class HttpContentFactoryWinRT
     /// <param name="content"></param>
     /// <param name="contentType"></param>
     /// <returns></returns>
-    public static IHttpContent CreateBody(IInputStream content, string? contentType)
+    public static IHttpContent CreateBody(IInputStream content, string contentType)
     {
         if (string.IsNullOrEmpty(contentType))
         {

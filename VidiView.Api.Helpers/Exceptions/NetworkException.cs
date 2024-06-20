@@ -1,5 +1,5 @@
 ﻿#if WINRT
-
+using System.Runtime.Versioning;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Web;
 
@@ -7,6 +7,7 @@ namespace VidiView.Api.Exceptions;
 
 public class NetworkException : Exception
 {
+    [SupportedOSPlatform("windows10.0.17763.0")]
     public static Exception CreateFromWinRT(Uri requestedUri, Certificate? certificate, Exception exception)
     {
         if (exception is OperationCanceledException)
