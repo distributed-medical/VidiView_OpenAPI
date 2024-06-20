@@ -51,7 +51,7 @@ public static class HttpMethodExtensionsWinRT
     /// <param name="range"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, System.Net.Http.Headers.RangeHeaderValue? range = null, CancellationToken? cancellationToken = null)
+    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
         return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link).AsTask(cancellationToken ?? CancellationToken.None);
     }
@@ -64,7 +64,7 @@ public static class HttpMethodExtensionsWinRT
     /// <param name="range"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, System.Net.Http.Headers.RangeHeaderValue? range, CancellationToken cancellationToken, IProgress<ulong> progress)
+    public static async Task<HttpContentStreamWinRT> GetStreamAsync(this HttpClient http, TemplatedLink link, CancellationToken cancellationToken, IProgress<ulong>? progress = null)
     {
         return await HttpContentStreamWinRT.CreateFromUriAsync(http, (Uri)link).AsTask(cancellationToken, progress);
     }
