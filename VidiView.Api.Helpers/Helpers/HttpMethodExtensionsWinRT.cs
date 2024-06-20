@@ -127,7 +127,7 @@ public static class HttpMethodExtensionsWinRT
     /// <param name="content"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The raw response, which should be checked for success</returns>
-    public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
+    public static Task<HttpResponseMessage> PostAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null, IProgress<HttpProgress>? progress = null)
     {
         var request = new HttpRequestMessage()
         {
@@ -136,7 +136,7 @@ public static class HttpMethodExtensionsWinRT
             Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return SendRequestInternal(http, request, cancellationToken);
+        return SendRequestInternal(http, request, cancellationToken, progress);
     }
 
     /// <summary>
@@ -147,7 +147,7 @@ public static class HttpMethodExtensionsWinRT
     /// <param name="content"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>The raw response, which should be checked for success</returns>
-    public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null)
+    public static Task<HttpResponseMessage> PutAsync(this HttpClient http, TemplatedLink link, object? content, CancellationToken? cancellationToken = null, IProgress<HttpProgress>? progress = null)
     {
         var request = new HttpRequestMessage()
         {
@@ -156,14 +156,14 @@ public static class HttpMethodExtensionsWinRT
             Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return SendRequestInternal(http, request, cancellationToken);
+        return SendRequestInternal(http, request, cancellationToken, progress);
     }
 
-    private static async Task<HttpResponseMessage> SendRequestInternal(HttpClient http, HttpRequestMessage request, CancellationToken? cancellationToken)
+    private static async Task<HttpResponseMessage> SendRequestInternal(HttpClient http, HttpRequestMessage request, CancellationToken? cancellationToken, IProgress<HttpProgress>? progress = null)
     {
         try
         {
-            return await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+            return await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None, progress);
         }
         catch (Exception ex)
         {
