@@ -252,12 +252,14 @@ public class WSClient
         }
         catch (WebSocketException ex)
         {
-            switch (ex.WebSocketErrorCode)
+            if (_socket?.State != WebSocketState.Open)
             {
-                case WebSocketError.Faulted:
-                case WebSocketError.ConnectionClosedPrematurely:
-                case WebSocketError.InvalidState:
-                    throw new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+                _logger.LogWarning(ex, "Connection unexpectedly closed");
+
+                var ex2 = new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+                ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
+                _socket = null;
+                throw ex2;
             }
 
             throw;

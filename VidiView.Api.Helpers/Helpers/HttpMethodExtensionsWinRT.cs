@@ -1,7 +1,8 @@
 ﻿#if WINRT
-using VidiView.Api.DataModel;
-using Windows.Web.Http;
 using System.Runtime.Versioning;
+using VidiView.Api.DataModel;
+using VidiView.Api.Exceptions;
+using Windows.Web.Http;
 
 namespace VidiView.Api.Helpers;
 
@@ -27,7 +28,8 @@ public static class HttpMethodExtensionsWinRT
             Method = HttpMethod.Get,
             RequestUri = (Uri)link,
         };
-        var response = await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        
+        var response = await SendRequestInternal(http, request, cancellationToken);
         await response.AssertSuccessAsync();
 
         if (typeof(T) == typeof(string))
@@ -83,9 +85,8 @@ public static class HttpMethodExtensionsWinRT
             RequestUri = (Uri)link,
         };
 
-        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        return SendRequestInternal(http, request, cancellationToken);
     }
-
 
     public static Task<HttpResponseMessage> HeadAsync(this HttpClient http, TemplatedLink link, CancellationToken? cancellationToken = null)
     {
@@ -95,7 +96,7 @@ public static class HttpMethodExtensionsWinRT
             RequestUri = (Uri)link,
         };
 
-        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        return SendRequestInternal(http, request, cancellationToken);
     }
 
     /// <summary>
@@ -115,7 +116,7 @@ public static class HttpMethodExtensionsWinRT
             Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        return SendRequestInternal(http, request, cancellationToken);
     }
 
     /// <summary>
@@ -135,7 +136,7 @@ public static class HttpMethodExtensionsWinRT
             Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        return SendRequestInternal(http, request, cancellationToken);
     }
 
     /// <summary>
@@ -155,7 +156,20 @@ public static class HttpMethodExtensionsWinRT
             Content = HttpContentFactoryWinRT.CreateBody(content),
         };
 
-        return http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        return SendRequestInternal(http, request, cancellationToken);
+    }
+
+    private static async Task<HttpResponseMessage> SendRequestInternal(HttpClient http, HttpRequestMessage request, CancellationToken? cancellationToken)
+    {
+        try
+        {
+            return await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            cancellationToken?.ThrowIfCancellationRequested();
+            throw NetworkException.CreateFromWinRT(request.RequestUri, request.TransportInformation.ServerCertificate, ex);
+        }
     }
 }
 #endif
