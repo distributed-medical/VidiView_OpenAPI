@@ -6,6 +6,7 @@ using System.Net.WebSockets;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.WSMessaging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidiView.Api.Helpers;
 
@@ -32,9 +33,9 @@ public class WSClient
     /// </summary>
     public event EventHandler<ConnectionClosedEventArgs>? ConnectionClosed;
 
-    public WSClient(ILogger<WSClient>? logger = null)
+    public WSClient(ILogger? logger = null)
     {
-        _logger = logger ?? NullLogger<WSClient>.Instance;
+        _logger = logger ?? NullLogger.Instance;
     }
 
     /// <summary>
@@ -73,7 +74,7 @@ public class WSClient
     public async Task ConnectAsync(Uri uri, string apiKey, string authorization, CancellationToken cancellationToken)
     {
         // Create a new web socket
-        _logger.LogInformation("Connect web socket to {uri}", uri);
+        _logger.LogInformation("Open web socket to {uri}", uri);
 
         var socket = new ClientWebSocket();
         socket.Options.AddSubProtocol(SubProtocol);
@@ -108,8 +109,10 @@ public class WSClient
                 throw new Exception("Unexpected response to authenticate request");
             }
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Failed to connect web socket");
+
             User = null;
             socket.Dispose();
             throw;
@@ -139,7 +142,7 @@ public class WSClient
                 break;
 
             default:
-                _logger.LogInformation("Close socket requested");
+                _logger.LogInformation("Close web socket requested");
 
                 // Initiate Close Handshake
                 await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
@@ -149,12 +152,12 @@ public class WSClient
                 try
                 {
                     // The ReadMessageLoop will signal connection closed event
-                    _logger.LogDebug("Connection successfully closed");
+                    _logger.LogDebug("Web socket successfully closed");
                 }
                 catch (ConnectionClosedException)
                 {
                     // Expected
-                    _logger.LogDebug("Connection successfully closed");
+                    _logger.LogDebug("Web socket successfully closed");
                 }
                 catch (Exception ex)
                 {
@@ -235,14 +238,14 @@ public class WSClient
         var data = message.Serialize();
         if (data.Length > MaxMessageSize)
         {
-            _logger.LogError("Message size too large. Message size is {bytes}, max size is {bytes}", data.Length, MaxMessageSize);
+            _logger.LogError("IWSMessage size too large. {type} size is {bytes}, max size is {bytes}", message.MessageType, data.Length, MaxMessageSize);
             throw new OutOfMemoryException("Message too large");
         }
 
         await _sendLock.WaitAsync(cancellationToken);
         try
         {
-            _logger.LogDebug("Send {type} {messageId} ({bytes} bytes)", message.MessageType, message.MessageId, data.Length);
+            _logger.LogDebug("Send IWSMessage {type} ({bytes} bytes)", message.MessageType, data.Length);
             socket ??= _socket ?? throw new InvalidOperationException("Not connected");
 
             await socket.SendAsync(data,
@@ -254,7 +257,7 @@ public class WSClient
         {
             if (_socket?.State != WebSocketState.Open)
             {
-                _logger.LogWarning(ex, "Connection unexpectedly closed");
+                _logger.LogWarning(ex, "Web socket unexpectedly closed");
 
                 var ex2 = new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
@@ -266,7 +269,7 @@ public class WSClient
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Send message failed");
+            _logger.LogError(ex, "Send IWSMessage failed");
             throw;
         }
         finally
@@ -293,7 +296,7 @@ public class WSClient
         _cts = new CancellationTokenSource();
         var cancellationToken = _cts.Token;
 
-        _logger.LogInformation("Read message loop started");
+        _logger.LogDebug("IWSMessage reader started");
         var socket = _socket ?? throw new InvalidOperationException("Not connected");
 
         try
@@ -306,6 +309,7 @@ public class WSClient
                     // Check if any message is waiting for reply
                     if (_messageAwaitingReply.TryRemove(reply.InReplyTo, out var tcs))
                     {
+                        _logger.LogDebug("Received reply {type}", message.MessageType);
                         tcs.SetResult(reply);
 
                         // Response has been returned. Don't raise event
@@ -315,6 +319,7 @@ public class WSClient
 
                 if (message != null)
                 {
+                    _logger.LogDebug("Received IWSMessage {type}", message.MessageType);
                     MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
                 }
             }
@@ -327,12 +332,12 @@ public class WSClient
             if (cancellationToken.IsCancellationRequested)
             {
                 // This is a deliberate Close called from our side
-                _logger.LogDebug(ex, "Connection closed");
+                _logger.LogDebug(ex, "Web socket closed");
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(null));
             }
             else
             {
-                _logger.LogWarning(ex, "Connection unexpectedly closed");
+                _logger.LogWarning(ex, "Web socket unexpectedly closed");
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
             }
 
@@ -340,7 +345,7 @@ public class WSClient
         }
         finally
         {
-            _logger.LogInformation("Read message loop exited");
+            _logger.LogInformation("IWSMessage reader exited");
         }
     }
 
@@ -355,7 +360,7 @@ public class WSClient
     {
         if (!_receiveLock.Wait(0))
         {
-            _logger.LogWarning("Another receive operation is already outstanding for this socket");
+            _logger.LogWarning("Another receive operation is already outstanding for this web socket");
             return null;
         }
 
@@ -374,16 +379,16 @@ public class WSClient
                         // Received message from remote client
                         if (result.EndOfMessage && concatenatedStream == null)
                         {
-                            _logger.LogDebug("Full message received ({bytes} bytes)", result.Count);
+                            _logger.LogTrace("IWSMessage received ({bytes} bytes)", result.Count);
                             var success = WSMessage.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
                             if (!success)
-                                _logger.LogWarning("Failed to deserialize message");
+                                _logger.LogWarning("Failed to deserialize IWSMessage");
 
                             return message;
                         }
                         else
                         {
-                            _logger.LogTrace("Partial message received ({bytes} bytes)", result.Count);
+                            _logger.LogTrace("Partial IWSMessage received ({bytes} bytes)", result.Count);
 
                             // The entire message didn't fit in our local buffer
                             // Copy to temporary stream instead
@@ -402,18 +407,18 @@ public class WSClient
 
                             concatenatedStream.Flush();
 
-                            _logger.LogDebug("Full message assembled ({bytes} bytes)", concatenatedStream.Length);
+                            _logger.LogTrace("IWSMessage received ({bytes} bytes)", concatenatedStream.Length);
                             var success = WSMessage.TryDeserialize(
                                 new ArraySegment<byte>(concatenatedStream.GetBuffer(), 0, (int)concatenatedStream.Length),
                                 out var message);
                             if (!success)
-                                _logger.LogWarning("Failed to deserialize message");
+                                _logger.LogWarning("Failed to deserialize IWSMessage");
 
                             return message;
                         }
 
                     case WebSocketMessageType.Close:
-                        _logger.LogInformation("Connection closed. {status}: {reason}", result.CloseStatus, result.CloseStatusDescription);
+                        _logger.LogInformation("Web socket closed. {status}: {reason}", result.CloseStatus, result.CloseStatusDescription);
                         throw new ConnectionClosedException(result.CloseStatus, result.CloseStatusDescription);
 
                     case WebSocketMessageType.Binary:
@@ -421,7 +426,7 @@ public class WSClient
                         continue;
 
                     default:
-                        _logger.LogDebug("Unsupported message type {type}", result.MessageType);
+                        _logger.LogDebug("Unsupported web socket message type {type}", result.MessageType);
                         continue;
                 }
 
