@@ -29,4 +29,13 @@ public record Department
     public LinkCollection? Links { get; init; }
 
     public override string ToString() => Name;
+
+    public static explicit operator IdAndName?(Department? department)
+    {
+        return department == null ? null : new IdAndName
+        {
+            Id = department.Id,
+            Name = department.Name
+        };
+    }
 }

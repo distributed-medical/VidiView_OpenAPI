@@ -108,6 +108,15 @@ public record User
     public LinkCollection? Links { get; init; }
 
     public override string ToString() => Name;
+
+    public static explicit operator IdAndName?(User? user)
+    {
+        return user == null ? null : new IdAndName
+        {
+            Id = user.Id,
+            Name = user.Name
+        };
+    }
 }
 
 public record EmbeddedUserObjects

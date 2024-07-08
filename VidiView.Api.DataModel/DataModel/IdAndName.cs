@@ -33,4 +33,14 @@ public record IdAndName
     {
         return Name != null ? $"{Name} ({Id})" : Id.ToString();
     }
+
+    public virtual bool Equals(IdAndName? other)
+    {
+        return other?.Id == this.Id;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

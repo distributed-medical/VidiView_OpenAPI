@@ -24,4 +24,13 @@ public record ServiceHost
     public LinkCollection? Links { get; init; }
 
     public override string ToString() => $"{Type} ({Name})";
+
+    public static explicit operator IdAndName?(ServiceHost? host)
+    {
+        return host == null ? null : new IdAndName
+        {
+            Id = host.Id,
+            Name = host.Name
+        };
+    }
 }
