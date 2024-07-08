@@ -21,5 +21,11 @@ public class StudyUnderReviewMessage : IWSReply
     /// A list of users currently having the study under review
     /// along with the device name from where the review is performed
     /// </summary>
-    public (User User, string? DeviceName)[] ReviewingUsers { get; set; }
+    public ReviewingUser[] ReviewingUsers { get; init; }
+}
+
+public class ReviewingUser
+{
+    public User User { get; init; }
+    public ClientDevice Device { get; init; }
 }

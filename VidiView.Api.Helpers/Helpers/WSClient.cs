@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net.WebSockets;
-using VidiView.Api.DataModel;
+using System.Text;
 using VidiView.Api.Exceptions;
 using VidiView.Api.WSMessaging;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidiView.Api.Helpers;
 
@@ -90,7 +90,7 @@ public class WSClient
             await SendMessageInternalAsync(authMessage, socket, cancellationToken);
             var message = await ReadMessageInternalAsync(socket, cancellationToken);
 
-            if (message is AuthenticateReplyMessage response 
+            if (message is AuthenticateReplyMessage response
                 && response.InReplyTo == authMessage.MessageId)
             {
                 // Successfully connected
@@ -120,6 +120,9 @@ public class WSClient
     /// <returns></returns>
     public async Task CloseAsync()
     {
+        if (_socket == null)
+            return;
+
         // Cancel the message loop
         _cts?.Cancel();
         await Task.Delay(150);
@@ -235,8 +238,16 @@ public class WSClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     async Task SendMessageInternalAsync(IWSMessage message, ClientWebSocket? socket, CancellationToken cancellationToken)
-    { 
+    {
         var data = message.Serialize();
+
+        _logger.LogDebug("Send {type} ({bytes} bytes)", message.MessageType, data.Length);
+        if (_logger.IsEnabled(LogLevel.Debug))
+        {
+            string rawMessage = Encoding.UTF8.GetString(data);
+            _logger.LogDebug("Send IWSMessage: {body}", rawMessage);
+        }
+
         if (data.Length > MaxMessageSize)
         {
             _logger.LogError("IWSMessage size too large. {type} size is {bytes}, max size is {bytes}", message.MessageType, data.Length, MaxMessageSize);
@@ -246,7 +257,6 @@ public class WSClient
         await _sendLock.WaitAsync(cancellationToken);
         try
         {
-            _logger.LogDebug("Send IWSMessage {type} ({bytes} bytes)", message.MessageType, data.Length);
             socket ??= _socket ?? throw new InvalidOperationException("Not connected");
 
             await socket.SendAsync(data,
@@ -361,7 +371,7 @@ public class WSClient
     {
         if (!_receiveLock.Wait(0))
         {
-            _logger.LogWarning("Another receive operation is already outstanding for this web socket");
+            _logger.LogError("Another receive operation is already outstanding for this web socket");
             return null;
         }
 
@@ -376,16 +386,11 @@ public class WSClient
                 switch (result.MessageType)
                 {
                     case WebSocketMessageType.Text:
-
                         // Received message from remote client
                         if (result.EndOfMessage && concatenatedStream == null)
                         {
-                            _logger.LogTrace("IWSMessage received ({bytes} bytes)", result.Count);
-                            var success = WSMessage.TryDeserialize(new ArraySegment<byte>(_receiveBuffer, 0, result.Count), out var message);
-                            if (!success)
-                                _logger.LogWarning("Failed to deserialize IWSMessage");
-
-                            return message;
+                            var buffer = new ArraySegment<byte>(_receiveBuffer, 0, result.Count);
+                            return DeserializeMessage(buffer);
                         }
                         else
                         {
@@ -408,14 +413,8 @@ public class WSClient
 
                             concatenatedStream.Flush();
 
-                            _logger.LogTrace("IWSMessage received ({bytes} bytes)", concatenatedStream.Length);
-                            var success = WSMessage.TryDeserialize(
-                                new ArraySegment<byte>(concatenatedStream.GetBuffer(), 0, (int)concatenatedStream.Length),
-                                out var message);
-                            if (!success)
-                                _logger.LogWarning("Failed to deserialize IWSMessage");
-
-                            return message;
+                            var buffer = new ArraySegment<byte>(concatenatedStream.GetBuffer(), 0, (int)concatenatedStream.Length);
+                            return DeserializeMessage(buffer);
                         }
 
                     case WebSocketMessageType.Close:
@@ -450,5 +449,18 @@ public class WSClient
         {
             _receiveLock.Release();
         }
+    }
+
+    private IWSMessage? DeserializeMessage(ArraySegment<byte> buffer)
+    {
+        if (_logger.IsEnabled(LogLevel.Debug) == true)
+        {
+            // Log the full message here
+            string rawMessage = Encoding.UTF8.GetString(buffer);
+            _logger.LogDebug("Received {bytes} bytes: {raw}", buffer.Count, rawMessage);
+        }
+
+        WSMessage.TryDeserialize(buffer, _logger, out var message);
+        return message;
     }
 }

@@ -1,6 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using VidiView.Api.Serialization;
 using VidiView.Api.WSMessaging;
@@ -79,6 +82,18 @@ public static class WSMessage
     /// <returns></returns>
     public static bool TryDeserialize(Span<byte> buffer, out IWSMessage? message)
     {
+        return TryDeserialize(buffer, null, out message);
+    }
+
+    /// <summary>
+    /// Deserialize byte buffer into a message
+    /// </summary>
+    /// <param name="buffer"></param>
+    /// <param name="logger"></param>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public static bool TryDeserialize(Span<byte> buffer, ILogger? logger, out IWSMessage? message)
+    {
         string propertyName = VidiViewJson.DefaultOptions?.PropertyNamingPolicy?.ConvertName(nameof(IWSMessage.MessageType))
             ?? nameof(IWSMessage.MessageType);
 
@@ -90,14 +105,31 @@ public static class WSMessage
                 var typeName = messageType.GetString();
                 if (typeName != null)
                 {
-                    var tp = ResolveMessageType(typeName);
-                    message = deserializedModel.Deserialize(tp, VidiViewJson.DefaultOptions) as IWSMessage;
-                    return message != null;
+                    try
+                    {
+                        var tp = ResolveMessageType(typeName);
+                        message = deserializedModel.Deserialize(tp, VidiViewJson.DefaultOptions) as IWSMessage;
+                        return message != null;
+                    }
+                    catch (NotSupportedException ex)
+                    {
+                        logger?.LogDebug(ex, "Unsupported message type {type}", typeName);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.LogWarning(ex, "Failed to deserialize message {type}", typeName);
+                    }
                 }
             }
+            else
+            {
+                logger?.LogDebug("Cannot deserialize message without MessageType property");
+            }
         }
-        catch
-        { }
+        catch (Exception ex)
+        {
+            logger?.LogError(ex, "Failed to deserialize Json");
+        }
 
         message = null;
         return false;
