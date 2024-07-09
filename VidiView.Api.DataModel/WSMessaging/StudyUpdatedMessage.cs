@@ -5,12 +5,10 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-/// <remarks>This can be sent as both a reply and a status message</remarks>
-public class StudyUnderReviewMessage : IWSReply
+public class StudyUpdatedMessage 
 {
     public string MessageType { get; init; }
     public string MessageId { get; init; }
-    public string InReplyTo { get; init; }
 
     /// <summary>
     /// The study this message is intended for
@@ -18,9 +16,12 @@ public class StudyUnderReviewMessage : IWSReply
     public Guid StudyId { get; set; }
 
     /// <summary>
-    /// A list of users currently having the study under review
-    /// along with the device name from where the review is performed
+    /// The updated study
     /// </summary>
-    public UserAndClient[] ReviewingUsers { get; init; }
-}
+    public Study Study { get; set; }
 
+    /// <summary>
+    /// The user performing the update
+    /// </summary>
+    public UserAndClient? UpdatedBy { get; init; }
+}

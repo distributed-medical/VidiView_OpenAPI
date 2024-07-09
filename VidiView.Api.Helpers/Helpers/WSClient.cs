@@ -26,11 +26,13 @@ public class WSClient
     /// <summary>
     /// Event raised when new message arrives
     /// </summary>
+    /// <remarks>Raised on a background thread</remarks>
     public event EventHandler<MessageReceivedEventArgs>? MessageReceived;
 
     /// <summary>
     /// Raised when the connection is closed
     /// </summary>
+    /// <remarks>Raised on a background thread</remarks>
     public event EventHandler<ConnectionClosedEventArgs>? ConnectionClosed;
 
     public WSClient(ILogger? logger = null)
@@ -310,11 +312,16 @@ public class WSClient
         _logger.LogDebug("IWSMessage reader started");
         var socket = _socket ?? throw new InvalidOperationException("Not connected");
 
+        // Move over to a background thread 
+        await Task.Delay(10).ConfigureAwait(false);
+
         try
         {
             while (true)
             {
+                // We should not revert back to the UI thread anymore
                 var message = await ReadMessageInternalAsync(socket, cancellationToken);
+
                 if (message is IWSReply reply && reply.InReplyTo != null)
                 {
                     // Check if any message is waiting for reply
