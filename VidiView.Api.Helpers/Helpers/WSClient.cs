@@ -315,7 +315,7 @@ public class WSClient
             while (true)
             {
                 var message = await ReadMessageInternalAsync(socket, cancellationToken);
-                if (message is IWSReply reply)
+                if (message is IWSReply reply && reply.InReplyTo != null)
                 {
                     // Check if any message is waiting for reply
                     if (_messageAwaitingReply.TryRemove(reply.InReplyTo, out var tcs))
