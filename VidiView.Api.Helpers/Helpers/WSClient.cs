@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Text;
 using VidiView.Api.Exceptions;
+using VidiView.Api.Serialization;
 using VidiView.Api.WSMessaging;
 
 namespace VidiView.Api.Helpers;
@@ -467,7 +468,7 @@ public class WSClient
             _logger.LogDebug("Received {bytes} bytes: {raw}", buffer.Count, rawMessage);
         }
 
-        WSMessage.TryDeserialize(buffer, _logger, out var message);
+        WSMessageSerializer.TryDeserialize(buffer, _logger, out var message);
         return message;
     }
 }

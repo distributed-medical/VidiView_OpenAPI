@@ -15,7 +15,7 @@ public class StudyUnderReviewMessage : IWSReply
     /// <summary>
     /// The study this message is intended for
     /// </summary>
-    public Guid StudyId { get; set; }
+    public Guid StudyId { get; init; }
 
     /// <summary>
     /// A list of users currently having the study under review

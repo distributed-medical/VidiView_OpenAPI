@@ -1,4 +1,5 @@
 using System.Text;
+using VidiView.Api.Serialization;
 using VidiView.Api.WSMessaging;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
@@ -81,7 +82,7 @@ public class WSMessageTest
     {
         string data = "{\"message-type\":\"VidiView.Api.WSMessaging.AuthenticateMessage\",\"message-id\":\"2d4122306afd4cdb946f6e2ecbb5a99f\",\"api-key\":\"abcd\",\"authorization\":\"1234\"}";
         var buffer = Encoding.UTF8.GetBytes(data);
-        var success = WSMessage.TryDeserialize(buffer, out var message);
+        var success = WSMessageSerializer.TryDeserialize(buffer, out var message);
 
         // Assert
         Assert.IsTrue(success);
@@ -99,10 +100,10 @@ public class WSMessageTest
         var customMessage = WSMessage.Factory<PrivateMessageType>();
         Assert.AreEqual("VidiView.Api.Helpers.Test.Helpers.WSMessageTest+PrivateMessageType", customMessage.MessageType);
 
-        var serialized = WSMessage.Serialize(customMessage);
+        var serialized = WSMessageSerializer.Serialize(customMessage);
         Assert.IsNotNull(serialized);
 
-        var success = WSMessage.TryDeserialize(serialized, out var deserializedMessage);
+        var success = WSMessageSerializer.TryDeserialize(serialized, out var deserializedMessage);
         Assert.IsTrue(success);
         Assert.AreEqual(customMessage.MessageId, deserializedMessage.MessageId);
     }
@@ -118,12 +119,12 @@ public class WSMessageTest
             T2Value = 66.6
         };
 
-        var serialized = WSMessage.Serialize(customMessage);
+        var serialized = WSMessageSerializer.Serialize(customMessage);
 
         var json = Encoding.UTF8.GetString(serialized);
         Assert.AreEqual("{\"message-type\":\"VidiView.Api.Helpers.Test.Helpers.WSMessageTest\\u002BGenericMessageType\\u00602[System.Int32,System.Double]\",\"message-id\":\"ff627f27167447a2a696541c7f7ab546\",\"t1-value\":666,\"t2-value\":66.6}", json);
 
-        var success = WSMessage.TryDeserialize(serialized, out var deserializedMessage);
+        var success = WSMessageSerializer.TryDeserialize(serialized, out var deserializedMessage);
         Assert.IsTrue(success);
         Assert.AreEqual(customMessage.MessageId, deserializedMessage.MessageId);
         Assert.AreEqual(666, ((GenericMessageType<int, double>) deserializedMessage).T1Value);
@@ -136,10 +137,10 @@ public class WSMessageTest
         var customMessage = WSMessage.Factory<GenericMessageType<List<int>, double>>();
         customMessage.T1Value = new List<int> { 10, 20, 30, 40 };
 
-        var serialized = WSMessage.Serialize(customMessage);
+        var serialized = WSMessageSerializer.Serialize(customMessage);
         var json = Encoding.UTF8.GetString(serialized);
 
-        var success = WSMessage.TryDeserialize(serialized, out var deserializedMessage);
+        var success = WSMessageSerializer.TryDeserialize(serialized, out var deserializedMessage);
         Assert.IsTrue(success);
         var d = (GenericMessageType<List<int>, double>)deserializedMessage;
         CollectionAssert.AreEqual(customMessage.T1Value, d.T1Value);
@@ -153,10 +154,10 @@ public class WSMessageTest
         customMessage.T1Value = [10, 20, 30, 40];
         customMessage.T2Value = true;
 
-        var serialized = WSMessage.Serialize(customMessage);
+        var serialized = WSMessageSerializer.Serialize(customMessage);
         var json = Encoding.UTF8.GetString(serialized);
 
-        var success = WSMessage.TryDeserialize(serialized, out var deserializedMessage);
+        var success = WSMessageSerializer.TryDeserialize(serialized, out var deserializedMessage);
         Assert.IsTrue(success);
         var d = (GenericMessageType<int[], bool>)deserializedMessage;
         CollectionAssert.AreEqual(customMessage.T1Value, d.T1Value);

@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VidiView.Api.DataModel" Version="5.0.13-beta6" />
+	  <PackageReference Include="VidiView.Api.DataModel" Version="5.0.13-rc04" />
 	  <PackageReference Include="VidiView.Api.Helpers" Version="5.0.13-beta7" />
 	</ItemGroup>
 
