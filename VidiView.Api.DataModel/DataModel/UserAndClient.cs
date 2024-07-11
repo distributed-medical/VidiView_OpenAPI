@@ -1,4 +1,4 @@
-﻿using VidiView.Api.DataModel;
+﻿namespace VidiView.Api.DataModel;
 
 public class UserAndClient
 {
@@ -6,6 +6,7 @@ public class UserAndClient
     /// User currently reviewing this study
     /// </summary>
     public IdAndName User { get; init; }
+
     /// <summary>
     /// Device used to review study
     /// </summary>
