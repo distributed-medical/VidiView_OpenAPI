@@ -3,9 +3,9 @@
 namespace VidiView.Api.WSMessaging;
 
 /// <summary>
-/// This is sent to clients that are reviewing a specific study
+/// This is sent when a study is created for a patient
 /// </summary>
-public class StudyUpdatedMessage : IWSMessage
+public class StudyCreatedMessage : IWSMessage
 {
     public string MessageType { get; init; }
     public string MessageId { get; init; }
@@ -16,9 +16,9 @@ public class StudyUpdatedMessage : IWSMessage
     public Guid StudyId { get; init; }
 
     /// <summary>
-    /// The updated study
+    /// The patient that the study is created for
     /// </summary>
-    public Study Study { get; init; }
+    public Guid PatientId { get; init; }
 
     /// <summary>
     /// The user performing the operation
