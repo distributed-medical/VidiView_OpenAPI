@@ -7,6 +7,15 @@ namespace VidiView.Api.WSMessaging;
 /// </summary>
 public class MediaFileUpdatedMessage : IWSMessage
 {
+    public MediaFileUpdatedMessage()
+    {
+        // Maybe it seems odd to use the ToString() here instead
+        // of FullName, but the ToString will not return assembly qualified name
+        // for generic type parameters
+        MessageType = this.GetType().ToString();
+        MessageId = Guid.NewGuid().ToString("N");
+    }
+
     public string MessageType { get; init; }
     public string MessageId { get; init; }
 
