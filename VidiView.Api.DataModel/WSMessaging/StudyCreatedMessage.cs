@@ -11,6 +11,11 @@ public class StudyCreatedMessage : IWSMessage
     public string MessageId { get; init; }
 
     /// <summary>
+    /// The department in which the study is created
+    /// </summary>
+    public Guid DepartmentId { get; init; }
+
+    /// <summary>
     /// The study this message is intended for
     /// </summary>
     public Guid StudyId { get; init; }

@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-public class MediaFileUpdatedMessage : IWSMessage
+public class AnnotationUpdatedMessage : IWSMessage
 {
     public string MessageType { get; init; }
     public string MessageId { get; init; }
@@ -16,9 +16,14 @@ public class MediaFileUpdatedMessage : IWSMessage
     public Guid StudyId { get; init; }
 
     /// <summary>
-    /// The updated media file
+    /// The Id of the deleted media file
     /// </summary>
-    public MediaFile MediaFile { get; init; }
+    public Guid ImageId { get; init; }
+
+    /// <summary>
+    /// The updated annotation
+    /// </summary>
+    public Annotation Annotation { get; init; }
 
     /// <summary>
     /// The user performing the operation
