@@ -132,6 +132,11 @@ public record Study
     public bool? IsAssigned { get; init; }
 
     /// <summary>
+    /// Timestamp value that changes with any update
+    /// </summary>
+    public string Timestamp { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
