@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-public class MediaFileDeletedMessage : IWSMessage
+public class MediaFileDeletedMessage : IWSActorMessage
 {
     public MediaFileDeletedMessage()
     {
@@ -18,6 +18,11 @@ public class MediaFileDeletedMessage : IWSMessage
 
     public string MessageType { get; init; }
     public string MessageId { get; init; }
+
+    /// <summary>
+    /// The user performing the operation
+    /// </summary>
+    public UserAndClient Actor { get; init; }
 
     /// <summary>
     /// The study this message is intended for
@@ -34,8 +39,4 @@ public class MediaFileDeletedMessage : IWSMessage
     /// </summary>
     public MediaFile? MediaFile { get; init; }
 
-    /// <summary>
-    /// The user performing the operation
-    /// </summary>
-    public UserAndClient? Actor { get; init; }
 }

@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-public class AnnotationUpdatedMessage : IWSMessage
+public class AnnotationUpdatedMessage : IWSActorMessage
 {
     public AnnotationUpdatedMessage()
     {
@@ -18,6 +18,11 @@ public class AnnotationUpdatedMessage : IWSMessage
 
     public string MessageType { get; init; }
     public string MessageId { get; init; }
+
+    /// <summary>
+    /// The user performing the operation
+    /// </summary>
+    public UserAndClient Actor { get; init; }
 
     /// <summary>
     /// The study this message is intended for
@@ -33,9 +38,4 @@ public class AnnotationUpdatedMessage : IWSMessage
     /// The updated annotation
     /// </summary>
     public Annotation Annotation { get; init; }
-
-    /// <summary>
-    /// The user performing the operation
-    /// </summary>
-    public UserAndClient? Actor { get; init; }
 }

@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent when a study is created for a patient
 /// </summary>
-public class StudyCreatedMessage : IWSMessage
+public class StudyCreatedMessage : IWSActorMessage
 {
     public StudyCreatedMessage()
     {
@@ -17,6 +17,11 @@ public class StudyCreatedMessage : IWSMessage
     }
     public string MessageType { get; init; }
     public string MessageId { get; init; }
+
+    /// <summary>
+    /// The user performing the operation
+    /// </summary>
+    public UserAndClient Actor { get; init; }
 
     /// <summary>
     /// The department in which the study is created
@@ -33,8 +38,5 @@ public class StudyCreatedMessage : IWSMessage
     /// </summary>
     public Guid PatientId { get; init; }
 
-    /// <summary>
-    /// The user performing the operation
-    /// </summary>
-    public UserAndClient? Actor { get; init; }
+
 }

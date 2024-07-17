@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-public class StudyUpdatedMessage : IWSMessage
+public class StudyUpdatedMessage : IWSActorMessage
 {
     public StudyUpdatedMessage()
     {
@@ -19,6 +19,11 @@ public class StudyUpdatedMessage : IWSMessage
     public string MessageId { get; init; }
 
     /// <summary>
+    /// The user performing the operation
+    /// </summary>
+    public UserAndClient Actor { get; init; }
+
+    /// <summary>
     /// The study this message is intended for
     /// </summary>
     public Guid StudyId { get; init; }
@@ -27,9 +32,4 @@ public class StudyUpdatedMessage : IWSMessage
     /// The updated study
     /// </summary>
     public Study Study { get; init; }
-
-    /// <summary>
-    /// The user performing the operation
-    /// </summary>
-    public UserAndClient? Actor { get; init; }
 }
