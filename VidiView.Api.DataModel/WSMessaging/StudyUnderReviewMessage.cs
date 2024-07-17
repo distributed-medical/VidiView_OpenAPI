@@ -29,6 +29,6 @@ public class StudyUnderReviewMessage : IWSReply
     /// A list of users currently having the study under review
     /// along with the device name from where the review is performed
     /// </summary>
-    public UserAndClient[] ReviewingUsers { get; init; }
+    public Actor[] ReviewingUsers { get; init; }
 }
 

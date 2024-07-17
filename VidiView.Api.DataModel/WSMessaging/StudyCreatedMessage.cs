@@ -21,7 +21,7 @@ public class StudyCreatedMessage : IWSActorMessage
     /// <summary>
     /// The user performing the operation
     /// </summary>
-    public UserAndClient Actor { get; init; }
+    public Actor Actor { get; init; }
 
     /// <summary>
     /// The department in which the study is created

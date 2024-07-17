@@ -22,7 +22,7 @@ public class MediaFileDeletedMessage : IWSActorMessage
     /// <summary>
     /// The user performing the operation
     /// </summary>
-    public UserAndClient Actor { get; init; }
+    public Actor Actor { get; init; }
 
     /// <summary>
     /// The study this message is intended for

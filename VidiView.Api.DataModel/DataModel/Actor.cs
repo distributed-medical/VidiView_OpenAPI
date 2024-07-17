@@ -1,6 +1,10 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class UserAndClient
+/// <summary>
+/// Info about an actor (performing an operation) in the system
+/// </summary>
+/// <remarks>An actor might be a user, a Controller or the system itself</remarks>
+public class Actor
 {
     /// <summary>
     /// User currently reviewing this study
