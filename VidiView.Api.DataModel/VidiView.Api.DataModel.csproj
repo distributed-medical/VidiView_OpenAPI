@@ -6,7 +6,7 @@
         
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
         <FileVersion>5.0.14.0</FileVersion>
-        <Version>5.0.14-beta05</Version>
+        <Version>5.0.14-beta06</Version>
 
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>VidiView OpenAPI</PackageTags>

@@ -6,5 +6,5 @@ public interface IWSActorMessage : IWSMessage
     /// <summary>
     /// The actor performing the operation that resulted in this message
     /// </summary>
-    public UserAndClient Actor { get; init; }
+    UserAndClient Actor { get; init; }
 }

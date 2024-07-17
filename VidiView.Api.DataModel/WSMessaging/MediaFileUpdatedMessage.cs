@@ -33,4 +33,9 @@ public class MediaFileUpdatedMessage : IWSActorMessage
     /// The updated media file
     /// </summary>
     public MediaFile MediaFile { get; init; }
+
+    /// <summary>
+    /// This will be true if the thumbnail needs refreshing
+    /// </summary>
+    public bool? RefreshThumbnail { get; set; }
 }
