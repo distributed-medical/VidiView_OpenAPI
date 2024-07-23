@@ -16,9 +16,12 @@ public record Department
 
     public string? SupportContactName { get; init; } 
 
-    public string? SupportContactPhone { get; init; } 
+    public string? SupportContactPhone { get; init; }
 
-    public long? EffectivePermissionSet { get; init; }
+    /// <summary>
+    /// This represents the permission set granted by the Server to this Department
+    /// </summary>
+    public long GrantedPermission { get; init; }
 
     public WorklistType WorklistType { get; init; } = WorklistType.None;
 

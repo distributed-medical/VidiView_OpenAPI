@@ -117,7 +117,7 @@ public record Study
     /// <summary>
     /// This represents the permission set granted by the Server to this Study
     /// </summary>
-    public long? EffectivePermissionSet { get; init; }
+    public long GrantedPermission { get; init; }
 
     /// <summary>
     /// The time this study was last reviewed by the current user
