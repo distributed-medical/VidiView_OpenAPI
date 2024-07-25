@@ -18,11 +18,6 @@ public record Department
 
     public string? SupportContactPhone { get; init; }
 
-    /// <summary>
-    /// This represents the permission set granted by the Server to this Department
-    /// </summary>
-    public long GrantedPermission { get; init; }
-
     public WorklistType WorklistType { get; init; } = WorklistType.None;
 
     /// <summary>

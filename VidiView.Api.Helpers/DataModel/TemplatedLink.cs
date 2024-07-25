@@ -26,7 +26,6 @@ public class TemplatedLink
         return new Uri(link.ToUrl());
     }
 
-    readonly Link _link;
     readonly string _hrefWithoutParams;
     readonly ParameterCollection _params;
 
@@ -36,8 +35,9 @@ public class TemplatedLink
     /// <param name="link"></param>
     public TemplatedLink(Link link)
     {
-        _link = link ?? throw new ArgumentNullException(nameof(link));
+        ArgumentNullException.ThrowIfNull(link, nameof(link));
         _hrefWithoutParams = link.Href;
+
         if (link.Templated)
         {
             _params = new ParameterCollection(ref _hrefWithoutParams);
@@ -46,6 +46,18 @@ public class TemplatedLink
         {
             _params = new ParameterCollection();
         }
+    }
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <param name="url"></param>
+    public TemplatedLink(string url)
+    {
+        ArgumentNullException.ThrowIfNull(url, nameof(url));
+
+        _hrefWithoutParams = url;
+        _params = new ParameterCollection(ref _hrefWithoutParams);
     }
 
     /// <summary>
@@ -78,7 +90,7 @@ public class TemplatedLink
     public string ToUrl()
     {
         if (_params.Count == 0)
-            return _link.Href;
+            return _hrefWithoutParams;
 
         int offset = 0;
         bool querySeparatorAdded = false;

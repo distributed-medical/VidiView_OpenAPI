@@ -115,11 +115,6 @@ public record Study
     public DateTimeOffset? DeletedDate { get; init; }
 
     /// <summary>
-    /// This represents the permission set granted by the Server to this Study
-    /// </summary>
-    public long GrantedPermission { get; init; }
-
-    /// <summary>
     /// The time this study was last reviewed by the current user
     /// </summary>
     /// <remarks>This is only set when retrieving the recently used studies</remarks>
