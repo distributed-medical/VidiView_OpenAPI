@@ -72,7 +72,7 @@ public class WSClient
     public async Task<AuthenticateReplyMessage> ConnectAsync(Uri uri, string apiKey, string authorization, CancellationToken cancellationToken)
     {
         // Create a new web socket
-        _logger.LogInformation("Open web socket to {uri}", uri);
+        _logger.LogDebug("Open web socket to {uri}", uri);
 
         var socket = new ClientWebSocket();
         socket.Options.AddSubProtocol(SubProtocol);
@@ -97,6 +97,7 @@ public class WSClient
                 && response.InReplyTo == authMessage.MessageId)
             {
                 // Successfully connected
+                _logger.LogInformation("Web socket to {uri} connected and authenticated", uri);
 
                 _socket = socket;
                 StartMessageReader();
@@ -110,7 +111,7 @@ public class WSClient
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to connect web socket");
+            _logger.LogDebug(ex, "Web socket to {uri} failed", uri);
 
             socket.Dispose();
             throw;

@@ -38,4 +38,11 @@ public class AnnotationDeletedMessage : IWSActorMessage
     /// The deleted annotation
     /// </summary>
     public Guid AnnotationId { get; init; }
+
+    /// <summary>
+    /// This will be true if the thumbnail needs refreshing
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool RefreshThumbnail { get; init; }
+
 }

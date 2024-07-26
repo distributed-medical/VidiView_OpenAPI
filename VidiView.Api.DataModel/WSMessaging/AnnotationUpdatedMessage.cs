@@ -38,4 +38,10 @@ public class AnnotationUpdatedMessage : IWSActorMessage
     /// The updated annotation
     /// </summary>
     public Annotation Annotation { get; init; }
+
+    /// <summary>
+    /// This will be true if the thumbnail needs refreshing
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool RefreshThumbnail { get; init; }
 }

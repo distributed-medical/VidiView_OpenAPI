@@ -37,5 +37,6 @@ public class MediaFileUpdatedMessage : IWSActorMessage
     /// <summary>
     /// This will be true if the thumbnail needs refreshing
     /// </summary>
-    public bool? RefreshThumbnail { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool RefreshThumbnail { get; init; }
 }
