@@ -25,7 +25,6 @@ public static class Rel
     public const string ClientDeviceRegistration = "device-registration";
     public const string Clear = "clear";
     public const string Close = "close";
-    public const string Conference = "conference";
     public const string Conferences = "conferences";
     public const string Configuration = "configuration";
     public const string Contents = "contents";

@@ -13,7 +13,7 @@ public record MediaFile
     /// </summary>
     public string? Checksum { get; init; }
 
-    public string ContentType { get; init; } = null!;
+    public string ContentType { get; init; } = string.Empty;
 
     /// <summary>
     /// Controller where this image was acquired
@@ -52,7 +52,7 @@ public record MediaFile
 
     public long FileSize { get; init; }
 
-    [Obsolete("This is only used by iOS?")]
+    [Obsolete("This is only used by legacy VidiView Capture iOS?")]
     public string? FileSizeAsString { get; init; }
 
     public int Height { get; init; }
