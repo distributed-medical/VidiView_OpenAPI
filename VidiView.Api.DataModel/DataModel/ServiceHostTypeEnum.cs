@@ -7,44 +7,58 @@ public enum ServiceHostType
 {
     None = 0,
 
+    // Protocol type
+    VidiViewNative = 0x10,
+    Dicom = 0x20,
+    HL7v2 = 0x40,
+    HL7v3 = 0x80,
+    HttpRest = 0x100,
+    Other = 0x800,
+
     /// <summary>
-    /// External Dicom modality from which images are received
+    /// Worklist provider
     /// </summary>
-    DicomModalityReceive = 0x201,
+    Worklist = 0x1000,
 
-    // External archives
-    //        ExternalArchive =                           0x400,
-    //        ExternalArchive_Export =                    0x401,
-    
     /// <summary>
-    /// External Dicom compatible archive used for query/retrieve
+    /// PDQ provider
     /// </summary>
-    RetrieveDicom = 0x402,
-    
+    PDQ = 0x2000,
+
     /// <summary>
-    /// External Dicom compatible export destination
+    /// Export destination
     /// </summary>
-    ExportDicom = 0x411,
-//        ExternalArchive_DicomCStoreQueryRetrieve = 0x413, // ExternalArchive_DicomCStore | ExternalArchive_DicomQueryRetrieve,
-    
+    Export = 0x4000,
+
     /// <summary>
-    /// External VidiView archive export destination
+    /// Import source
     /// </summary>
-    ExportVidiView = 0x421,
+    Import = 0x8000,
 
-    EnterprisePartner = 0x800,
+    /// <summary>
+    /// IAN destination
+    /// </summary>
+    IANDestination = 0x10000,
 
-    WorklistProvider = 0x1000,
-    WorklistProvider_None = 0x1000,
-    WorklistProvider_VidiView = 0x1001,
-    WorklistProvider_Dicom = 0x1002,
-    WorklistProvider_Provisio = 0x1004,
+    EnterprisePartner = 0x80000,
 
-    HL7v2_Host = 0x2000,
-    HL7v3_Host = 0x4000,
+    WorklistVidiView = 0x1010,
+    WorklistDicom = 0x1020,
+    WorklistProvisio = 0x1800,
 
-    PDQ_Provider_HL7v2 = 0x12000,
-    PDQ_Provider_HL7v3 = 0x14000,
+    PDQProviderHL7v2 = 0x2040,
+    PDQProviderHL7v3 = 0x2080,
 
-    IAN_Receiver_HL7v2 = 0x22000,
+    ExportVidiView = 0x4010,
+    ExportDicom = 0x4020,
+    ExportDicomWithQR = 0x4021,
+    ExportRMV = 0x4100,
+
+    /// <summary>
+    /// Dicom modality receive
+    /// </summary>
+    ImportDicom = 0x8020,
+    ImportDicomQR = 0x8021,
+
+    IANReceiverHL7v2 = 0x10040,
 }

@@ -13,7 +13,7 @@ public record ExportQueueCollection
     /// <summary>
     /// The items
     /// </summary>
-    public ExportMediaFile[] Items => Embedded.Items;
+    public QueuedItem[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -32,7 +32,7 @@ public record ExportQueueCollection
 
     public record EmbeddedArray
     {
-        public ExportMediaFile[] Items
+        public QueuedItem[] Items
         {
             get; init;
         }
