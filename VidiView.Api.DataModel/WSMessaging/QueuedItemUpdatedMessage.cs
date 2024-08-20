@@ -5,9 +5,9 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to all clients having a specific study open, when a queued item is updated
 /// </summary>
-public class QueuedItemUpdateMessage : IWSMessage
+public class QueuedItemUpdatedMessage : IWSMessage
 {
-    public QueuedItemUpdateMessage()
+    public QueuedItemUpdatedMessage()
     {
         // Maybe it seems odd to use the ToString() here instead
         // of FullName, but the ToString will not return assembly qualified name
