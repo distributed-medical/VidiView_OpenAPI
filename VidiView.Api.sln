@@ -13,6 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VidiView.Api.DataModel.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VidiView.Api.Helpers.Test", "VidiView.Api.Helpers.Test\VidiView.Api.Helpers.Test.csproj", "{05E59674-2FEF-4333-9985-BE23DDDE5DEE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F9BF123-5930-4060-A57D-A25723D7C716}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\BuildAndPublish.yml = .github\workflows\BuildAndPublish.yml
+		GitVersion.yml = GitVersion.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,1 +1,0 @@
-﻿dotnet nuget push "VidiView.Api.Helpers/bin/release/VidiView.Api.Helpers.5.0.12.nupkg" --source "dm-vidiview"

@@ -1,0 +1,82 @@
+# Copyright (c) 2024 Distributed Medical AB. All rights reserved.
+
+name: Build, test and publish VidiView Open API projects
+
+on:
+  push:
+    branches: [ ]
+
+jobs:
+
+  build-test-and-publish:
+    strategy:
+      matrix:
+        configuration: [Release]
+        nuget: [latest]
+
+    runs-on: windows-latest
+    permissions:
+      contents: read
+      packages: read
+
+    env:
+      SOLUTION: VidiView.Api.sln
+      PROJECT: ${{ github.workspace }}\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+       fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 7.0.x
+    
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: NuGet add source with credentials
+      run: nuget sources Add -name "dm-vidiview" -source "https://nuget.pkg.github.com/distributed-medical/index.json" -username "github_action" -password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText 
+
+#    - name: NuGet update sources
+#      run: nuget sources Update -name "dm-vidiview"
+
+    - name: Restore dependencies
+      run: dotnet restore ${{env.SOLUTION}}
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.0.0
+      with:
+        versionSpec: '6.x'
+
+    - name: Determine Version
+      id: version_step # step id used as reference for output values
+      uses: gittools/actions/gitversion/execute@v3.0.0
+      with:
+        useConfigFile: true
+
+    # - name: Output the FullSemVer variable
+    #   uses: gittools/actions/gitversion/command@v3.0.0
+    #   with:
+    #     arguments: '/showvariable FullSemVer'
+
+    - name: Update project file
+      uses: gittools/actions/gitversion/command@v3.0.0
+      with:
+        arguments: '/updateprojectfiles /updateassemblyinfo /verbosity Diagnostic'
+    
+    - name: Build
+      run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
+    
+    - name: Test
+      run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
+
+    # - name: Publish DataModel package 
+    #   if: always() # github.ref == 'refs/heads/main'
+    #   run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+
+    # - name: Publish Helper package 
+    #   if: always() # github.ref == 'refs/heads/main'
+    #   run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+

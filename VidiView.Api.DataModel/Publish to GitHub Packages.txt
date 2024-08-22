@@ -1,1 +1,0 @@
-﻿dotnet nuget push "VidiView.Api.DataModel/bin/release/VidiView.Api.DataModel.5.0.12.nupkg" --source "dm-vidiview"
