@@ -36,9 +36,9 @@ jobs:
     - name: Setup NuGet
       uses: nuget/setup-nuget@v2
 
-    - name: NuGet update source with credentials
-      if: always()
-      run: nuget sources Update -Name dm-vidiview -UserName "username" -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
+#    - name: NuGet update source with credentials
+#      if: always()
+#      run: nuget sources Update -Name dm-vidiview -UserName "username" -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
 
     - name: Restore dependencies
       run: dotnet restore ${{env.SOLUTION}}
