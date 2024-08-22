@@ -41,6 +41,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Publish to GitHub Packages.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>
