@@ -14,10 +14,10 @@ jobs:
         configuration: [Release]
         nuget: [latest]
 
-    runs-on: [Windows, self-hosted]
+    runs-on: windows-latest
     permissions:
       contents: read
-      packages: write
+      packages: read
 
     env:
       SOLUTION: VidiView.DataModel.sln
