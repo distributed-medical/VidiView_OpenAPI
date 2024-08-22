@@ -22,7 +22,6 @@ jobs:
     env:
       SOLUTION: VidiView.DataModel.sln
       PROJECT: ${{ github.workspace }}\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj
-      NUGET_PKG_SOURCE: https://nuget.pkg.github.com/distributed-medical/index.json
 
     steps:
     - uses: actions/checkout@v4
@@ -67,7 +66,7 @@ jobs:
     - name: Test
       run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
-    - name: Publish to Distributed Medical package store
-      if: github.ref == 'refs/heads/main'
-      run: dotnet nuget push **\VidiView.Api.DataModel*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
+#    - name: Publish to Distributed Medical package store
+#      if: github.ref == 'refs/heads/main'
+#      run: dotnet nuget push **\VidiView.Api.DataModel*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s ${{env.NUGET_PKG_SOURCE}} --skip-duplicate
 
