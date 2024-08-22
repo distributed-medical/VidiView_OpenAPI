@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Distributed Medical. All rights reserved.
+# Copyright (c) 2024 Distributed Medical AB. All rights reserved.
 
 name: Build, test and publish data model
 
@@ -26,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+       fetch-depth: 0
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -41,6 +43,23 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore ${{env.SOLUTION}}
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v3.0.0
+      with:
+        versionSpec: '6.x'
+
+    - name: Determine Version
+      id: version_step # step id used as reference for output values
+      uses: gittools/actions/gitversion/execute@v3.0.0
+      with:
+        useConfigFile: true
+        updateAssemblyInfo: true
+
+    - name: Output the FullSemVer variable
+      uses: gittools/actions/gitversion/command@v3.0.0
+      with:
+        arguments: '/showvariable FullSemVer'
     
     - name: Build
       run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore

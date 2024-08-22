@@ -5,8 +5,8 @@
         <Platforms>AnyCPU</Platforms>
         
         <AssemblyVersion>5.0.0.0</AssemblyVersion>
-        <FileVersion>5.0.15.0</FileVersion>
-        <Version>5.0.15-beta02</Version>
+        <FileVersion>5.0</FileVersion>
+        <Version>5.1</Version>
 
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>VidiView OpenAPI</PackageTags>
