@@ -3,6 +3,7 @@
 ### License
 This library is the property of Distributed Medical AB, Sweden and may only
 be used by individuals and companies that has a prior written consent!
+https://www.distributedmedical.com/
 
 ### Features
 * Targets .NET 7.0
