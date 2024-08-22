@@ -51,22 +51,24 @@ public record QueuedItem
     public IdAndName Department { get; init; }
 
     /// <summary>
-    /// The patient this item is associated with
+    /// The study accession number, if any
     /// </summary>
-    public Patient Patient { get; init; } = null!;
+    public string? AccessionNumber { get; init; }
 
     /// <summary>
     /// Media file acquisition date
     /// </summary>
     public DateTimeOffset AcquisitionDate { get; init; }
+
+    /// <summary>
+    /// The patient this item is associated with
+    /// </summary>
+    public Patient Patient { get; init; } = null!;
+
     /// <summary>
     /// Media file type
     /// </summary>
     public string ContentType { get; init; }
-    /// <summary>
-    /// Media file size (if known)
-    /// </summary>
-    public long? FileSize { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
