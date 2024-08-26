@@ -21,7 +21,6 @@ jobs:
 
     env:
       SOLUTION: VidiView.Api.sln
-      PROJECT: ${{ github.workspace }}\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj
 
     steps:
     - uses: actions/checkout@v4
@@ -39,9 +38,6 @@ jobs:
     - name: NuGet add source with credentials
       run: nuget sources Add -name "dm-vidiview" -source "https://nuget.pkg.github.com/distributed-medical/index.json" -username "github_action" -password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText 
 
-#    - name: NuGet update sources
-#      run: nuget sources Update -name "dm-vidiview"
-
     - name: Restore dependencies
       run: dotnet restore ${{env.SOLUTION}}
 
@@ -56,11 +52,6 @@ jobs:
       with:
         useConfigFile: true
 
-    # - name: Output the FullSemVer variable
-    #   uses: gittools/actions/gitversion/command@v3.0.0
-    #   with:
-    #     arguments: '/showvariable FullSemVer'
-
     - name: Update project file
       uses: gittools/actions/gitversion/command@v3.0.0
       with:
@@ -72,11 +63,11 @@ jobs:
     - name: Test
       run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
-    # - name: Publish DataModel package 
-    #   if: always() # github.ref == 'refs/heads/main'
-    #   run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+    - name: Publish DataModel package 
+      if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 
-    # - name: Publish Helper package 
-    #   if: always() # github.ref == 'refs/heads/main'
-    #   run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+    - name: Publish Helper package 
+      if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 
