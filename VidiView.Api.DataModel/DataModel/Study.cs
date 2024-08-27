@@ -111,6 +111,11 @@ public record Study
     public Assignment[]? Assignment { get; init; }
 
     /// <summary>
+    /// This is the date after which the study is scheduled to purged
+    /// </summary>
+    public DateOnly? PurgeDate { get; init; }
+
+    /// <summary>
     /// If this is set, the study is deleted
     /// </summary>
     public DateTimeOffset? DeletedDate { get; init; }

@@ -37,6 +37,6 @@ public class MediaFileDeletedMessage : IWSActorMessage
     /// <summary>
     /// The updated media file
     /// </summary>
-    public MediaFile? MediaFile { get; init; }
+    public MediaFile MediaFile { get; init; }
 
 }
