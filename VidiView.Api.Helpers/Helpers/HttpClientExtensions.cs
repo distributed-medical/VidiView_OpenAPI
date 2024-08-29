@@ -30,7 +30,7 @@ public static class HttpClientExtensions
     /// <param name="appVersion">Application version</param>
     /// <param name="deviceModel">Device model</param>
     /// <returns></returns>
-    public static async Task<ClientDevice> RegisterDeviceAsync(this System.Net.Http.HttpClient http, string appVersion, string? deviceModel)
+    public static async Task<ClientDevice> RegisterDeviceAsync(this HttpClient http, string appVersion, string? deviceModel)
     {
         var api = await http.HomeAsync();
         var device = new ClientDevice
@@ -54,13 +54,6 @@ public static class HttpClientExtensions
     {
         _baseAddress[http] = baseAddress;
         _cache[http] = apiHome;
-    }
-
-    [Obsolete("Use the ConnectAsync() extension method instead")]
-    public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
-    {
-        _baseAddress[http] = baseAddress;
-        _cache.Remove(http);
     }
 
     /// <summary>
@@ -124,6 +117,7 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="http"></param>
     /// <returns></returns>
+    [Obsolete("Not use", true)]
     internal static ApiHome? CachedHome(this HttpClient http)
     {
         if (_cache.TryGetValue(http, out var home))

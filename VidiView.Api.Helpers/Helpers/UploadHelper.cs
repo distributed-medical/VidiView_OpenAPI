@@ -16,6 +16,15 @@ public class UploadHelper
     }
 
     /// <summary>
+    /// The maximum individual chunk to send in each request
+    /// </summary>
+    /// <remarks>
+    /// In order to utilize chunking, the upload must be announced
+    /// with a checksum. 
+    /// </remarks>
+    public long MaximumChunkSize { get; set; } = long.MaxValue;
+
+    /// <summary>
     /// Upload a file stream to server, with automatic resume for interrupted uploads
     /// </summary>
     /// <param name="link"></param>
@@ -42,13 +51,28 @@ public class UploadHelper
     /// <returns></returns>
     public async Task<MediaFile> UploadFromCurrentPositionAsync(TemplatedLink link, Stream stream, string contentType, CancellationToken cancellationToken)
     {
-        var httpContent = HttpContentFactory.CreateBody(stream, contentType);
+        HttpResponseMessage response;
+        do
+        {
+            var rangeStream = new RangeStream(stream, stream.Position, MaximumChunkSize)
+            {
+                CloseUnderlyingStream = false
+            };
 
-        // Indicate with a content range header the position we start uploading from
-        httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Length - 1, stream.Length);
+            var httpContent = HttpContentFactory.CreateBody(rangeStream, contentType);
 
-        var response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
-        await response.AssertSuccessAsync().ConfigureAwait(false);
+            // Indicate with a content range header the position we start uploading from
+            httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Position + rangeStream.Length - 1, stream.Length);
+
+            response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
+            await response.AssertSuccessAsync().ConfigureAwait(false);
+
+            // In MAUI, the underlying code will reset the stream's position
+            stream.Position = rangeStream.Offset + rangeStream.Length;
+        }
+        while (stream.Position < stream.Length);
+
+        // Now the file should be fully uploaded
         return await response.DeserializeAsync<MediaFile>().ConfigureAwait(false);
     }
 

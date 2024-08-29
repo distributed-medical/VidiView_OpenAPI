@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 
 namespace VidiView.Api.Authentication;
-public class PinCodeAuthenticator
+public class PinCodeAuthenticator 
 {
     readonly HttpClient _http;
     Link? _authenticationLink;
@@ -14,10 +14,15 @@ public class PinCodeAuthenticator
     public PinCodeAuthenticator(HttpClient http)
     {
         _http = http;
-        IsSupported = http.CachedHome()?.Links.Exists(Rel.AuthenticatePinEnabled) == true;
     }
 
-    public bool IsSupported { get; private set; }
+    public async Task<bool> IsSupportedAsync()
+    {
+        return (await _http.HomeAsync())
+            .AssertRegistered()
+            .Links.Exists(Rel.AuthenticatePinEnabled);
+    }
+
     public User? User { get; private set; }
     public AuthToken? Token { get; private set; }
 

@@ -5,17 +5,22 @@ using VidiView.Api.Exceptions;
 using System.Net.Http;
 
 namespace VidiView.Api.Authentication;
-public class WindowsAuthenticator
+public class WindowsAuthenticator : IAuthenticator
 {
     readonly HttpClient _http;
 
     public WindowsAuthenticator(HttpClient http)
     {
         _http = http;
-        IsSupported = http.CachedHome()?.Links.Exists(Rel.AuthenticateWindows) == true;
     }
 
-    public bool IsSupported { get; private set; }
+    public async Task<bool> IsSupportedAsync()
+    {
+        return (await _http.HomeAsync())
+            .AssertRegistered()
+            .Links.Exists(Rel.AuthenticateWindows);
+    }
+
     public User? User { get; private set; }
     public AuthToken? Token { get; private set; }
     

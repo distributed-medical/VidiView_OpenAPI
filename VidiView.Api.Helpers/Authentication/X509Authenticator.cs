@@ -5,14 +5,20 @@ using VidiView.Api.DataModel;
 using System.Net.Http;
 
 namespace VidiView.Api.Authentication;
-public class X509Authenticator
+public class X509Authenticator : IAuthenticator
 {
     readonly HttpClient _http;
 
     public X509Authenticator(HttpClient http)
     {
         _http = http;
-        IsSupported = http.CachedHome()?.Links.Exists(Rel.TrustedIssuers) == true;
+    }
+
+    public async Task<bool> IsSupportedAsync()
+    {
+        return (await _http.HomeAsync())
+            .AssertRegistered()
+            .Links.Exists(Rel.TrustedIssuers);
     }
 
     public bool IsSupported { get; private set; }

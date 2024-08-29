@@ -29,14 +29,15 @@ public static class HttpAuthenticationExtensions
     }
 
     /// <summary>
-    /// Provide an api key
+    /// Provide an api key, by adding the provided API key
+    /// header as a default request header
     /// </summary>
     /// <param name="http"></param>
-    /// <param name="apikey"></param>
-    public static void SetApiKey(this HttpClient http, ApiKeyHeader apikey)
+    /// <param name="apiKey"></param>
+    public static void SetApiKey(this HttpClient http, ApiKeyHeader apiKey)
     {
-        http.DefaultRequestHeaders.Remove(apikey.Name);
-        http.DefaultRequestHeaders.Add(apikey.Name, apikey.Value);
+        http.DefaultRequestHeaders.Remove(apiKey.Name);
+        http.DefaultRequestHeaders.Add(apiKey.Name, apiKey.Value);
     }
 
     public static void SetActingRole(this HttpClient http, string id)

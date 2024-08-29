@@ -1,14 +1,13 @@
 # Copyright (c) 2024 Distributed Medical AB. All rights reserved.
 
-name: Build, test and publish VidiView Open API projects
+name: Build and publish
 
 on:
   push:
     branches: [ ]
 
 jobs:
-
-  build-test-and-publish:
+  build:
     strategy:
       matrix:
         configuration: [Release]
@@ -60,14 +59,16 @@ jobs:
     - name: Build
       run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
     
-    - name: Test
-      run: dotnet test ${{env.SOLUTION}} --no-build --configuration ${{ matrix.configuration }} --verbosity normal
+    - name: Test DataModel
+      run: dotnet test 'VidiView.Api.DataModel.Test\VidiView.Api.DataModel.Test.csproj' --no-build --configuration ${{ matrix.configuration }} --verbosity normal
+    - name: Test Helpers
+      run: dotnet test 'VidiView.Api.Helpers.Test\VidiView.Api.Helpers.Test.csproj' --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
     - name: Publish DataModel package 
-      if: github.ref == 'refs/heads/main'
+      if: always() # github.ref == 'refs/heads/main'
       run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 
     - name: Publish Helper package 
-      if: github.ref == 'refs/heads/main'
+      if: always() # github.ref == 'refs/heads/main'
       run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 

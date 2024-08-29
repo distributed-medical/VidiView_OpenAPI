@@ -6,17 +6,22 @@ using System.Net.Http;
 using System.Text;
 
 namespace VidiView.Api.Authentication;
-public class UsernamePasswordAuthenticator
+public class UsernamePasswordAuthenticator : IAuthenticator
 {
     readonly HttpClient _http;
 
     public UsernamePasswordAuthenticator(HttpClient http)
     {
         _http = http;
-        IsSupported = http.CachedHome()?.Links.Exists(Rel.AuthenticatePassword) == true;
     }
 
-    public bool IsSupported { get; private set; }
+    public async Task<bool> IsSupportedAsync()
+    {
+        return (await _http.HomeAsync())
+            .AssertRegistered()
+            .Links.Exists(Rel.AuthenticatePassword);
+    }
+
     public User? User { get; private set; }
     public AuthToken? Token { get; private set; }
     

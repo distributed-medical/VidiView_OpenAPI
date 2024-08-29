@@ -40,15 +40,18 @@ public static class ApiHomeExtensions
     /// </summary>
     /// <param name="home"></param>
     /// <exception cref="E1007_DeviceNotGrantedAccessException"></exception>
-    public static void AssertRegistered(this ApiHome home)
+    /// <returns>The ApiHome instance</returns>
+    public static ApiHome AssertRegistered(this ApiHome home)
     {
         if (IsAuthenticated(home))
-            return; // This infers device is registered
+            return home; // This infers device is registered
 
         bool isRegistered = home.Links.Exists(Rel.Start) // This must always exist
             && home.Links.Exists(Rel.ClientDeviceRegistration);
 
         if (!isRegistered)
             throw new E1007_DeviceNotGrantedAccessException("Device is either not registered or denied access");
+
+        return home;
     }
 }

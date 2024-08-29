@@ -29,19 +29,14 @@ public static class DeviceRegistration
     /// <returns></returns>
     public static async Task<ClientDevice> RegisterAsync(System.Net.Http.HttpClient http, ApiHome api, ClientDevice device)
     {
-        try
-        {
-            var link = api.Links.GetRequired(Rel.RegisterClientDevice);
+        var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
-            var response = await http.PutAsync(link, device).ConfigureAwait(false);
-            await response.AssertSuccessAsync().ConfigureAwait(false);
-            var result = await response.DeserializeAsync<ClientDevice>().ConfigureAwait(false);
-            return result;
-        }
-        finally
-        {
-            http.InvalidateHome();
-        }
+        var response = await http.PutAsync(link, device).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
+        var result = await response.DeserializeAsync<ClientDevice>().ConfigureAwait(false);
+        http.InvalidateHome();
+
+        return result;
     }
 
 #if WINRT
@@ -71,6 +66,7 @@ public static class DeviceRegistration
         var response = await http.PutAsync(link, device);
         await response.AssertSuccessAsync();
         var result = response.Deserialize<ClientDevice>();
+        http.InvalidateHome();
         
         return result;
     }
