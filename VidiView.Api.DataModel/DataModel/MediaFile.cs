@@ -136,6 +136,10 @@ public record MediaFile
     /// <summary>
     /// Timestamp value that changes with any update
     /// </summary>
+    /// <remarks>
+    /// This is only changed when actual file metadata is changed, not
+    /// annotations, favourite markings etc
+    /// </remarks>
     public string Timestamp { get; init; }
 
     /// <summary>

@@ -12,13 +12,16 @@ jobs:
   build:
     strategy:
       matrix:
-        configuration: [Release]
-        nuget: [latest]
+        configuration: 
+        - Release
+        project:
+        - 'VidiView.Api.DataModel'
+        - 'VidiView.Api.Helpers'
 
     runs-on: windows-latest
     permissions:
       contents: read
-      packages: read
+      packages: write
 
     env:
       SOLUTION: VidiView.Api.sln
@@ -39,9 +42,6 @@ jobs:
     - name: NuGet add source with credentials
       run: nuget sources Add -name "dm-vidiview" -source "https://nuget.pkg.github.com/distributed-medical/index.json" -username "github_action" -password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText 
 
-    - name: Restore dependencies
-      run: dotnet restore ${{env.SOLUTION}}
-
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v3.0.0
       with:
@@ -58,15 +58,12 @@ jobs:
       with:
         arguments: '/updateprojectfiles /updateassemblyinfo /verbosity Diagnostic'
     
-    - name: Build
-      run: dotnet build ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-restore
+    - name: Build and test
+      run: |
+          dotnet build ${{ matrix.project }} --configuration ${{ matrix.configuration }}
+          dotnet test ${{ matrix.project }}.Test --configuration ${{ matrix.configuration }}
     
-    - name: Test DataModel
-      run: dotnet test 'VidiView.Api.DataModel.Test\VidiView.Api.DataModel.Test.csproj' --no-build --configuration ${{ matrix.configuration }} --verbosity normal
-    - name: Test Helpers
-      run: dotnet test 'VidiView.Api.Helpers.Test\VidiView.Api.Helpers.Test.csproj' --no-build --configuration ${{ matrix.configuration }} --verbosity normal
-
-    - name: Sign binaries (main branch only)
+    - name: Sign binaries
       uses: azure/trusted-signing-action@v0.4.0
       with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -75,19 +72,31 @@ jobs:
           endpoint: https://weu.codesigning.azure.net/ # Western Europe
           trusted-signing-account-name: DMCodesigning
           certificate-profile-name: DMCodesigning
-          files: ${{ github.workspace }}\VidiView.Api.DataModel\bin\Release\net7.0\VidiView.Api.DataModel.dll,
-                 ${{ github.workspace }}\VidiView.Api.Helpers\bin\Release\net7.0\VidiView.Api.Helpers.dll
+          files-folder: ${{ matrix.project }}\bin\Release\net7.0\
+          files-folder-filter: dll
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
 
     - name: Pack
-      run: dotnet pack ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-build --no-restore
+      run: dotnet pack ${{ matrix.project }} --configuration ${{ matrix.configuration }} --no-build --no-restore
 
-    - name: Publish DataModel package 
-      #if: github.ref == 'refs/heads/main'
-      run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+    # - name: Sign NuGet package
+    #   uses: azure/trusted-signing-action@v0.4.0
+    #   with:
+    #       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    #       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    #       azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+    #       endpoint: https://weu.codesigning.azure.net/ # Western Europe
+    #       trusted-signing-account-name: DMCodesigning
+    #       certificate-profile-name: DMCodesigning
+    #       files-folder: ${{ matrix.project }}\bin\Release\
+    #       files-folder-filter: nupkg
+    #       file-digest: SHA256
+    #       timestamp-rfc3161: http://timestamp.acs.microsoft.com
+    #       timestamp-digest: SHA256
 
-    - name: Publish Helper package 
-      run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
+    - name: Publish package 
+     #   #if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push **\${{ matrix.project }}*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s "dm-vidiview" --skip-duplicate
 

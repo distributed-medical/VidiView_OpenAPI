@@ -11,7 +11,7 @@
         <Version>5.0-devbuild</Version>
 		-->
 
-        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageTags>VidiView OpenAPI</PackageTags>
         <Company>Distributed Medical AB</Company>
         <Authors>Distributed Medical AB</Authors>
@@ -33,6 +33,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 

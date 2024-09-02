@@ -133,8 +133,12 @@ public record Study
     public bool? IsAssigned { get; init; }
 
     /// <summary>
-    /// Timestamp value that changes with any update
+    /// Timestamp value that changes with any update to the study metadata
     /// </summary>
+    /// <remarks>
+    /// This is only changed when actual study metadata is changed, not
+    /// media files, assignment status etc
+    /// </remarks>
     public string Timestamp { get; init; }
 
     /// <summary>
