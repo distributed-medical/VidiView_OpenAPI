@@ -4,7 +4,7 @@ name: Build and publish
 
 on:
   push:
-    branches: [ ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -64,11 +64,28 @@ jobs:
     - name: Test Helpers
       run: dotnet test 'VidiView.Api.Helpers.Test\VidiView.Api.Helpers.Test.csproj' --no-build --configuration ${{ matrix.configuration }} --verbosity normal
 
+    - name: Sign binaries (main branch only)
+      uses: azure/trusted-signing-action@v0.4.0
+      with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://weu.codesigning.azure.net/ # Western Europe
+          trusted-signing-account-name: DMCodesigning
+          certificate-profile-name: DMCodesigning
+          files: ${{ github.workspace }}\VidiView.Api.DataModel\bin\Release\net7.0\VidiView.Api.DataModel.dll,
+                 ${{ github.workspace }}\VidiView.Api.Helpers\bin\Release\net7.0\VidiView.Api.Helpers.dll
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+    - name: Pack
+      run: dotnet pack ${{env.SOLUTION}} --configuration ${{ matrix.configuration }} --no-build --no-restore
+
     - name: Publish DataModel package 
-      if: always() # github.ref == 'refs/heads/main'
+      #if: github.ref == 'refs/heads/main'
       run: dotnet nuget push "**\VidiView.Api.DataModel*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 
     - name: Publish Helper package 
-      if: always() # github.ref == 'refs/heads/main'
       run: dotnet nuget push "**\VidiView.Api.Helpers*.nupkg" -k ${{ secrets.PACKAGE_ACCESS_TOKEN }} -s "dm-vidiview" --skip-duplicate
 
