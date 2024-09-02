@@ -19,15 +19,17 @@
         <Title>VidiView OpenAPI Helper</Title>
         <Copyright>Copyright © 2023-2024 Distributed Medical AB, https://distributedmedical.com. All rights reserved</Copyright>
         <Description>VidiView helper objects for accessing VidiView API</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageProjectUrl>https://distributedmedical.com/vidiview/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
-
+		<PackageProjectUrl>https://github.com/distributed-medical/VidiView_OpenAPI</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/distributed-medical/VidiView_OpenAPI</RepositoryUrl>
+		<PackageIcon>DM diamond 128px.png</PackageIcon>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		
         <RootNamespace>VidiView.Api</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
 	</PropertyGroup>
 
@@ -72,7 +74,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="" />
+		<None Include="..\DM diamond 128px.png" Pack="true" PackagePath="\"/>
+		<None Include="README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
