@@ -1,26 +1,19 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class MediaFileCollection
+public record TrackableCollection
 {
     /// <summary>
     /// Number of items in this collection
     /// </summary>
     public int Count { get; init; }
 
-    /// <summary>
-    /// Associated study (if any)
-    /// </summary>
-    public Guid? StudyId { get; init; }
-
-    /// <summary>
-    /// Associated trackable (if any)
-    /// </summary>
-    public Guid? TrackableId { get; init; }
+    public Guid PatientId { get; init; }
+    public int MaximumHits { get; init; }
 
     /// <summary>
     /// The items
     /// </summary>
-    public MediaFile[] Items => Embedded.MediaFiles;
+    public Trackable[] Items => Embedded.Trackables;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -31,10 +24,8 @@ public class MediaFileCollection
     [JsonPropertyName("_embedded")]
     public EmbeddedArray Embedded { get; init; }
 
-    public class EmbeddedArray
+    public record EmbeddedArray
     {
-        // This is the legacy name...
-        [JsonPropertyName("images")]
-        public MediaFile[] MediaFiles { get; set; }
+        public Trackable[] Trackables { get; init; }
     }
 }

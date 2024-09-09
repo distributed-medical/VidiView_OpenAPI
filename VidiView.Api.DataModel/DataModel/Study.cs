@@ -18,6 +18,11 @@ public record Study
     public DateTimeOffset StudyDate { get; init; }
 
     /// <summary>
+    /// The study type
+    /// </summary>
+    public IdAndName Type { get; init; }
+
+    /// <summary>
     /// Study accession number
     /// </summary>
     public string? AccessionNumber { get; init; }

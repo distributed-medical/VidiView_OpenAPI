@@ -82,6 +82,7 @@ public static class Rel
     public const string Study = "study";
     public const string SubscribeLegacy = "subscribe-legacy";
     public const string Thumbnail = "thumbnail";
+    public const string Trackable = "trackable";
     public const string Trim = "trim";
     public const string TrustedIssuers = "x509-trusted-issuers";
     public const string UnidentifyStudy = "unidentify";

@@ -147,6 +147,12 @@ public static class SettingKey
     public const string WebViewUseLicenseCertificate = "WebView/UseDefaultCertificate";
     public const string WebViewSessionTimeout = "WebView/SessionTimeout";
 
+    public const string ReportLogotype = "Report/Logotype";
+    public const string ReportLogotypeHeight = "Report/LogotypeHeight";
+    public const string ReportPageNoFormat = "Report/PageNoFormat";
+    public const string ReportRasterDpi = "Report/RasterDpi";
+    public const string ReportJpegQuality = "Report/JpegQuality";
+
     #region VidiView Controller
     public const string ControllerConferenceRemoteCaptureEnable = "Controller/Conference/RemoteCapture/Enable";
     public const string ControllerServiceStudyDeleteEmpty = "Controller/Service/Study/DeleteEmpty";
@@ -222,12 +228,11 @@ public static class SettingKey
     public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
     public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
 
+    public const string ClientReportDefaultFont = "Client/Report/Default/Font";
     public const string ClientReportDefaultAnatomicMapWidth = "Client/Report/Default/AnatomicMapWidth";
     public const string ClientReportDefaultHeaderFontSize = "Client/Report/Default/HeaderFontSize";
     public const string ClientReportDefaultTextFontSize = "Client/Report/Default/TextFontSize";
     public const string ClientReportDefaultShowIndex = "Client/Report/Default/ShowIndex";
-    public const string ClientReportLogotype = "Client/Report/Logotype";
-    public const string ClientReportLogotypeHeight = "Client/Report/LogotypeHeight";
 
     public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
     public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";

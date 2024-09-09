@@ -129,9 +129,14 @@ public record MediaFile
     public Annotation[]? Annotations { get; init; }
 
     /// <summary>
-    /// Anatomic region annotation for this media file
+    /// Anatomic region for this media file
     /// </summary>
     public AnatomicRegion? AnatomicRegion { get; init; }
+
+    /// <summary>
+    /// Association with a trackable find
+    /// </summary>
+    public IdAndName? Trackable { get; init; }
 
     /// <summary>
     /// Timestamp value that changes with any update
