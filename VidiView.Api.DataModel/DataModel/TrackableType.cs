@@ -4,6 +4,6 @@
 public enum TrackableType
 {
     Unknown = 0,
-    Mole,
+    Nevus, // Mole
     Wound,
 }
