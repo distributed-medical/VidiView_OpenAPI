@@ -47,7 +47,7 @@ public class UsernamePasswordAuthenticator : IAuthenticator
             _http.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(username, password);
 
             User = await _http.GetAsync<User>(link);
-            link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
 
             Token = await _http.GetAsync<AuthToken>(link);
             _http.DefaultRequestHeaders.Authorization

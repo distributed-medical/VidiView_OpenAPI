@@ -40,4 +40,4 @@ obj
 project.lock.json
 project.assets.json
 Debug
-/Integration.Test/TestData/TestConfigLocalSecret.cs
+/Example/TestData/TestConfigLocalSecret.cs

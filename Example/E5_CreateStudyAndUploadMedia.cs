@@ -1,57 +1,61 @@
-using System.Net.Http;
-using VidiView.Api.Authentication;
 using VidiView.Api.DataModel;
 using VidiView.Api.Helpers;
+using VidiView.Example.TestData;
 
-namespace Integration.Test;
+namespace VidiView.Example;
 
 /// <summary>
 /// This class demonstrates uploading an image to a known
 /// study on the VidiView Server
 /// </summary>
 [TestClass]
-public class UploadImage
+public class E5_CreateStudyAndUploadMedia
 {
     static HttpClient _http = null!;
 
     [ClassInitialize]
     public static async Task ClassInitialize(TestContext context)
     {
-        // Prepare HttpClient with API key
-        var apiKey = TestConfig.ApiKey();
-        _http = new HttpClient();
-        _http.DefaultRequestHeaders.Add(apiKey.Name, apiKey.Value);
+        _http = await HttpClientFactory.CreateAsync();
 
-        // Connect to VidiView and register device (or update device registration)
-        await _http.ConnectAsync(TestConfig.ServerHostName, CancellationToken.None);
-        var device = await _http.RegisterDeviceAsync("4.0", "Apple iPhone 15");
-        if (!device.IsGranted)
-            throw new Exception($"Device not granted access, registration token: {device.RegistrationToken}");
-
-        // Authenticate
-        var auth = new UsernamePasswordAuthenticator(_http);
-        await auth.AuthenticateAsync(
-            TestConfig.Username,
-            TestConfig.Password);
-
-        // Now we are good to go!
     }
 
     /// <summary>
-    /// Load a study from a known id
+    /// Create an unidentified study in the system
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    public async Task LoadSpecificStudy()
+    public async Task Create_Unidentified_Study()
     {
         var api = await _http.HomeAsync();
 
-        // Load a specific study
-        var link = api.Links.GetRequired(Rel.Study).AsTemplatedLink();
-        link.Parameters["studyId"].Value = TestConfig.StudyId;
+        // Get the first department allowing us to create a study
+        var departments = await _http.GetAsync<DepartmentCollection>(api.Links.GetRequired(Rel.Departments));
+        var department = departments.Items.FirstOrDefault((d) => d.Links.Exists(Rel.CreateStudy));
+        Assert.IsNotNull(department, "You are not granted Create study rights in any department");
 
-        var study = await _http.GetAsync<Study>(link);
-        Assert.AreEqual(new Guid("b71f7d6e-aadf-4d38-9343-f3e88250f6e5"), study.StudyId);
+        var link = department.Links.GetRequired(Rel.CreateStudy);
+        string s = DateTime.UtcNow.Ticks.ToString();
+        if (s.Length > 15)
+            s = s.Substring(s.Length - 15);
+
+        // Initial parameters to assign to this study
+        var sco = new StudyCreateOptions
+        {
+            AccessionNumber = $"T{s}",
+            Patient = null, 
+            AssignToSelf = false
+        };
+
+        var response = await _http.PostAsync(link, sco);
+        await response.AssertSuccessAsync();
+        var study = response.Deserialize<Study>();
+
+        // Now we have a study
+        Assert.AreEqual(sco.AccessionNumber, study.AccessionNumber);
+
+        // Since we didn't assign the study in the first call...
+        Assert.IsTrue(study.Links.Exists(Rel.Assign));
     }
 
     /// <summary>
@@ -79,7 +83,9 @@ public class UploadImage
             ContentType = "image/jpeg",
             FileSize = fileStream.Length,
             OriginalFilename = "VietBun.jpg",
-            Checksum = CalculateChecksum(fileStream)
+            Checksum = CalculateChecksum(fileStream),
+            Name = "Nice lunch",
+            Description = "Vietnamese Bao-Bun",
         };
 
         // Post data to the server
@@ -94,9 +100,9 @@ public class UploadImage
 
         // Upload the content
         var uploadHelper = new UploadHelper(_http);
-        var finalImage = await uploadHelper.UploadWithResumeAsync(uploadLink, 
-            fileStream, 
-            mediaFile.ContentType, 
+        var finalImage = await uploadHelper.UploadWithResumeAsync(uploadLink,
+            fileStream,
+            mediaFile.ContentType,
             CancellationToken.None);
 
         Assert.AreEqual(fileStream.Length, finalImage.FileSize);

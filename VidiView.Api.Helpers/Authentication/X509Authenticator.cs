@@ -3,6 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using VidiView.Api.Helpers;
 using VidiView.Api.DataModel;
 using System.Net.Http;
+using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Authentication;
 public class X509Authenticator : IAuthenticator
@@ -112,7 +113,10 @@ public class X509Authenticator : IAuthenticator
                 //}
                 catch (Exception exc)
                 {
-                    authenticationException ??= exc;
+                    if (authenticationException is not VidiViewException)
+                    {
+                        authenticationException = exc;
+                    }
                 }
             }
 
@@ -122,7 +126,7 @@ public class X509Authenticator : IAuthenticator
             if (User == null)
                 throw new Exception("User object not retrievable");
 
-            link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
 
             Token = await _http.GetAsync<AuthToken>(link);
             _http.DefaultRequestHeaders.Authorization
@@ -142,6 +146,43 @@ public class X509Authenticator : IAuthenticator
     }
 
     /// <summary>
+    /// Return certificates eligible for client authentication.
+    /// This will look in the current user's personal certificate store
+    /// </summary>
+    public async Task<X509Certificate2Collection> EligibleClientCertificatesAsync()
+    {
+        using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+        store.Open(OpenFlags.ReadOnly);
+
+        return await EligibleClientCertificatesAsync(store);
+    }
+
+    /// <summary>
+    /// Return certificates eligible for client authentication
+    /// </summary>
+    /// <param name="store">The certificate store to look in</param>
+    public async Task<X509Certificate2Collection> EligibleClientCertificatesAsync(X509Store store)
+    {
+        var issuers = await TrustedIssuersAsync();
+
+        // Find eligible certificates
+        var result = new X509Certificate2Collection();
+        if (issuers != null)
+        {
+            foreach (var trusted in issuers.Items)
+            {
+                var certs = store.Certificates
+                    .Find(X509FindType.FindByIssuerDistinguishedName, trusted.DistinguishedName, true)
+                    .Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, true);
+
+                result.AddRange(certs);
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Clear authentication
     /// </summary>
     void Clear()
@@ -152,12 +193,18 @@ public class X509Authenticator : IAuthenticator
 
     static HttpClientHandler GetHttpClientHandler(HttpMessageHandler? messageHandler)
     {
-        while (messageHandler is DelegatingHandler dh)
+        while (true)
         {
             if (messageHandler is HttpClientHandler hch)
                 return hch;
 
-            messageHandler = dh.InnerHandler!;
+            if (messageHandler is DelegatingHandler dh)
+            {
+                messageHandler = dh.InnerHandler;
+                continue;
+            }
+
+            break;
         }
 
         throw new NotSupportedException("The HttpClient is expected to have an HttpClientHandler");

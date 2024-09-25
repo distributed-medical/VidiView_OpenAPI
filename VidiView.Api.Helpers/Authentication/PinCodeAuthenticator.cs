@@ -76,7 +76,7 @@ public class PinCodeAuthenticator
             _http.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(username, pin);
 
             User = await _http.GetAsync<User>(_authenticationLink);
-            var link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            var link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
 
             Token = await _http.GetAsync<AuthToken>(link);
             _http.DefaultRequestHeaders.Authorization

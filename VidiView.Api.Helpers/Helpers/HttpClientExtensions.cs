@@ -1,8 +1,7 @@
-﻿using VidiView.Api.Headers;
+﻿using System.Net;
 using System.Net.Http;
 using VidiView.Api.DataModel;
-using System.Net;
-using System.Collections.ObjectModel;
+using VidiView.Api.Headers;
 
 namespace VidiView.Api.Helpers;
 
@@ -55,6 +54,12 @@ public static class HttpClientExtensions
         _baseAddress[http] = baseAddress;
         _cache[http] = apiHome;
     }
+    
+    [Obsolete("Only used by Unit-tests")]
+    public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
+    {
+        _baseAddress[http] = baseAddress;
+    }
 
     /// <summary>
     /// Helper extension to get the API starting point. The result will 
@@ -102,7 +107,7 @@ public static class HttpClientExtensions
         {
             if (!http.DefaultRequestHeaders.Contains(PseudonymizeHeader.Name))
             {
-                http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?) null);
+                http.DefaultRequestHeaders.Add(PseudonymizeHeader.Name, (string?)null);
             }
         }
         else
@@ -110,20 +115,4 @@ public static class HttpClientExtensions
             http.DefaultRequestHeaders.Remove(PseudonymizeHeader.Name);
         }
     }
-
-    /// <summary>
-    /// Return the cached ApiHome (or null if no cached document exists)
-    /// This is used internally
-    /// </summary>
-    /// <param name="http"></param>
-    /// <returns></returns>
-    [Obsolete("Not use", true)]
-    internal static ApiHome? CachedHome(this HttpClient http)
-    {
-        if (_cache.TryGetValue(http, out var home))
-            return home;
-        else
-            return null;
-    }
-
 }

@@ -16,9 +16,9 @@ public class WindowsAuthenticator : IAuthenticator
 
     public async Task<bool> IsSupportedAsync()
     {
-        return (await _http.HomeAsync())
-            .AssertRegistered()
-            .Links.Exists(Rel.AuthenticateWindows);
+        var start = (await _http.HomeAsync())
+            .AssertRegistered();
+        return start.Links.Exists(Rel.AuthenticateWindows);
     }
 
     public User? User { get; private set; }
@@ -42,7 +42,7 @@ public class WindowsAuthenticator : IAuthenticator
                 throw new E1813_LogonMethodNotAllowedException("Windows authentication is not supported");
 
             User = await _http.GetAsync<User>(link);
-            link = User.Links.GetRequired(Rel.IssueSamlToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
 
             Token = await _http.GetAsync<AuthToken>(link);
             _http.DefaultRequestHeaders.Authorization

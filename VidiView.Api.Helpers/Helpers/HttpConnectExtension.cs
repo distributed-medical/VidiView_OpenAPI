@@ -98,7 +98,7 @@ public static class HttpConnectExtension
                     continue;
 
                 default:
-                    await response.AssertSuccessAsync();
+                    await response.AssertSuccessAsync().ConfigureAwait(false);
 
                     try
                     {

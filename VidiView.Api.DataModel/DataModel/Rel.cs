@@ -47,11 +47,15 @@ public static class Rel
     public const string ExportQueues = "export-queues";
     public const string ExtractFrame = "extract-frame";
     public const string Favourite = "favourite";
+    public const string File = "image";
+    public const string Files = "images";
     public const string FindPatient = "find-patient";
     public const string FindStudy = "find-study";
     public const string GrantDevice = "grant-device";
     public const string IdentifyStudy = "identify";
+    [Obsolete("Use File instead", true)]
     public const string Image = "image";
+    [Obsolete("Use Files instead", true)]
     public const string Images = "images";
     public const string IssueSamlToken = "issue-saml-token";
     public const string JoinAudioLegacy = "join-av-legacy";
@@ -65,13 +69,16 @@ public static class Rel
     public const string ParseSnomed = "parse-snomed";
     public const string Patient = "patient";
     public const string Preferences = "preferences";
+    public const string Recover = "recover";
     public const string RegisterClientDevice = "register-device";
     public const string Release = "release";
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
+    public const string RequestToken = "request-token";
     public const string RenewSamlToken = "renew-saml-token";
     public const string ReportImage = "report-image";
     public const string Roles = "roles";
+    [Obsolete("Use Recover instead", true)]
     public const string UndoDelete = "undo-delete";
     public const string Self = "self";
     public const string ServiceHosts = "service-hosts";
