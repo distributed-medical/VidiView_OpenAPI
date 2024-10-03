@@ -182,7 +182,11 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
 #endif
 
                 // Copy from source buffer to destination buffer
-                response.Buffer.CopyTo(sourceOffset, destination, destinationOffset, bytesToCopy);
+
+                // https://github.com/microsoft/CsWinRT/issues/1808
+                // response.Buffer.CopyTo(sourceOffset, destination, destinationOffset, bytesToCopy);
+                WorkaroundCopy(response.Buffer, sourceOffset, destination, destinationOffset, bytesToCopy);
+
                 destinationOffset += bytesToCopy;
                 destination.Length = destinationOffset;
 
@@ -197,6 +201,26 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
             // Return the data
             return destination;
         });
+    }
+
+    static void WorkaroundCopy(IBuffer sourceBuffer, uint sourceOffset, IBuffer destinationBuffer, uint destinationOffset, uint bytesToCopy)
+    {
+        var inputStream = sourceBuffer.AsStream();
+        inputStream.Position = sourceOffset;
+
+        var outputStream = destinationBuffer.AsStream();
+        outputStream.Position = destinationOffset;
+
+        int blockSize = Math.Min((int)bytesToCopy, 65536);
+        byte[] buffer = new byte[blockSize];
+
+        while (bytesToCopy > 0)
+        {
+            var bytesRead = inputStream.Read(buffer, 0, blockSize);
+            outputStream.Write(buffer, 0, bytesRead);
+
+            bytesToCopy -= (uint) bytesRead;
+        }
     }
 
     /// <summary>
