@@ -6,6 +6,22 @@ using System.Net.Http;
 using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Authentication;
+
+
+/// <summary>
+/// This is used to authenticate user using an X509 certificate (i.e. smart card)
+/// </summary>
+/// <remarks>
+/// NOTICE!
+/// 
+/// This does not appear to be working when targeting .NET 8, but it
+/// works perfectly when targeting .NET 7. This may have to be further
+/// investigated!!
+/// 
+/// 
+/// 
+/// 
+/// </remarks>
 public class X509Authenticator : IAuthenticator
 {
     readonly HttpClient _http;

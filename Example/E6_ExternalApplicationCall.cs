@@ -37,6 +37,14 @@ public class E6_ExternalApplicationCall
         await ExternalCallAsync(studyUri, TestConfig.Thumbprint, restrictedToken.Token);
     }
 
+    /// <summary>
+    /// This could be run by a different application that needs 
+    /// access to the VidiView System
+    /// </summary>
+    /// <param name="studyUri"></param>
+    /// <param name="deviceThumbprint"></param>
+    /// <param name="accessToken"></param>
+    /// <returns></returns>
     async Task ExternalCallAsync(Uri studyUri, byte[] deviceThumbprint, string accessToken)
     {
         // This simulates the called application which should now
@@ -44,7 +52,11 @@ public class E6_ExternalApplicationCall
 
         var handler = new DebugLogHandler(HttpClientHandlerFactory.Create());
         var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
-        http.SetApiKey(new ApiKeyHeader(TestConfig.ApplicationId, deviceThumbprint, TestConfig.SecretKey));
+
+        var appId = Guid.Empty; // TestConfig.ExternalAppId
+        var apiKey = new byte[0]; // TestConfig.ExternalAppKey 
+
+        http.SetApiKey(new ApiKeyHeader(appId, deviceThumbprint, apiKey));
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         // Get study metadata
@@ -72,7 +84,8 @@ public class E6_ExternalApplicationCall
         {
             Lifetime = TimeSpan.FromDays(30),
             Scope = "vidiview-patient:read",
-            ContributeStudy = [studyId] // Only allow contribution to the specific study
+            AppId = TestConfig.ExternalAppId,
+            ContributeStudy = [ studyId ] // Only allow contribution to the specific study
         };
 
         var response = await _http.PostAsync(exchangeTokenLink, restricted, CancellationToken.None);

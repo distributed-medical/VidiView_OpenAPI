@@ -32,10 +32,6 @@ public record IdentityProvider
     /// </summary>
     public string? Prompt { get; init; }
 
-    public bool SkipLogout { get; init; }
-
-    public bool PrivateSession { get; init; }
-
     /// <summary>
     /// Flags
     /// </summary>
@@ -45,4 +41,9 @@ public record IdentityProvider
     {
         return $"{Name} ({Issuer})";
     }
+
+    public bool SkipIdPLogout => Flags.HasFlag(IdentityProviderFlags.SkipIdPLogout);
+
+    public bool PrivateSession => Flags.HasFlag(IdentityProviderFlags.PrivateSession);
+
 }
