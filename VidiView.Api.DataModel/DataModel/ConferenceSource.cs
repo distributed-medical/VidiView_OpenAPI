@@ -26,16 +26,6 @@ public record ConferenceSource
     public VideoInformation VideoInformation { get; init; }
 
     /// <summary>
-    /// The Controller where this source is broadcasted from 
-    /// </summary>
-    public IdAndName? Controller { get; init; }
-
-    /// <summary>
-    /// The Controller location
-    /// </summary>
-    public string? Location { get; init; }
-
-    /// <summary>
     /// If camera is remote controllable, this defines
     /// the supported capabilities
     /// </summary>
