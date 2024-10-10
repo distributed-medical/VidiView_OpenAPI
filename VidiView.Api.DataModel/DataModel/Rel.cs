@@ -58,7 +58,8 @@ public static class Rel
     public const string Image = "image";
     [Obsolete("Use Files instead", true)]
     public const string Images = "images";
-    [Obsolete("Use POST RequestToken instead", true)]
+    [Obsolete("Use POST RequestToken instead", false)]
+
     public const string IssueSamlToken = "issue-saml-token";
     public const string JoinAudioLegacy = "join-av-legacy";
     public const string LeaveAudioLegacy = "leave-av-legacy";
@@ -77,8 +78,9 @@ public static class Rel
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
     public const string RequestToken = "request-token";
-    [Obsolete("Use POST RequestToken instead", true)]
+    [Obsolete("Use POST RequestToken instead", false)]
     public const string RenewSamlToken = "renew-saml-token";
+
     public const string ReportImage = "report-image";
     public const string Roles = "roles";
     [Obsolete("Use Recover instead", true)]
