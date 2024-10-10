@@ -3,12 +3,12 @@
 /// <summary>
 /// Represents a live conference source
 /// </summary>
-public record LiveConferenceSource
+public record ConferenceSource
 {
     /// <summary>
     /// The source Id
     /// </summary>
-    public string Id { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// The source name, i.e Endoscope
@@ -26,14 +26,10 @@ public record LiveConferenceSource
     public VideoInformation VideoInformation { get; init; }
 
     /// <summary>
-    /// The Controller where this source is broadcasted from 
+    /// If camera is remote controllable, this defines
+    /// the supported capabilities
     /// </summary>
-    public IdAndName? Controller { get; init; }
-
-    /// <summary>
-    /// The Controller location
-    /// </summary>
-    public string? Location { get; init; }
+    public CameraControl? Controllable { get; init; }
 
     /// <summary>
     /// Associated links

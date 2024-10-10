@@ -22,6 +22,7 @@ public static class Rel
     public const string AuthenticateX509Windows = "authenticate-x509-windows";
     public const string AuthenticateToken = "authenticate-login-token";
     public const string BiometricLoginToken = "biometric-login-token";
+    public const string CameraControl = "camera-control";
     public const string ClientDeviceRegistration = "device-registration";
     public const string Clear = "clear";
     public const string Close = "close";
@@ -36,7 +37,7 @@ public static class Rel
     public const string Delete = "delete";
     public const string DeleteDevice = "delete-device";
     public const string DeleteOverride = "delete-override";
-    public const string DeletedImages = "deleted-images";
+    public const string DeletedFiles = "deleted-files";
     public const string Departments = "departments";
     public const string DicomMetadata = "dicom-metadata";
     public const string Download = "download";
@@ -47,8 +48,8 @@ public static class Rel
     public const string ExportQueues = "export-queues";
     public const string ExtractFrame = "extract-frame";
     public const string Favourite = "favourite";
-    public const string File = "image";
-    public const string Files = "images";
+    public const string File = "file";
+    public const string Files = "files";
     public const string FindPatient = "find-patient";
     public const string FindStudy = "find-study";
     public const string GrantDevice = "grant-device";
@@ -57,7 +58,8 @@ public static class Rel
     public const string Image = "image";
     [Obsolete("Use Files instead", true)]
     public const string Images = "images";
-    [Obsolete("Use RequestToken instead", false)]
+    [Obsolete("Use POST RequestToken instead", false)]
+
     public const string IssueSamlToken = "issue-saml-token";
     public const string JoinAudioLegacy = "join-av-legacy";
     public const string LeaveAudioLegacy = "leave-av-legacy";
@@ -76,8 +78,9 @@ public static class Rel
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
     public const string RequestToken = "request-token";
-    [Obsolete("Use RequestToken instead", false)]
+    [Obsolete("Use POST RequestToken instead", false)]
     public const string RenewSamlToken = "renew-saml-token";
+
     public const string ReportImage = "report-image";
     public const string Roles = "roles";
     [Obsolete("Use Recover instead", true)]

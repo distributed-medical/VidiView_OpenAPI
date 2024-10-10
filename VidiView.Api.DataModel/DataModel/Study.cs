@@ -147,13 +147,6 @@ public record Study
     public string Timestamp { get; init; }
 
     /// <summary>
-    /// If a conference is active for this study, this will contain
-    /// more information.
-    /// </summary>
-    /// <remarks>Only set when the conference is opened, not for list results</remarks>
-    public Conference? Conference { get; init; }
-
-    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
