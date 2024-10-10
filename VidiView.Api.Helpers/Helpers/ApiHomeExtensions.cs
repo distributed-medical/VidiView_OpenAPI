@@ -9,13 +9,21 @@ public static class ApiHomeExtensions
         if (home == null)
             throw new ArgumentNullException(nameof(home));
 
+        if (Version.TryParse(home.ServerVersion, out var serverVersion))
+        {
+            if (serverVersion < ApiVersion.MinimumServerVersion)
+            {
+                return ApiCompatibility.ClientApiNewerThanSupported;
+            }
+        }
+
         if (!Version.TryParse(home.ApiVersion, out var serverApiVersion))
             return ApiCompatibility.InvalidResponse;
         if (!Version.TryParse(home.CompatibleApiVersion, out var serverApiCompatibleVersion))
             return ApiCompatibility.InvalidResponse;
 
         // Check if the server is too old or too new
-        if (serverApiVersion < ApiVersion.MinimumServerApiVersion)
+        if (serverApiVersion < ApiVersion.MinimumApiVersion)
             return ApiCompatibility.ClientApiNewerThanSupported;
         if (serverApiCompatibleVersion > ApiVersion.TestedApiVersion) 
             return ApiCompatibility.ClientApiOlderThanSupported;

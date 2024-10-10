@@ -29,6 +29,12 @@ public record IdAndName
     public Guid Id { get; init; }
     public string? Name { get; init; }
 
+    /// <summary>
+    /// Any HAL Rest links associated with this object
+    /// </summary>
+    [JsonPropertyName("_links")]
+    public LinkCollection? Links { get; init; }
+
     public override string ToString()
     {
         return Name != null ? $"{Name} ({Id})" : Id.ToString();

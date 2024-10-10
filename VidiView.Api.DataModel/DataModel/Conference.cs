@@ -23,6 +23,6 @@ public class Conference
     /// This will only be set when the study is
     /// open/active by the user
     /// </remarks>
-    public LiveConferenceSource[]? LiveSources { get; init; }
+    public ConferenceSource[]? LiveSources { get; init; }
 
 }
