@@ -22,7 +22,7 @@ public static class Rel
     public const string AuthenticateX509Windows = "authenticate-x509-windows";
     public const string AuthenticateToken = "authenticate-login-token";
     public const string BiometricLoginToken = "biometric-login-token";
-    public const string CameraControl = "camera-control";
+    public const string CameraCommand = "camera-command";
     public const string ClientDeviceRegistration = "device-registration";
     public const string Clear = "clear";
     public const string Close = "close";
@@ -54,13 +54,14 @@ public static class Rel
     public const string FindStudy = "find-study";
     public const string GrantDevice = "grant-device";
     public const string IdentifyStudy = "identify";
+
     [Obsolete("Use File instead", true)]
     public const string Image = "image";
     [Obsolete("Use Files instead", true)]
     public const string Images = "images";
     [Obsolete("Use POST RequestToken instead", false)]
-
     public const string IssueSamlToken = "issue-saml-token";
+
     public const string JoinAudioLegacy = "join-av-legacy";
     public const string LeaveAudioLegacy = "leave-av-legacy";
     public const string Load = "load";
@@ -78,13 +79,12 @@ public static class Rel
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
     public const string RequestToken = "request-token";
+
     [Obsolete("Use POST RequestToken instead", false)]
     public const string RenewSamlToken = "renew-saml-token";
 
     public const string ReportImage = "report-image";
     public const string Roles = "roles";
-    [Obsolete("Use Recover instead", true)]
-    public const string UndoDelete = "undo-delete";
     public const string Self = "self";
     public const string ServiceHosts = "service-hosts";
     public const string Settings = "settings";
@@ -106,10 +106,8 @@ public static class Rel
     public const string UserProfile = "user-profile";
     public const string User = "user";
     public const string Users = "users";
-
     public const string WebSocket = "websocket";
     public const string WorklistMetadata = "worklist-metadata";
-
     public const string GetLoginPin = "login-pin";
     public const string ClearLoginPin = "clear-login-pin";
     public const string SetLoginPin = "set-login-pin";
