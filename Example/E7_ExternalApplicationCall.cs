@@ -13,7 +13,7 @@ namespace VidiView.Example;
 /// to grant an external application access to VidiVIew
 /// </summary>
 [TestClass]
-public class E6_ExternalApplicationCall
+public class E7_ExternalApplicationCall
 {
     static HttpClient _http = null!;
 
@@ -53,8 +53,8 @@ public class E6_ExternalApplicationCall
         var handler = new DebugLogHandler(HttpClientHandlerFactory.Create());
         var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
 
-        var appId = Guid.Empty; // TestConfig.ExternalAppId
-        var apiKey = new byte[0]; // TestConfig.ExternalAppKey 
+        var appId = TestConfig.ExternalAppId;
+        var apiKey = TestConfig.ExternalAppKey;
 
         http.SetApiKey(new ApiKeyHeader(appId, deviceThumbprint, apiKey));
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -71,7 +71,7 @@ public class E6_ExternalApplicationCall
         Assert.IsFalse(study.Links.Exists(Rel.Update));
     }
 
-    public async Task<AuthToken> CreateRestrictedToken(Guid studyId)
+    private async Task<AuthToken> CreateRestrictedToken(Guid studyId)
     {
         var start = await _http.HomeAsync();
         var link = start.Links.GetRequired(Rel.UserProfile);
@@ -85,7 +85,7 @@ public class E6_ExternalApplicationCall
             Lifetime = TimeSpan.FromDays(30),
             Scope = "vidiview-patient:read",
             AppId = TestConfig.ExternalAppId,
-            ContributeStudy = [ studyId ] // Only allow contribution to the specific study
+            ContributeStudy = [studyId] // Only allow contribution to the specific study
         };
 
         var response = await _http.PostAsync(exchangeTokenLink, restricted, CancellationToken.None);

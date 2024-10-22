@@ -47,6 +47,7 @@ public class E4_FindPatient
         var patients = result.Deserialize<PatientCollection>();
 
         Assert.IsTrue(patients.Count >= 1);
+        Assert.IsTrue(patients.Items[0].Name.HatFormat.StartsWith("Lundmark"));
     }
 
     /// <summary>
