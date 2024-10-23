@@ -4,15 +4,13 @@ using VidiView.Api.Headers;
 namespace VidiView.Example;
 public static partial class TestConfig
 {
-    public const string ServerHostName = "blundmark1.ad.perspektivgruppen.se";
-    //public const string ServerHostName = "test2.ad.perspektivgruppen.se";
+    public const string ServerHostName = "demo0.vidiview.com";
     public static readonly byte[] Thumbprint = [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8];
 
     public const string Username = "vidiview";
     public const string Password = "vidiview";
 
-    public const string StudyId = "1.2.3.5.638513557112734571";
-
+    public const string StudyId = "1.3.6.1.4.1.29228.100.3715174326.638652902738721452";
     public static Guid ApplicationId
     {
         get
@@ -57,6 +55,4 @@ public static partial class TestConfig
             systemThumbprint,
             SecretKey);
     }
-
-
 }
