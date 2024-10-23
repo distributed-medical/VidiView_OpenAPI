@@ -81,9 +81,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj" />
+        <PackageReference Include="VidiView.Api.DataModel" Version="5.1.1" />
     </ItemGroup>
 </Project>
