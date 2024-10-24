@@ -5,12 +5,17 @@ namespace VidiView.Example;
 public static partial class TestConfig
 {
     public const string ServerHostName = "demo0.vidiview.com";
+    //public const string ServerHostName = "blundmark1.ad.perspektivgruppen.se";
+
     public static readonly byte[] Thumbprint = [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8];
 
     public const string Username = "vidiview";
-    public const string Password = "vidiview";
+    public const string Password = "vidiview-demo0";
 
     public const string StudyId = "1.3.6.1.4.1.29228.100.3715174326.638652902738721452";
+    public static readonly Guid DepartmentId = new Guid("a942c6f3637c4972a91e67fd41df84c7");
+    public const string PatientId = "196302010001";
+
     public static Guid ApplicationId
     {
         get

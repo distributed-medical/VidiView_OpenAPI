@@ -39,15 +39,15 @@ public class E4_FindPatient
         // To find patients, we use POST, to not reveal patient information in URL:s
         var criteria = new PatientSearch
         {
-            IdNumber = "197603221239"
+            IdNumber = TestConfig.PatientId
         };
 
         var result = await _http.PostAsync(link, criteria);
         await result.AssertSuccessAsync();
         var patients = result.Deserialize<PatientCollection>();
 
-        Assert.IsTrue(patients.Count >= 1);
-        Assert.IsTrue(patients.Items[0].Name.HatFormat.StartsWith("Lundmark"));
+        Assert.IsTrue(patients.Count == 1);
+        Assert.IsTrue(patients.Items[0].Name.HatFormat == "Strandqvist^Karin");
     }
 
     /// <summary>
@@ -60,18 +60,18 @@ public class E4_FindPatient
         var start = await _http.HomeAsync();
 
         var link = start.Links.GetRequired(Rel.FindPatient);
-        var result = await _http.PostAsync(link, new PatientSearch { IdNumber = "197604011234" });
+        var result = await _http.PostAsync(link, new PatientSearch { IdNumber = TestConfig.PatientId });
         await result.AssertSuccessAsync();
         var patients = result.Deserialize<PatientCollection>();
 
         link = patients.Items.First().Links.GetRequired(Rel.Studies);
         var tl = link.AsTemplatedLink();
-        tl.TrySetParameterValue("departmentId", "3b8d2e01-3f9e-4061-9ca5-8eb435d2b071");
+        tl.TrySetParameterValue("departmentId", TestConfig.DepartmentId.ToString());
         tl.TrySetParameterValue("fromDate", "20230101");
 
         var studies = await _http.GetAsync<StudyCollection>(tl);
 
-        Assert.IsTrue(studies.Count > 0);
+        Assert.IsTrue(studies.Count > 2);
 
     }
 }

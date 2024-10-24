@@ -32,7 +32,7 @@ public class E3_OpenStudy
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    public async Task List_By_Date()
+    public async Task List_Department_Studies_By_Date()
     {
         var start = await _http.HomeAsync();
 
@@ -41,8 +41,8 @@ public class E3_OpenStudy
         var departments = await _http.GetAsync<DepartmentCollection>(link);
 
         // List studies in the first study we are granted List access
-        var department = departments.Items.FirstOrDefault((d) => d.Links.Exists(Rel.Studies));
-        Assert.IsNotNull(department, "You are not granted List access in any department");
+        var department = departments.Items.FirstOrDefault((d) => d.Id == TestConfig.DepartmentId);
+        Assert.IsNotNull(department, "Inaccessible department");
 
         link = department.Links.GetRequired(Rel.Studies);
 
@@ -52,27 +52,27 @@ public class E3_OpenStudy
         tl.TrySetParameterValue("toDate", "20240930"); // September 30th 2024
         var studies = await _http.GetAsync<StudyCollection>(tl);
 
-        Assert.IsTrue(studies.Count > 0);
+        Assert.IsTrue(studies.Count > 50);
     }
 
     /// <summary>
-    /// Load a study by a unique identifier 
+    /// Load a study by any unique identifier 
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    public async Task Load_Study_By_Id()
+    public async Task Find_Study_By_Unique_Identifier()
     {
         var start = await _http.HomeAsync();
 
         // The ID parameter of a Find can be any identifier, such as:
         // VidiView ID, Study Instance UID, Accession number etc..
         var tl = start.Links.GetRequired(Rel.FindStudy).AsTemplatedLink();
-        var success = tl.TrySetParameterValue("id", "0a743fda-6373-40d4-b1ed-d426e9b523cf");
+        var success = tl.TrySetParameterValue("id", TestConfig.StudyId);
         Assert.IsTrue(success);
 
         var studies = await _http.GetAsync<StudyCollection>(tl);
         Assert.IsTrue(studies.Count == 1);
-        Assert.IsTrue(studies.Items[0].StudyId == new Guid("0a743fda-6373-40d4-b1ed-d426e9b523cf"));
+        Assert.IsTrue(studies.Items[0].StudyInstanceUid == TestConfig.StudyId);
 
         // Since the study is the result of a Find, it is not "opened"
         // and therefore we have limited data about it
@@ -81,52 +81,51 @@ public class E3_OpenStudy
         var link = studies.Items[0].Links.GetRequired(Rel.Self);
         var study = await _http.GetAsync<Study>(link);
 
-        // Load media for this study as well
+        // Load media information for this study as well
         link = study.Links.GetRequired(Rel.Files);
         var mediaFiles = await _http.GetAsync<MediaFileCollection>(link);
-        Assert.IsTrue(mediaFiles.Count > 0);
+        Assert.IsTrue(mediaFiles.Count > 2);
     }
 
     /// <summary>
-    /// Load a study by a unique identifier 
+    /// Load a study by a unique identifier and download thumbnails for all media files
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    public async Task Load_Media_File_From_Specific_Study()
+    public async Task Download_Thumbnail_And_Media_File()
     {
         var start = await _http.HomeAsync();
 
-        // The quickest way to open a study that we know the unique id for 
-        // (must be VidiView ID or Study Instance UID which are always unique)
+        // The quickest way to open a study when we know the VidiView ID (or StudyInstanceUid)
         var tl = start.Links.GetRequired(Rel.Study).AsTemplatedLink();
-        tl.TrySetParameterValue("studyId", "0a743fda-6373-40d4-b1ed-d426e9b523cf");
+        tl.TrySetParameterValue("studyId", TestConfig.StudyId);
         var study = await _http.GetAsync<Study>(tl);
 
-        // Load media for this study as well
+        // Load media files for this study as well
         var link = study.Links.GetRequired(Rel.Files);
         var mediaFiles = await _http.GetAsync<MediaFileCollection>(link);
 
         // Get thumbnails
+        int thumbnailCount = 0;
         foreach (var mediaFile in mediaFiles.Items)
         {
+            // If a thumbnail is available, download id
             var hasThumbnail = mediaFile.Links.TryGet(Rel.Thumbnail, out link);
             if (hasThumbnail)
             {
-                try
-                {
-                    // Download the thumbnail, which is normally a jpg
-                    using HttpContentStream thumbnailStream = await _http.GetStreamAsync(link);
-                    Assert.AreEqual("image/jpeg", thumbnailStream.ContentType);
-                    Assert.IsTrue(thumbnailStream.Length > 0);
-                }
-                catch
-                {
-                    // Strange
-                }
+                // Download the thumbnail, which is always jpeg
+                using HttpContentStream thumbnailStream = await _http.GetStreamAsync(link);
+                Assert.AreEqual("image/jpeg", thumbnailStream.ContentType);
+                Assert.IsTrue(thumbnailStream.Length > 0);
+                thumbnailCount++;
             }
-        }
 
-        // Download the first image
+            if (thumbnailCount > 5)
+                break; // Point proven
+        }
+        Assert.IsTrue(thumbnailCount > 0);
+
+        // Download the first jpeg image
         var photo = mediaFiles.Items.FirstOrDefault((f) => f.ContentType == "image/jpeg");
         link = photo.Links.GetRequired(Rel.Enclosure);
 

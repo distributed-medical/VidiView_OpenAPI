@@ -10,7 +10,7 @@ namespace VidiView.Example;
 
 /// <summary>
 /// This class demonstrates creating a restricted access token
-/// to grant an external application access to VidiVIew
+/// to grant an external application access to VidiView
 /// </summary>
 [TestClass]
 public class E7_ExternalApplicationCall
@@ -28,35 +28,34 @@ public class E7_ExternalApplicationCall
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    public async Task Exchange_Token()
+    public async Task Prepare_Study_And_Get_Contribution_Token()
     {
         var study = await CreateStudyForPatientAsync();
-        var restrictedToken = await CreateRestrictedToken(study.StudyId);
+        var restrictedToken = await CreateContributionToken(study.StudyId);
         var studyUri = (Uri)study.Links.GetRequired(Rel.Self).AsTemplatedLink();
 
-        await ExternalCallAsync(studyUri, TestConfig.Thumbprint, restrictedToken.Token);
+        await CallExternalApplication(studyUri, TestConfig.Thumbprint, restrictedToken.Token);
     }
 
     /// <summary>
-    /// This could be run by a different application that needs 
-    /// access to the VidiView System
+    /// Simulate call to external system that can contribute to a specific study
     /// </summary>
     /// <param name="studyUri"></param>
     /// <param name="deviceThumbprint"></param>
     /// <param name="accessToken"></param>
     /// <returns></returns>
-    async Task ExternalCallAsync(Uri studyUri, byte[] deviceThumbprint, string accessToken)
+    private async Task CallExternalApplication(Uri studyUri, byte[] deviceThumbprint, string accessToken)
     {
-        // This simulates the called application which should now
-        // be able to contribute with files to the study
-
+        // Create a new, independent HttpClient
         var handler = new DebugLogHandler(HttpClientHandlerFactory.Create());
         var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
 
+        // Api-key for the external application
         var appId = TestConfig.ExternalAppId;
         var apiKey = TestConfig.ExternalAppKey;
-
         http.SetApiKey(new ApiKeyHeader(appId, deviceThumbprint, apiKey));
+
+        // Use the received access token as-is
         http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
         // Get study metadata
@@ -69,9 +68,11 @@ public class E7_ExternalApplicationCall
         Assert.IsTrue(study.Links.Exists(Rel.AnnounceUpload));
         Assert.IsTrue(study.Links.Exists(Rel.UploadMedia));
         Assert.IsFalse(study.Links.Exists(Rel.Update));
+
+        // To upload media at this point, please look at example E6
     }
 
-    private async Task<AuthToken> CreateRestrictedToken(Guid studyId)
+    private async Task<AuthToken> CreateContributionToken(Guid studyId)
     {
         var start = await _http.HomeAsync();
         var link = start.Links.GetRequired(Rel.UserProfile);
@@ -83,7 +84,6 @@ public class E7_ExternalApplicationCall
         var restricted = new TokenRequest
         {
             Lifetime = TimeSpan.FromDays(30),
-            Scope = "vidiview-patient:read",
             AppId = TestConfig.ExternalAppId,
             ContributeStudy = [studyId] // Only allow contribution to the specific study
         };
@@ -100,7 +100,7 @@ public class E7_ExternalApplicationCall
     {
         var start = await _http.HomeAsync();
         var link = start.Links.GetRequired(Rel.FindPatient);
-        var criteria = new PatientSearch { IdNumber = "197603221239" };
+        var criteria = new PatientSearch { IdNumber = TestConfig.PatientId };
 
         var result = await _http.PostAsync(link, criteria);
         await result.AssertSuccessAsync();
@@ -108,7 +108,7 @@ public class E7_ExternalApplicationCall
 
         // Link to create a study in specific department
         var tl = patients.Items[0].Links.GetRequired(Rel.CreateStudy).AsTemplatedLink();
-        tl.TrySetParameterValue("departmentId", "3b8d2e01-3f9e-4061-9ca5-8eb435d2b071");
+        tl.TrySetParameterValue("departmentId", TestConfig.DepartmentId.ToString() );
 
         // Initial parameters to assign to this study
         var sco = new StudyCreateOptions

@@ -8,7 +8,7 @@ namespace VidiView.Example;
 /// This class demonstrates the process of authenticating with
 /// the connected VidiView Server.
 /// Ensure that the device is registered and granted access in 
-/// the Step 1 before continuing with this step
+/// Step 1 before continuing with this step
 /// </summary>
 [TestClass]
 public class E2_Authenticate
@@ -62,6 +62,8 @@ public class E2_Authenticate
         _http.ClearAuthentication(); // Start fresh
 
         var auth = new UsernamePasswordAuthenticator(_http);
+        auth.Options = new Api.DataModel.TokenRequest { Lifetime = TimeSpan.FromSeconds(10) };
+
         if (!await auth.IsSupportedAsync())
             Assert.Inconclusive("Username/password authentication is not enabled on the connected system");
 
