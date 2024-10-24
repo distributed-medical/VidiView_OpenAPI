@@ -1,4 +1,5 @@
 ﻿#if WINRT
+using System.Collections.Concurrent;
 using System.Runtime.Versioning;
 using VidiView.Api.Headers;
 using VidiView.Api.DataModel;
@@ -9,8 +10,8 @@ namespace VidiView.Api.Helpers;
 [SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpClientExtensionsWinRT
 {
-    static readonly Dictionary<HttpClient, ApiHome> _cache = new();
-    static readonly Dictionary<HttpClient, Uri> _baseAddress = new();
+    static readonly ConcurrentDictionary<HttpClient, ApiHome> _cache = new();
+    static readonly ConcurrentDictionary<HttpClient, Uri> _baseAddress = new();
 
     /// <summary>
     /// Specify the VidiView Server's base address
@@ -20,8 +21,8 @@ public static class HttpClientExtensionsWinRT
     /// <param name="baseAddress"></param>
     public static void Disconnect(this HttpClient http)
     {
-        _baseAddress.Remove(http);
-        _cache.Remove(http);
+        _baseAddress.TryRemove(http, out _);
+        _cache.TryRemove(http, out _);
     }
 
     /// <summary>
@@ -57,13 +58,6 @@ public static class HttpClientExtensionsWinRT
         _cache[http] = apiHome;
     }
 
-    [Obsolete("Use the ConnectAsync() extension method instead")]
-    public static void SetBaseAddress(this HttpClient http, Uri baseAddress)
-    {
-        _baseAddress[http] = baseAddress;
-        _cache.Remove(http);
-    }
-
     /// <summary>
     /// Helper extension to get the API starting point. The result will 
     /// be cached for subsequent calls on the specific HttpClient
@@ -93,7 +87,7 @@ public static class HttpClientExtensionsWinRT
     /// <param name="http"></param>
     public static void InvalidateHome(this HttpClient http)
     {
-        _cache.Remove(http);
+        _cache.TryRemove(http, out _);
     }
 
     /// <summary>

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 
 namespace VidiView.Api.Authentication;
-public class PinCodeAuthenticator 
+public class PinCodeAuthenticator : IAuthenticator
 {
     readonly HttpClient _http;
     Link? _authenticationLink;
@@ -25,6 +25,11 @@ public class PinCodeAuthenticator
 
     public User? User { get; private set; }
     public AuthToken? Token { get; private set; }
+
+    /// <summary>
+    /// Optional token request options
+    /// </summary>
+    public TokenRequest? Options { get; set; }
 
     /// <summary>
     /// Returns pin code state for the user
@@ -60,7 +65,7 @@ public class PinCodeAuthenticator
     /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(string username, string pin)
     {
-        var api = await _http.HomeAsync();
+        var api = await _http.HomeAsync().ConfigureAwait(false);
         if (api.IsAuthenticated())
             throw new InvalidOperationException("Already authenticated");
         api.AssertRegistered();
@@ -68,17 +73,20 @@ public class PinCodeAuthenticator
         try
         {
             if (_authenticationLink == null)
-                await GetStateAsync(username);
+                await GetStateAsync(username).ConfigureAwait(false);
 
             if (_authenticationLink == null)
                 throw new E1813_LogonMethodNotAllowedException("Username/pin authentication is not enabled");
 
             _http.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(username, pin);
 
-            User = await _http.GetAsync<User>(_authenticationLink);
-            var link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            User = await _http.GetAsync<User>(_authenticationLink).ConfigureAwait(false);
+            var link = User.Links.GetRequired(Rel.RequestToken);
 
-            Token = await _http.GetAsync<AuthToken>(link);
+            var response = await _http.PostAsync(link, Options).ConfigureAwait(false);
+            await response.AssertSuccessAsync().ConfigureAwait(false);
+            Token = response.Deserialize<AuthToken>();
+
             _http.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", Token.Token);
 

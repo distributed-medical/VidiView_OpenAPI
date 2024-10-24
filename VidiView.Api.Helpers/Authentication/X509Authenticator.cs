@@ -43,6 +43,11 @@ public class X509Authenticator : IAuthenticator
     public AuthToken? Token { get; private set; }
 
     /// <summary>
+    /// Optional token request options
+    /// </summary>
+    public TokenRequest? Options { get; set; }
+
+    /// <summary>
     /// Return a collection of trusted X509 issuers. Null if X509 authentication isn't supported
     /// </summary>
     /// <param name="cancellationToken"></param>
@@ -84,7 +89,7 @@ public class X509Authenticator : IAuthenticator
     /// <remarks>If successful, an access token is set on the HttpClient</remarks>
     public async Task AuthenticateAsync(X509Certificate certificate)
     {
-        var api = await _http.HomeAsync();
+        var api = await _http.HomeAsync().ConfigureAwait(false);
         if (api.IsAuthenticated())
             throw new InvalidOperationException("Already authenticated");
         api.AssertRegistered();
@@ -107,7 +112,7 @@ public class X509Authenticator : IAuthenticator
             {
                 try
                 {
-                    User = await _http.GetAsync<User>(link);
+                    User = await _http.GetAsync<User>(link).ConfigureAwait(false);
                     authenticationException = null;
                 }
                 catch (Exception exc)
@@ -120,7 +125,7 @@ public class X509Authenticator : IAuthenticator
             {
                 try
                 {
-                    User = await _http.GetAsync<User>(link);
+                    User = await _http.GetAsync<User>(link).ConfigureAwait(false);
                     authenticationException = null;
                 }
                 //catch (E1816_CertificateNotMappedToAnyUserException exc)
@@ -142,9 +147,12 @@ public class X509Authenticator : IAuthenticator
             if (User == null)
                 throw new Exception("User object not retrievable");
 
-            link = User.Links.GetRequired(Rel.RequestToken) ?? throw new NotSupportedException("This server does not support issuing SAML tokens");
+            link = User.Links.GetRequired(Rel.RequestToken);
 
-            Token = await _http.GetAsync<AuthToken>(link);
+            var response = await _http.PostAsync(link, Options).ConfigureAwait(false);
+            await response.AssertSuccessAsync().ConfigureAwait(false);
+            Token = response.Deserialize<AuthToken>();
+
             _http.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue("Bearer", Token.Token);
 

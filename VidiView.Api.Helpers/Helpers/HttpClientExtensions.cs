@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Http;
 using VidiView.Api.DataModel;
 using VidiView.Api.Headers;
@@ -7,8 +8,8 @@ namespace VidiView.Api.Helpers;
 
 public static class HttpClientExtensions
 {
-    static readonly Dictionary<HttpClient, ApiHome> _cache = new();
-    static readonly Dictionary<HttpClient, Uri> _baseAddress = new();
+    static readonly ConcurrentDictionary<HttpClient, ApiHome> _cache = new();
+    static readonly ConcurrentDictionary<HttpClient, Uri> _baseAddress = new();
 
     /// <summary>
     /// Specify the VidiView Server's base address
@@ -18,8 +19,8 @@ public static class HttpClientExtensions
     /// <param name="baseAddress"></param>
     public static void Disconnect(this HttpClient http)
     {
-        _baseAddress.Remove(http);
-        _cache.Remove(http);
+        _baseAddress.TryRemove(http, out _);
+        _cache.TryRemove(http, out _);
     }
 
     /// <summary>
@@ -92,7 +93,7 @@ public static class HttpClientExtensions
     /// <param name="http"></param>
     public static void InvalidateHome(this HttpClient http)
     {
-        _cache.Remove(http);
+        _cache.TryRemove(http, out _);
     }
 
 

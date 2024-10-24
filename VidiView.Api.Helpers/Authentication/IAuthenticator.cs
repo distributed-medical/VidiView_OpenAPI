@@ -27,4 +27,9 @@ public interface IAuthenticator
     /// Authentication token. This is set after a successful authentication request
     /// </summary>
     AuthToken? Token { get; }
+
+    /// <summary>
+    /// Optional token request options
+    /// </summary>
+    TokenRequest? Options { get; set; }
 }
