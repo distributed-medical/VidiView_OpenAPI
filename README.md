@@ -1,7 +1,7 @@
 [<img src="https://distributedmedical.com/images/github-logo.png" alt="Distributed Medical logo" height="70" />](https://distributedmedical.com/)
 
 # VidiView OpenAPI
-***
+
 This repository contains the official definitions for accessing the VidiView Server's OpenAPI v5.0.
 
 The intended audience of this package are programmers that are developing applications that need to integrate with the VidiView System.

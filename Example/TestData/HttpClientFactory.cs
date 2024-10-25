@@ -29,6 +29,7 @@ internal static class HttpClientFactory
 
         // Authenticate
         var auth = new UsernamePasswordAuthenticator(http);
+        auth.Options = new TokenRequest { Scope = "vidiview-study:read vidiview-study:contribute" };
         await auth.AuthenticateAsync(TestConfig.Username, TestConfig.Password);
 
         return http;

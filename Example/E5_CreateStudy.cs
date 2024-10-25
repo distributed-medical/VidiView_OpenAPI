@@ -46,8 +46,7 @@ public class E5_CreateStudy
         var sco = new StudyCreateOptions
         {
             AccessionNumber = accessionNumber,
-            Patient = null, 
-            AssignToSelf = false
+            Patient = null
         };
 
         var response = await _http.PostAsync(link, sco);
@@ -59,9 +58,5 @@ public class E5_CreateStudy
         Assert.IsNull(study.Patient, "Unidentified study does not contain any patient data");
         Assert.AreNotEqual(Guid.Empty, study.StudyId, "A unique id has been generated");
         Assert.AreEqual(DateTime.Today, study.StudyDate.LocalDateTime.Date, "The study date was set to current time on the VidiView Server");
-
-        // Since we didn't assign the study in the first call...
-        Assert.IsFalse(study.IsAssigned ?? false);
-        Assert.IsTrue(study.Links.Exists(Rel.Assign));
     }
 }

@@ -1,8 +1,9 @@
-﻿# VidiView® OpenAPI Helper
+﻿# VidiView OpenAPI Helpers
 
 ### License
-This library is the property of Distributed Medical AB, Sweden and may only
-be used by individuals and companies that has a prior written consent!
+This library is licensed under the [MIT License (MIT)](https://opensource.org/license/mit).
+
+VidiView® is a registered trademark of Distributed Medical AB.
 
 ### Features
 * Targets .NET 7.0 for use with System.Net.Http.HttpClient
@@ -17,4 +18,4 @@ Officially supports the following runtimes:
 * .NET 7.0 and Windows10.0.17763.0
 
 ### Documentation
-* Documentation can be found in the GitHub Wiki
+[Documentation Wiki](https://github.com/distributed-medical/VidiView_OpenAPI/wiki/)
