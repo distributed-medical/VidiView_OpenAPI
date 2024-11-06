@@ -17,7 +17,6 @@ public static partial class TestConfig
     public const string PatientId = "196302010001";
 
     public static readonly Guid ExternalAppId = new Guid("A6FC1192-B803-4200-B64E-7D8403D399EC");
-
     public static Guid ApplicationId
     {
         get
