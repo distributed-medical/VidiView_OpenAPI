@@ -11,9 +11,12 @@ public static class Rel
     public const string AnnounceUpload = "announce-upload";
     public const string Assign = "assign";
     public const string AssignedStudies = "assigned-studies";
-    public const string AuditEventsLatest = "audit-events-latest";
-    public const string AuditEventsForPatient = "audit-events-for-patient";
-    public const string AuditEventsForStudy = "audit-events-for-study";
+    public const string AuditEvents = "audit-events";
+    public const string AuditLogForPatient = "audit-log-for-patient";
+    public const string AuditLogForStudy = "audit-log-for-study";
+    public const string AuditLogForUser = "audit-log-for-user";
+    public const string AuditLogLatestEntries = "audit-log-latest";
+    public const string AuditLogPatientInteractions = "audit-log-patient-interactions";
     public const string AuthenticatePassword = "authenticate-username-password";
     public const string AuthenticatePin = "authenticate-username-pincode";
     public const string AuthenticatePinEnabled = "authenticate-pin-enabled";
