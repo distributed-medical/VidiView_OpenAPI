@@ -53,12 +53,10 @@ public record User
 
     public string? AdministrativeId { get; init; }
 
+    [Obsolete("Use Flags2 instead", false)]
     public long Flags { get; init; }
 
-    /// <summary>
-    /// Convert flags to system rights
-    /// </summary>
-    public UserFlags SystemRights => (UserFlags)(Flags & (long)UserFlags.SystemRights);
+    public UserFlags Flags2 { get; init; }
 
     /// <summary>
     /// The user's access to entities in the system

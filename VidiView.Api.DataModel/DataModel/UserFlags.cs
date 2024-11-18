@@ -8,17 +8,12 @@
 public enum UserFlags
     : long
 {
-    /// <summary>
-    /// The flags that indicate system rights
-    /// </summary>
-    SystemRights = SysAdmin | UserAdmin | AuditLogReview | PatientAdmin | PseudonymizedPatientInformation,
-
     None = 0x0,
 
     /// <summary>
     /// Implicit user, added due to group membership
     /// </summary>
-    IsImplicit = 0x0001,
+    Implicit = 0x0001,
 
     /// <summary>
     /// Global system administrator
@@ -33,15 +28,15 @@ public enum UserFlags
     /// <summary>
     /// This user may review audit logs
     /// </summary>
-    AuditLogReview = 0x0010,
+    ReviewAuditLog = 0x0010,
 
     /// <summary>
     /// This user may only display anonymized information
     /// </summary>
-    PseudonymizedPatientInformation = 0x0020,
+    AlwaysPseudonymize = 0x0020,
 
     /// <summary>
-    /// This user may only display anonymized information
+    /// This user may manage patient information
     /// </summary>
     PatientAdmin = 0x0040,
 
@@ -58,7 +53,7 @@ public enum UserFlags
     /// <summary>
     /// Disabled user
     /// </summary>
-    IsDisabled = 0x1000,
+    Disabled = 0x1000,
 
     /// <summary>
     /// This user is actually a group
