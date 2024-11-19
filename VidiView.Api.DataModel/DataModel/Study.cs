@@ -34,6 +34,12 @@ public record Study
     public IdAndName Department { get; init; } = null!;
 
     /// <summary>
+    /// Permissions granted to this study
+    /// </summary>
+    /// <remarks>Cast to <see cref="DepartmentPermissions"/> to check specific permissions</remarks>
+    public long? Permissions { get; init; }
+
+    /// <summary>
     /// Study external ID 
     /// </summary>
     public string? ExternalIdentification { get; init; }
