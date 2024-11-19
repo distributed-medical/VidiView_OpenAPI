@@ -30,6 +30,7 @@ public static class Rel
     public const string Clear = "clear";
     public const string Close = "close";
     public const string Conferences = "conferences";
+    public const string ConferenceSources = "conference-sources";
     public const string Configuration = "configuration";
     public const string Contents = "contents";
     public const string Controllers = "controllers";
