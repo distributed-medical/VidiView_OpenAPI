@@ -3,22 +3,27 @@
 /// <summary>
 /// Information about an active conference
 /// </summary>
-public class Conference
+public record Conference
 {
     /// <summary>
     /// Id of this conference
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
+
+    /// <summary>
+    /// Study id
+    /// </summary>
+    public Guid StudyId { get; init; }
 
     /// <summary>
     /// The Controller where this conference is broadcasted from 
     /// </summary>
-    public IdAndName Controller { get; set; }
+    public IdAndName? Controller { get; init; }
 
     /// <summary>
     /// The Controller location
     /// </summary>
-    public string Location { get; set; }
+    public string? Location { get; init; }
 
     /// <summary>
     /// Date and time when the conference was created

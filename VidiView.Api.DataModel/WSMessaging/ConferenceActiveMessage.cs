@@ -19,6 +19,14 @@ public class ConferenceActiveMessage : IWSMessage
     public string MessageType { get; init; }
     public string MessageId { get; init; }
 
+    /// <summary>
+    /// Patient this conference relates to. If null, it is an unidentified study
+    /// </summary>
+    public Guid? PatientId { get; init; }
+
+    /// <summary>
+    /// Study this conference relates to
+    /// </summary>
     public Guid StudyId { get; init; }
 
     /// <summary>
