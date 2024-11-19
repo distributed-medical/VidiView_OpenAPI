@@ -36,7 +36,7 @@ public record Study
     /// <summary>
     /// Permissions granted to this study
     /// </summary>
-    /// <remarks>This is only set when opening a study and loading all its data</remarks>
+    /// <remarks>Cast to <see cref="DepartmentPermissions"/> to check specific permissions</remarks>
     public long? Permissions { get; init; }
 
     /// <summary>
