@@ -3,7 +3,7 @@
 /// <summary>
 /// Sent when beginning review of study
 /// </summary>
-public class StudyBeginReviewMessage : IWSMessage
+public record StudyBeginReviewMessage : IWSMessage
 {
     public StudyBeginReviewMessage()
     {

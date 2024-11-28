@@ -6,7 +6,7 @@ namespace VidiView.Api.WSMessaging;
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
 /// <remarks>This can be sent as both a reply and a status message</remarks>
-public class StudyUnderReviewMessage : IWSReply
+public record StudyUnderReviewMessage : IWSReply
 {
     public StudyUnderReviewMessage()
     {

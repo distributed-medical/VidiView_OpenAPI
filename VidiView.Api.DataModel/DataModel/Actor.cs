@@ -4,7 +4,7 @@
 /// Info about an actor (performing an operation) in the system
 /// </summary>
 /// <remarks>An actor might be a user, a Controller or the system itself</remarks>
-public class Actor
+public record Actor
 {
     /// <summary>
     /// User currently reviewing this study

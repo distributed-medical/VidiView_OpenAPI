@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// Received as a response to a successful authentication
 /// </summary>
-public class AuthenticateReplyMessage : IWSReply
+public record AuthenticateReplyMessage : IWSReply
 {
     public AuthenticateReplyMessage()
     {

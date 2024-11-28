@@ -3,7 +3,7 @@
 /// <summary>
 /// Authentication message. Must be the first message sent after connecting a WebSocket
 /// </summary>
-public class AuthenticateMessage : IWSMessage
+public record AuthenticateMessage : IWSMessage
 {
     public AuthenticateMessage()
     {
