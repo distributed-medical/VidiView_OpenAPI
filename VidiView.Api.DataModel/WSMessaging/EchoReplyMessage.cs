@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.WSMessaging;
 
-public class EchoReplyMessage : IWSReply
+public record EchoReplyMessage : IWSReply
 {
     public EchoReplyMessage()
     {

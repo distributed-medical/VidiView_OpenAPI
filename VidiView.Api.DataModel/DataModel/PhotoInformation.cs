@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class PhotoInformation
+public record PhotoInformation
 {
     /// <summary>
     /// Photo width

@@ -2,7 +2,7 @@
 
 namespace VidiView.Api.DataModel;
 
-public class VideoInformation
+public record VideoInformation
 {
     /// <summary>
     /// Video width

@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.WSMessaging;
 
-public class StudyEndReviewMessage : IWSMessage
+public record StudyEndReviewMessage : IWSMessage
 {
     public StudyEndReviewMessage()
     {

@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to all clients having a specific study open, when a queued item is updated
 /// </summary>
-public class QueuedItemUpdatedMessage : IWSMessage
+public record QueuedItemUpdatedMessage : IWSMessage
 {
     public QueuedItemUpdatedMessage()
     {

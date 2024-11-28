@@ -3,7 +3,7 @@
 /// <summary>
 /// Request pseudonymization on messages 
 /// </summary>
-public class PseudonymizeMessage : IWSMessage
+public record PseudonymizeMessage : IWSMessage
 {
     public PseudonymizeMessage()
     {

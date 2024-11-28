@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.WSMessaging;
 
-public class EchoMessage : IWSMessage
+public record EchoMessage : IWSMessage
 {
     public EchoMessage()
     {

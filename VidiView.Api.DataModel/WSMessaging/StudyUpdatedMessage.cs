@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to clients that are reviewing a specific study
 /// </summary>
-public class StudyUpdatedMessage : IWSActorMessage
+public record StudyUpdatedMessage : IWSActorMessage
 {
     public StudyUpdatedMessage()
     {

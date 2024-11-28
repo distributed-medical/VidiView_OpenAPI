@@ -1,6 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
-public class ConferenceAdvertisement
+public record ConferenceAdvertisement
 {
     public ConferenceType ConferenceType { get; init; }
     public IdAndName Department { get; init; }
