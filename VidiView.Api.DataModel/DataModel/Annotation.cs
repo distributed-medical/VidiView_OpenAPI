@@ -38,6 +38,11 @@ public record Annotation
     public double? Thickness { get; init; }
 
     /// <summary>
+    /// Length of measurement or calibration, or area. The unit is placed in Text
+    /// </summary>
+    public double? Measure { get; init; }
+
+    /// <summary>
     /// Optional text
     /// </summary>
     public string? Text { get; init; }
