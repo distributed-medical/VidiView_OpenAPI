@@ -1,5 +1,6 @@
 ﻿#if WINRT
 using System.Runtime.Versioning;
+using System.Runtime.InteropServices;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Web;
 
@@ -14,7 +15,20 @@ public class NetworkException : Exception
             return exception;
 
         var status = WebError.GetStatus(exception.HResult);
-        var result = new NetworkException(requestedUri, certificate, $"{status} (HResult=0x{exception.HResult:X8})", status, exception);
+        string statusDescription;
+        if (status != WebErrorStatus.Unknown)
+        {
+            statusDescription = $"{status} (HResult=0x{exception.HResult:X8})";
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(exception.Message))
+                statusDescription = exception.Message;
+            else 
+                statusDescription = Marshal.GetExceptionForHR(exception.HResult)?.Message ?? $"(HResult=0x{exception.HResult:X8})";
+        }
+
+        var result = new NetworkException(requestedUri, certificate, statusDescription, status, exception);
 
         return result;
     }
@@ -23,11 +37,23 @@ public class NetworkException : Exception
         : base(message, innerException)
     {
         RequestedUri = requestedUri;
+        HostCertificate = certificate;
         Status = status;
     }
 
+    /// <summary>
+    /// The certificate presented by the host
+    /// </summary>
+    public Certificate? HostCertificate { get; }
+
+    /// <summary>
+    /// The URI that was requested
+    /// </summary>
     public Uri RequestedUri { get; }
 
+    /// <summary>
+    /// Status code
+    /// </summary>
     public WebErrorStatus Status { get; }
 }
 #endif
