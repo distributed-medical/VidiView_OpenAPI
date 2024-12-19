@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Net.Security;
 using System.Net.WebSockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using VidiView.Api.Exceptions;
 using VidiView.Api.Serialization;
@@ -77,7 +79,7 @@ public class WSClient
         var socket = new ClientWebSocket();
         socket.Options.AddSubProtocol(SubProtocol);
         socket.Options.UseDefaultCredentials = false;
-
+        socket.Options.RemoteCertificateValidationCallback = RemoteCertificateValidationCallback;
         try
         {
             // Negotiate web socket
@@ -116,6 +118,23 @@ public class WSClient
             socket.Dispose();
             throw;
         }
+    }
+
+    bool RemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+    {
+        if (sslPolicyErrors == SslPolicyErrors.None)
+            return true;
+
+        if (certificate is X509Certificate2 x2)
+        {
+            bool isLegacyCertificate = x2.IsVidiViewLicenseCertificate();
+            if (isLegacyCertificate)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
