@@ -33,7 +33,13 @@ public class LinkCollection : IDictionary<string, Link>
     /// <returns></returns>
     Link IDictionary<string, Link>.this[string key] {
         get => _links[key];
-        set => _links[key] = value;
+        set
+        {
+            // When deserializing, the Rel property is not contained
+            // in the body of the object, replace with key
+            value.Rel = key;
+            _links[key] = value;
+        }
     }
 
     #region Implementation of Read-only Dictionary
