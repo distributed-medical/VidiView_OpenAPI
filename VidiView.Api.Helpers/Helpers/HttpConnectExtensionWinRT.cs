@@ -96,6 +96,10 @@ public static class HttpConnectExtensionWinRT
                     continue;
 
                 case HttpStatusCode.NotFound:
+                    // A json problem here indicates the VidiView Server is answering.
+                    await response.AssertNotProblem().ConfigureAwait(false);
+
+                    // Otherwise it is treated as the Web Server responded with the 404
                     uri = HttpConnectExtension.RetryWithDefaultPath(uri);
                     continue;
 

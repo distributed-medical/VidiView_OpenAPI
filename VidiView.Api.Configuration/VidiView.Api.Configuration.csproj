@@ -16,8 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj" />
-	  <ProjectReference Include="..\VidiView.Api.Helpers\VidiView.Api.Helpers.csproj" />
+	  <PackageReference Include="VidiView.Api.Helpers" Version="5.1.3-conference.16" />
 	</ItemGroup>
 
 </Project>
