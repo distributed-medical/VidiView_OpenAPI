@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VidiView.Api.Helpers" Version="5.1.3-conference.16" />
+	  <PackageReference Include="VidiView.Api.Helpers" Version="5.1.3" />
 	</ItemGroup>
 
 </Project>
