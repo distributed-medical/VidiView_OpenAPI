@@ -38,9 +38,12 @@ public static class LinkCollectionExtension
     /// <exception cref="E1021_RelDoesNotExistException"></exception>
     public static Link GetRequired(this LinkCollection? links, string rel)
     {
+        if (string.IsNullOrEmpty(rel))
+            throw new ArgumentException(nameof(rel));
+
         if (links?.TryGet(rel, out var r) == true)
             return r;
 
-        throw new KeyNotFoundException($"Rel {rel} does not exist");
+        throw new KeyNotFoundException($"{rel} relation not found in links");
     }
 }
