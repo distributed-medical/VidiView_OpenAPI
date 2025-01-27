@@ -177,6 +177,7 @@ public static class SettingKey
     public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
     public const string CaptureOptionsAnatomicMap = "Capture/Options/AnatomicMap";
     public const string CaptureOptionsAnatomicTagging = "Capture/Options/AnatomicTagging";
+    public const string CaptureOptionsContinueStudyAllowed = "Capture/Options/ContinueStudyAllowed";
     public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
     public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
     public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";

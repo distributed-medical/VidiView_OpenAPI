@@ -155,6 +155,6 @@ public record MediaFile
 
     public override string ToString()
     {
-        return $"Image {ImageId} ({ContentType})";
+        return $"MediaFile {ImageId} ({ContentType})";
     }
 }

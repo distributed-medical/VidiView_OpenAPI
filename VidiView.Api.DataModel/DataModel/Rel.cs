@@ -80,6 +80,8 @@ public static class Rel
     public const string Recover = "recover";
     public const string RegisterClientDevice = "register-device";
     public const string Release = "release";
+
+    [Obsolete("Not to be used anymore", true)]
     public const string ReleaseStudy = "release-study";
     public const string RemoveStudy = "remove-study";
     public const string RequestToken = "request-token";
@@ -96,6 +98,7 @@ public static class Rel
     public const string Start = "start";
     public const string Studies = "studies";
     public const string Study = "study";
+    public const string StudyLock = "study-lock";
     public const string SubscribeLegacy = "subscribe-legacy";
     public const string Thumbnail = "thumbnail";
     public const string Trackable = "trackable";
