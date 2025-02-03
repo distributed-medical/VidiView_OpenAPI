@@ -6,7 +6,7 @@ namespace VidiView.Api.DataModel;
 /// The collection of links for a model. This is a struct, ensuring it is never null. 
 /// The contained Links dictionary is treated as read only
 /// </summary>
-public class LinkCollection : IDictionary<string, Link>
+public class LinkCollection : IDictionary<string, Link>, IEquatable<LinkCollection> 
 {
     readonly Dictionary<string, Link> _links = new();
 
@@ -99,5 +99,15 @@ public class LinkCollection : IDictionary<string, Link>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return _links.GetEnumerator();
+    }
+
+    bool IEquatable<LinkCollection>.Equals(LinkCollection? other)
+    {
+        if (other == null)
+        {
+            return false;
+        }
+
+        return Enumerable.SequenceEqual(this._links, other._links);
     }
 }
