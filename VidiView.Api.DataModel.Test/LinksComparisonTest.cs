@@ -24,7 +24,8 @@ public class LinksComparisonTest
         ((IDictionary<string, Link>)mf2.Links)[Rel.Self] = new Link { Href = "http://test.se/uri/1", Templated = true };
 
         // Act
-        Assert.AreEqual(mf1, mf2);
+        bool areEqual = mf1.Equals(mf2);
+        Assert.IsTrue(areEqual);
     }
 
     [TestMethod]
