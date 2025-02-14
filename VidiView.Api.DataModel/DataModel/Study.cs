@@ -66,6 +66,11 @@ public record Study
     public StudyState State { get; init; }
 
     /// <summary>
+    /// Study flags
+    /// </summary>
+    public StudyFlags Flags { get; init; }
+
+    /// <summary>
     /// Study description
     /// </summary>
     public string? Description { get; init; }
