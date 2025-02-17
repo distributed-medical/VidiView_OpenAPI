@@ -56,6 +56,7 @@ public static class Rel
     public const string Files = "files";
     public const string FindPatient = "find-patient";
     public const string FindStudy = "find-study";
+    public const string ForceRelease = "force-release";
     public const string GrantDevice = "grant-device";
     public const string IdentifyStudy = "identify";
 
@@ -70,6 +71,8 @@ public static class Rel
     public const string LeaveAudioLegacy = "leave-av-legacy";
     public const string Load = "load";
     public const string LookupPatient = "lookup-patient";
+    public const string Merge = "merge";
+    public const string MergeHistory = "merge-history";
     public const string MimeTypes = "mime-types";
     public const string MyPersonalWorklists = "personal-worklists";
     public const string MyRecentStudies = "recent-studies";
@@ -104,6 +107,7 @@ public static class Rel
     public const string Trackable = "trackable";
     public const string Trim = "trim";
     public const string TrustedIssuers = "x509-trusted-issuers";
+    public const string UndoMerge = "undo-merge";
     public const string UnidentifyStudy = "unidentify";
     public const string UnsubscribeLegacy = "unsubscribe-legacy";
     public const string Update = "update";

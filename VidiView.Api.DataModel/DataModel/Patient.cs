@@ -63,6 +63,11 @@ public record Patient
     /// </summary>
     public string? SopInstance { get; init; }
 
+    /// <summary>
+    /// Patient flags
+    /// </summary>
+    public PatientFlags Flags { get; init; }
+
     [JsonPropertyName("_links")]
     public LinkCollection? Links { get; init; }
 }

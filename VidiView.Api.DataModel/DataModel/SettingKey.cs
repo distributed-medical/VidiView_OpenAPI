@@ -130,9 +130,9 @@ public static class SettingKey
 
     public const string StudyMaxReturnedRecords = "System/Study/MaxReturnRecords";
     public const string StudyMediaFavouriteMark = "System/Study/Media/FavouriteMark";
-    public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHEVCtoAVC";
-    public const string StudyMediaConvertHeifToJpeg = "System/Study/Media/Conversion/ConvertHEIFtoJPEG";
-
+    public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHevcToAvc";
+    public const string StudyMediaConvertUnsupportedPhotoToJpeg = "System/Study/Media/Conversion/ConvertUnsupportedPhotoToJpeg";
+    
     public const string StudyDeleteIdentifiedAutomaticallyEnabled = "System/Study/Delete/Identified/Automatic/Enabled";
     public const string StudyDeleteIdentifiedAutomaticallyAfter = "System/Study/Delete/Identified/Automatic/After";
     public const string StudyDeleteIdentifiedManuallyAllowed = "System/Study/Delete/Identified/Manually";
