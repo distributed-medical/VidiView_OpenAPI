@@ -129,6 +129,9 @@ public static class SettingKey
     public const string PatientPseudonymizedIdPresentation = "System/Patient/Formatting/PatientId/Pseudonymized";
 
     public const string StudyMaxReturnedRecords = "System/Study/MaxReturnRecords";
+    public const string StudyMediaFavouriteMark = "System/Study/Media/FavouriteMark";
+    public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHEVCtoAVC";
+    public const string StudyMediaConvertHeifToJpeg = "System/Study/Media/Conversion/ConvertHEIFtoJPEG";
 
     public const string StudyDeleteIdentifiedAutomaticallyEnabled = "System/Study/Delete/Identified/Automatic/Enabled";
     public const string StudyDeleteIdentifiedAutomaticallyAfter = "System/Study/Delete/Identified/Automatic/After";
