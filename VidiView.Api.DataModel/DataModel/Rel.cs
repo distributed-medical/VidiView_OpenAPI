@@ -17,6 +17,7 @@ public static class Rel
     public const string AuditLogForUser = "audit-log-for-user";
     public const string AuditLogLatestEntries = "audit-log-latest";
     public const string AuditLogPatientInteractions = "audit-log-patient-interactions";
+    public const string AuditLogStudyInteractions = "audit-log-study-interactions";
     public const string AuthenticatePassword = "authenticate-username-password";
     public const string AuthenticatePin = "authenticate-username-pincode";
     public const string AuthenticatePinEnabled = "authenticate-pin-enabled";

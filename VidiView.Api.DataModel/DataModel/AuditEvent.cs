@@ -44,4 +44,23 @@ public record AuditEvent
     /// Additional event data
     /// </summary>
     public string? Data { get; init; }
+
+    /// <summary>
+    /// The study ID
+    /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
+    public Guid? StudyId { get; init; }
+
+    /// <summary>
+    /// The study accession number
+    /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
+    public string? AccessionNumber { get; init; }
+
+    /// <summary>
+    /// The department
+    /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
+    public IdAndName? Department { get; init; }
+
 }
