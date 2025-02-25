@@ -32,6 +32,16 @@ public record ConferenceSource
     public CameraControl? Controllable { get; init; }
 
     /// <summary>
+    /// Flags for this source
+    /// </summary>
+    public ConferenceSourceFlags Flags { get; init; }
+
+    /// <summary>
+    /// Time when the current recording started
+    /// </summary>
+    public DateTimeOffset? RecordingStarted { get; init; }
+
+    /// <summary>
     /// Associated links
     /// </summary>
     [JsonPropertyName("_links")]

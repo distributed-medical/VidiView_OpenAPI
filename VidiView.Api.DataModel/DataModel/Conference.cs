@@ -11,6 +11,12 @@ public record Conference
     public Guid Id { get; init; }
 
     /// <summary>
+    /// The patient for which this conference is active 
+    /// </summary>
+    /// <remarks>Null for unidentified patients</remarks>
+    public Guid? PatientId { get; set; }
+
+    /// <summary>
     /// Study id
     /// </summary>
     public Guid StudyId { get; init; }

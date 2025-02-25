@@ -27,6 +27,7 @@ public static class Rel
     public const string AuthenticateToken = "authenticate-login-token";
     public const string BiometricLoginToken = "biometric-login-token";
     public const string CameraCommand = "camera-command";
+    public const string CapturePhoto = "capture-photo";
     public const string ClientDeviceRegistration = "device-registration";
     public const string Clear = "clear";
     public const string Close = "close";
@@ -81,6 +82,7 @@ public static class Rel
     public const string ParseSnomed = "parse-snomed";
     public const string Patient = "patient";
     public const string Preferences = "preferences";
+    public const string RecordVideo = "record-video";
     public const string Recover = "recover";
     public const string RegisterClientDevice = "register-device";
     public const string Release = "release";

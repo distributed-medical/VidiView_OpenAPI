@@ -211,6 +211,7 @@ public class WSClient
     /// <returns></returns>
     /// <exception cref="TimeoutException">Thrown if timeout</exception>
     /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
+    /// <remarks>If the awaited reply is received, <see cref="MessageReceived"/> event will not be raised for the reply message</remarks>
     public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message)
     {
         try
@@ -231,6 +232,7 @@ public class WSClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
+    /// <remarks>If the awaited reply is received, <see cref="MessageReceived"/> event will not be raised for the reply message</remarks>
     public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message, CancellationToken cancellationToken)
     {
         AssertValid(message);

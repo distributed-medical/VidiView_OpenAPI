@@ -6,8 +6,6 @@ public static class SettingKey
 
     public const string ServerApiCorsAllowOrigin = "Server/Api/CorsAllowOrigin";
     public const string ServerEnableRemoteConfiguration = "Server/Service/EnableRemoteConfiguration";
-    public const string ServerServiceEndpointIdentity = "Server/Service/EndpointIdentity";
-    public const string ServerServiceExternalVisibleName = "Server/Service/ExternalVisibleName";
     
     public const string ServerServiceAuthenticationDefaultDomain = "Server/Service/Authentication/AD/DefaultDomain";
     public const string ServerServiceAuthenticationEnableADUsernamePassword = "Server/Service/Authentication/AD/UsernamePassword";
@@ -35,8 +33,10 @@ public static class SettingKey
     public const string ServerServiceAuthorizationRoleProviderLegacyConfiguration = "Server/Service/Authorization/RoleProvider/LegacyConfiguration";
 
     public const string ServerServicePort = "Server/Service/Port";
+    public const string ServerServiceServicePrincipalName = "Server/Service/ServicePrincipalName";
     public const string ServerServiceSniHostName = "Server/Service/SniHostName";
     public const string ServerServiceEnableCompression = "Server/Service/EnableCompression";
+    public const string ServerServiceExternalVisibleName = "Server/Service/ExternalVisibleName";
 
     public const string ServerServiceUnsecureHttpEnabled = "Server/Service/UnsecureHttp/Enabled";
     public const string ServerServiceUnsecureHttpPort = "Server/Service/UnsecureHttp/Port";
