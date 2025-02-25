@@ -1,0 +1,60 @@
+﻿using VidiView.Api.DataModel;
+
+namespace VidiView.Api.WSMessaging;
+
+/// <summary>
+/// This is sent to all clients having a specific study open, when the conference pointer is moved
+/// </summary>
+public record ConferencePointerMessage : IWSMessage
+{
+    public ConferencePointerMessage()
+    {
+        // Maybe it seems odd to use the ToString() here instead
+        // of FullName, but the ToString will not return assembly qualified name
+        // for generic type parameters
+        MessageType = this.GetType().ToString();
+        MessageId = Guid.NewGuid().ToString("N");
+    }
+
+    public string MessageType { get; init; }
+    public string MessageId { get; init; }
+
+    /// <summary>
+    /// The user performing the operation
+    /// </summary>
+    public Actor Actor { get; init; }
+
+    /// <summary>
+    /// Study this conference relates to
+    /// </summary>
+    public Guid StudyId { get; init; }
+
+    /// <summary>
+    /// The source id that the pointer relates to
+    /// </summary>
+    public string SourceId { get; init; }
+
+    /// <summary>
+    /// Horizontal pixel offset relative top-left corner (0 <= X < Video.Width)
+    /// </summary>
+    public uint X { get; init; }
+
+    /// <summary>
+    /// Vertical pixel offset relative top-left corner (0 <= Y < Video.Height)
+    /// </summary>
+    public uint Y { get; init; }
+
+    /// <summary>
+    /// This is the pointer index of the current pointer. 
+    /// </summary>
+    /// <remarks>
+    /// To start sending pointer coordinates, this must be incremented by the client
+    /// </remarks>
+    public uint PointerIndex { get; init; }
+
+    /// <summary>
+    /// Hide pointer
+    /// </summary>
+    public bool? Hide { get; set; }
+}
+
