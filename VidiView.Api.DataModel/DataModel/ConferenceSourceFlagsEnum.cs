@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<ConferenceSourceFlags>))]
 [Flags]
 public enum ConferenceSourceFlags
 {
