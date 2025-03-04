@@ -47,6 +47,11 @@ public record ApiHome
     public IdentityProvider[]? IdentityProviders { get; init; }
 
     /// <summary>
+    /// Service principal name for Kerberos authentication
+    /// </summary>
+    public string? ServicePrincipalName { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")] 
