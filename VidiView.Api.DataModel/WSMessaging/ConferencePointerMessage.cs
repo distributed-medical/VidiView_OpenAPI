@@ -55,6 +55,11 @@ public record ConferencePointerMessage : IWSReply
     public uint PointerIndex { get; init; }
 
     /// <summary>
+    /// Returns true if the current user is owning the pointer
+    /// </summary>
+    public bool IsOwner { get; init; }
+
+    /// <summary>
     /// Hide pointer
     /// </summary>
     public bool? Hide { get; init; }
