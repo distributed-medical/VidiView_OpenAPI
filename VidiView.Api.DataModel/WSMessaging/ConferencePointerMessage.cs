@@ -32,17 +32,13 @@ public record ConferencePointerMessage : IWSMessage
     /// <summary>
     /// The source id that the pointer relates to
     /// </summary>
-    public string SourceId { get; init; }
+    public Guid SourceId { get; init; }
 
     /// <summary>
-    /// Horizontal pixel offset relative top-left corner (0 <= X < Video.Width)
+    /// Pointer position relative top-left corner
     /// </summary>
-    public uint X { get; init; }
-
-    /// <summary>
-    /// Vertical pixel offset relative top-left corner (0 <= Y < Video.Height)
-    /// </summary>
-    public uint Y { get; init; }
+    /// <remarks>0 <= X < Video.Width, 0 <= Y < Video.Height</remarks>
+    public PointInt Position { get; init;}
 
     /// <summary>
     /// This is the pointer index of the current pointer. 
