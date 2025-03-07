@@ -5,7 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to all clients having a specific study open, when the conference pointer is moved
 /// </summary>
-public record ConferencePointerMessage : IWSMessage
+public record ConferencePointerMessage : IWSReply
 {
     public ConferencePointerMessage()
     {
@@ -18,6 +18,7 @@ public record ConferencePointerMessage : IWSMessage
 
     public string MessageType { get; init; }
     public string MessageId { get; init; }
+    public string InReplyTo { get; init; }
 
     /// <summary>
     /// The user performing the operation
@@ -32,12 +33,17 @@ public record ConferencePointerMessage : IWSMessage
     /// <summary>
     /// The source id that the pointer relates to
     /// </summary>
-    public Guid SourceId { get; init; }
+    public Guid? SourceId { get; init; }
+
+    /// <summary>
+    /// The media file id that the pointer relates to
+    /// </summary>
+    public Guid? ImageId { get; init; }
 
     /// <summary>
     /// Pointer position relative top-left corner
     /// </summary>
-    /// <remarks>0 <= X < Video.Width, 0 <= Y < Video.Height</remarks>
+    /// <remarks>0 <= X < PixelWidth, 0 <= Y < PixelHeight</remarks>
     public PointInt Position { get; init;}
 
     /// <summary>
@@ -51,6 +57,6 @@ public record ConferencePointerMessage : IWSMessage
     /// <summary>
     /// Hide pointer
     /// </summary>
-    public bool? Hide { get; set; }
+    public bool? Hide { get; init; }
 }
 
