@@ -50,6 +50,7 @@ public static class Rel
     public const string ScheduledStudies = "scheduled-studies";
     public const string UnidentifiedStudies = "unidentified-studies";
     public const string Enclosure = "enclosure";
+    public const string Equipment = "equipment";
     public const string ExportStatus = "export-status";
     public const string ExportQueues = "export-queues";
     public const string ExtractFrame = "extract-frame";
