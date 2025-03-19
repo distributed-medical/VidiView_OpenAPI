@@ -8,7 +8,7 @@ public record Equipment
     /// <summary>
     /// Id of the unique equipment 
     /// </summary>
-    public Guid EquipmentId { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// The department in which this equipment is defined
