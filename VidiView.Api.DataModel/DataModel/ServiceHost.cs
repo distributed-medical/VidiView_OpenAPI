@@ -18,6 +18,11 @@ public record ServiceHost
     public ServiceHostType Type { get; init; }
 
     /// <summary>
+    /// If this host represents a Dicom service, these are the configuration options
+    /// </summary>
+    public ServiceHostDicomConnection? DicomConnection { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]

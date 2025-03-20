@@ -99,6 +99,7 @@ public static class Rel
     public const string ReportImage = "report-image";
     public const string Roles = "roles";
     public const string Self = "self";
+    public const string ServiceHost = "service-host";
     public const string ServiceHosts = "service-hosts";
     public const string Settings = "settings";
     public const string Signatures = "signatures";
