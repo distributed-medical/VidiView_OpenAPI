@@ -155,6 +155,7 @@ public static class SettingKey
     public const string ReportPageNoFormat = "Report/PageNoFormat";
     public const string ReportRasterDpi = "Report/RasterDpi";
     public const string ReportJpegQuality = "Report/JpegQuality";
+    public const string ReportDefaultLanguage = "Report/DefaultLanguage";
 
     #region VidiView Controller
     public const string ControllerConferenceRemoteCaptureEnable = "Controller/Conference/RemoteCapture/Enable";
@@ -183,6 +184,7 @@ public static class SettingKey
     public const string CaptureOptionsContinueStudyAllowed = "Capture/Options/ContinueStudyAllowed";
     public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
     public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
+    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
     public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";
     public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
     public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
