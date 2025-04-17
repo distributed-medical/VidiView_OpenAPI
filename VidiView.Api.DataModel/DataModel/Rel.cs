@@ -46,6 +46,7 @@ public static class Rel
     public const string DeletedFiles = "deleted-files";
     public const string Departments = "departments";
     public const string DicomMetadata = "dicom-metadata";
+    public const string Document = "document";
     public const string Download = "download";
     public const string ScheduledStudies = "scheduled-studies";
     public const string UnidentifiedStudies = "unidentified-studies";
