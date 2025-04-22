@@ -102,7 +102,24 @@ public static class HttpConnectExtension
                     continue;
 
                 default:
-                    await response.AssertSuccessAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await response.AssertSuccessAsync().ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            uri = RetryWithDefaultPath(uri);
+                            continue;
+                        }
+                        catch
+                        {
+                        }
+
+                        // Throw first exception here
+                        throw;
+                    }
 
                     try
                     {

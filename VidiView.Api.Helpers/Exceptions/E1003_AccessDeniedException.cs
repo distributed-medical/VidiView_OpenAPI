@@ -1,4 +1,6 @@
-﻿namespace VidiView.Api.Exceptions;
+﻿using VidiView.Api.DataModel;
+
+namespace VidiView.Api.Exceptions;
 
 public class E1003_AccessDeniedException : VidiViewException
 {
@@ -6,4 +8,9 @@ public class E1003_AccessDeniedException : VidiViewException
         : base(message)
     {
     }
+
+    /// <summary>
+    /// Optional department information from which this exception derives
+    /// </summary>
+    public IdAndName? Department { get; init; }
 }

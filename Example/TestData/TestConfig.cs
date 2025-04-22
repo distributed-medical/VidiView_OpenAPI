@@ -5,7 +5,6 @@ namespace VidiView.Example;
 public static partial class TestConfig
 {
     public const string ServerHostName = "demo0.vidiview.com";
-    //public const string ServerHostName = "blundmark1.ad.perspektivgruppen.se";
 
     public static readonly byte[] Thumbprint = [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8];
 
