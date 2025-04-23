@@ -17,13 +17,12 @@ public class DebugLogHandler : DelegatingHandler
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var sb = new StringBuilder();
-        Stopwatch? sw = null;
 
+        WriteRequestAsync(sb, request).Wait();
+
+        var sw = Stopwatch.StartNew();
         try
         {
-            WriteRequestAsync(sb, request).Wait();
-
-            sw = Stopwatch.StartNew();
             var response = base.Send(request, cancellationToken);
 
             WriteResponse(sb, sw, response);
@@ -43,13 +42,12 @@ public class DebugLogHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var sb = new StringBuilder();
-        Stopwatch? sw = null;
 
+        await WriteRequestAsync(sb, request);
+
+        var sw = Stopwatch.StartNew();
         try
         {
-            await WriteRequestAsync(sb, request);
-
-            sw = Stopwatch.StartNew();
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             WriteResponse(sb, sw, response);
@@ -68,15 +66,22 @@ public class DebugLogHandler : DelegatingHandler
 
     async Task WriteRequestAsync(StringBuilder sb, HttpRequestMessage request)
     {
-        sb.Append(request.Method);
-        sb.Append(" ");
-        sb.Append(request.RequestUri?.AbsoluteUri);
-        if (request.Headers.Range != null)
-            sb.Append($" [Range: {request.Headers.Range}]");
-
-        if (WriteRequestBodyToDebugOut)
+        try
         {
-            await DebugWriteBodyAsync(request.Content);
+            sb.Append(request.Method);
+            sb.Append(" ");
+            sb.Append(request.RequestUri?.AbsoluteUri);
+            if (request.Headers.Range != null)
+                sb.Append($" [Range: {request.Headers.Range}]");
+
+            if (WriteRequestBodyToDebugOut)
+            {
+                await DebugWriteBodyAsync(request.Content);
+            }
+        }
+        catch
+        {
+            sb.Append(" [Failed to log request]");
         }
     }
 
@@ -90,7 +95,7 @@ public class DebugLogHandler : DelegatingHandler
         }
     }
 
-    void WriteResponse(StringBuilder sb, Stopwatch? sw, HttpResponseMessage response)
+    void WriteResponse(StringBuilder sb, Stopwatch sw, HttpResponseMessage response)
     {
         sb.Append($" => {(int)response.StatusCode} {response.ReasonPhrase} after {sw.Elapsed.TotalMilliseconds:0}ms");
         if (response.Headers.Location != null)
@@ -104,9 +109,9 @@ public class DebugLogHandler : DelegatingHandler
 
     }
 
-    static void WriteException(StringBuilder sb, Stopwatch? sw, Exception ex)
+    static void WriteException(StringBuilder sb, Stopwatch sw, Exception ex)
     {
         sb.AppendLine("");
-        sb.Append($"  Failed to execute operation after {sw?.Elapsed.TotalMilliseconds:0}ms => {ex.Message}");
+        sb.Append($"  Failed to execute operation after {sw.Elapsed.TotalMilliseconds:0}ms => {ex.Message}");
     }
 }

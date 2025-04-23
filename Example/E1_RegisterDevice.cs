@@ -116,7 +116,7 @@ public class E1_RegisterDevice
                 throw new NotImplementedException();
             }
         }
-        catch (E1405_ServiceMaintenanceModeException maintenance)
+        catch (E1405_ServiceMaintenanceModeException)
         {
             // The VidiView Server is down for maintenance.
             // The exception has more details on when it is expected to back online etc

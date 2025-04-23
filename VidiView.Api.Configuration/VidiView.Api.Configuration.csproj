@@ -1,8 +1,7 @@
 <Project Sdk="MSBuild.Sdk.Extras/3.0.44">
 
   <PropertyGroup>
-	  <!--<TargetFrameworks>net7.0</TargetFrameworks>-->
-	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net7.0-windows10.0.18362.0;$(TargetFrameworks)</TargetFrameworks>
+	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net8.0-windows10.0.18362.0;$(TargetFrameworks)</TargetFrameworks>
 
 	  <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	  

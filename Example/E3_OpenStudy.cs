@@ -3,6 +3,7 @@ using VidiView.Example.TestData;
 using VidiView.Api.Authentication;
 using VidiView.Api.DataModel;
 using VidiView.Api.Helpers;
+using System.Diagnostics;
 
 namespace VidiView.Example;
 
@@ -127,6 +128,7 @@ public class E3_OpenStudy
 
         // Download the first jpeg image
         var photo = mediaFiles.Items.FirstOrDefault((f) => f.ContentType == "image/jpeg");
+        Debug.Assert(photo != null);
         link = photo.Links.GetRequired(Rel.Enclosure);
 
         using var stream = await _http.GetStreamAsync(link);

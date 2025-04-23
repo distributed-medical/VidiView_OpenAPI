@@ -6,7 +6,7 @@ This library is licensed under the [MIT License (MIT)](https://opensource.org/li
 VidiView® is a registered trademark of Distributed Medical AB.
 
 ### Features
-* Targets .NET 7.0
+* Targets .NET 8.0
 * Contains data models used by the VidiView OpenAPI
 * Data model objects are defined as light weight init-only records
 * Compliant with the VidiView Server OpenAPI 5.0
@@ -14,7 +14,7 @@ VidiView® is a registered trademark of Distributed Medical AB.
 ### Supported Runtimes
 
 Officially supports the following runtimes:
-* .NET 7.0
+* .NET 8.0
 
 ### Documentation
 [Documentation Wiki](https://github.com/distributed-medical/VidiView_OpenAPI/wiki/)

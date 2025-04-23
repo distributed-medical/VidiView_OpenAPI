@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <AssemblyName>VidiView.Api.DataModel</AssemblyName>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Platforms>AnyCPU</Platforms>
         
 		<!-- Note! The version information is automatically updated by GitVersion when this package is build on GitHub -->
@@ -17,7 +17,7 @@
         <Authors>Distributed Medical AB</Authors>
         <Product>VidiView® Enterprise Imaging</Product>
         <Title>VidiView OpenAPI Data Model</Title>
-        <Copyright>Copyright © 2023-2024 Distributed Medical AB, https://distributedmedical.com. All rights reserved</Copyright>
+        <Copyright>Copyright © 2023-2025 Distributed Medical AB, https://distributedmedical.com. All rights reserved</Copyright>
         <Description>VidiView data model objects for accessing VidiView API</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -30,6 +30,10 @@
 		<RootNamespace>VidiView.Api</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+		<!-- Since this library contains classes that are used with serialization, 
+		     don't enable trimming at present -->
+		<IsTrimmable>false</IsTrimmable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

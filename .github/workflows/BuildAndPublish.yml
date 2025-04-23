@@ -73,7 +73,7 @@ jobs:
           endpoint: https://weu.codesigning.azure.net/ # Western Europe
           trusted-signing-account-name: DMCodesigning
           certificate-profile-name: DMCodesigning
-          files-folder: ${{ matrix.project }}\bin\Release\net7.0\
+          files-folder: ${{ matrix.project }}\bin\Release\net8.0\
           files-folder-filter: dll
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com

@@ -237,7 +237,7 @@ public class X509Authenticator : IAuthenticator
     static HttpMessageHandler GetPrivateMessageHandler(HttpClient http)
     {
         var fi = typeof(HttpMessageInvoker).GetField("_handler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?? throw new Exception("The private field _handler is expected to exist in HttpMessageInvoker when running .NET7");
+            ?? throw new Exception("The private field _handler is expected to exist in HttpMessageInvoker when running .NET8");
 
         var handler = fi.GetValue(http)
             ?? throw new Exception("The private field _handler does not contain any message handler");
