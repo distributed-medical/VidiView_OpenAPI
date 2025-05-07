@@ -18,7 +18,12 @@ public static class HttpConnectExtensionWinRT
     /// <param name="http"></param>
     /// <param name="hostName">Host name. May include optional scheme, port and path</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="UriFormatException"></exception>
+    /// <exception cref="E1002_ConnectException"></exception>
+    /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
+    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="TaskCanceledException"></exception>    /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
     /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
     /// </returns>
@@ -58,6 +63,10 @@ public static class HttpConnectExtensionWinRT
     /// <param name="hostName">Host name. May include optional scheme, port and path</param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="UriFormatException"></exception>
+    /// <exception cref="E1002_ConnectException"></exception>
+    /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
+    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="TaskCanceledException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
         var uri = HttpConnectExtension.HandleState(state, out var callHistory);
@@ -75,10 +84,17 @@ public static class HttpConnectExtensionWinRT
             catch (Exception ex)
             {
                 var inner = NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
-                throw new E1002_ConnectException(inner.Message, inner)
+                if (inner is NetworkException ne && ne.Status == Windows.Web.WebErrorStatus.CannotConnect)
                 {
-                    Uri = uri
-                };
+                    throw new E1421_NoResponseFromServerException(ne.RequestedUri, ne);
+                }
+                else
+                {                
+                    throw new E1002_ConnectException(inner.Message, inner)
+                    {
+                        Uri = uri
+                    };
+                }
             }
 
             switch (response.StatusCode)
@@ -100,7 +116,7 @@ public static class HttpConnectExtensionWinRT
                     await response.AssertNotProblem().ConfigureAwait(false);
 
                     // Otherwise it is treated as the Web Server responded with the 404
-                    uri = HttpConnectExtension.RetryWithDefaultPath(uri);
+                    uri = HttpConnectExtension.GetDefaultPath(uri);
                     continue;
 
                 default:
@@ -122,7 +138,7 @@ public static class HttpConnectExtensionWinRT
                     }
 
                     // Something other than a VidiView Server has answered
-                    uri = HttpConnectExtension.RetryWithDefaultPath(uri);
+                    uri = HttpConnectExtension.GetDefaultPath(uri);
                     continue;
             }
 

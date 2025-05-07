@@ -1,4 +1,5 @@
 using VidiView.Api.DataModel;
+using VidiView.Api.Exceptions;
 using VidiView.Api.Helpers;
 using VidiView.Example.TestData;
 
@@ -72,6 +73,39 @@ public class E4_FindPatient
         var studies = await _http.GetAsync<StudyCollection>(tl);
 
         Assert.IsTrue(studies.Count > 2);
-
     }
+
+    [TestMethod]
+    public async Task Find_Non_Existing()
+    {
+        var start = await _http.HomeAsync();
+
+        var link = start.Links.GetRequired(Rel.FindPatient);
+
+        // To find patients, we use POST, to not reveal patient information in URL:s
+        var criteria = new PatientSearch
+        {
+            IdNumber = "182201021234"
+        };
+
+        var result = await _http.PostAsync(link, criteria);
+        await result.AssertSuccessAsync();
+        var patients = result.Deserialize<PatientCollection>();
+
+        Assert.IsTrue(patients.Count == 0);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(E1745_PatientNotFoundException))]
+    public async Task Get_Non_Existing()
+    {
+        var start = await _http.HomeAsync();
+
+        var link = start.Links.GetRequired(Rel.Patient).AsTemplatedLink();
+        link.TrySetParameterValue("patientIdGuid", Guid.NewGuid().ToString());
+
+        var result = await _http.GetAsync(link.ToUrl());
+        await result.AssertSuccessAsync();
+    }
+
 }

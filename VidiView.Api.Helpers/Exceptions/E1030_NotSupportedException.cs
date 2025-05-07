@@ -5,5 +5,6 @@ public class E1030_NotSupportedException : VidiViewException
     public E1030_NotSupportedException(string message)
         : base(message)
     {
+        ErrorCode = 1030;
     }
 }

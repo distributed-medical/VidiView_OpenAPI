@@ -20,7 +20,7 @@ public class VidiViewExceptionTest
             ErrorCode = "1034",
         };
 
-        var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, problem);
+        var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, problem, null);
 
         Assert.IsInstanceOfType<E1034_ConcurrentUpdateException>(exc);
         Assert.AreEqual("Concurrent update", exc.Message);
@@ -47,7 +47,7 @@ public class VidiViewExceptionTest
         var problem = JsonSerializer.Deserialize<ProblemDetails>(problemJson, VidiViewJson.DefaultOptions);
         problem.RawResponse = problemJson;
 
-        var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, problem);
+        var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, problem, null);
         Assert.IsInstanceOfType<E1038_FieldRequiredException>(exc);
         Assert.AreEqual("Study", ((E1038_FieldRequiredException)exc).FieldLevel);
     }

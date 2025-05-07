@@ -69,7 +69,7 @@ public static class HttpResponseMessageExtensionWinRT
 
             if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
             {
-                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem);
+                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, response.RequestMessage?.RequestUri);
             }
 
             throw new Exception(problem.Detail);
@@ -111,6 +111,10 @@ public static class HttpResponseMessageExtensionWinRT
 
                 case HttpStatusCode.Forbidden:
                     throw new E1003_AccessDeniedException(!string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : "403 Forbidden");
+
+                case HttpStatusCode.ServiceUnavailable:
+                    // No maintenance mode message presented
+                    throw new E1421_NoResponseFromServerException("Service unavailable");
 
                 default:
                     // Just throw default error

@@ -52,9 +52,6 @@ public record MediaFile
 
     public long FileSize { get; init; }
 
-    [Obsolete("This is only used by legacy VidiView Capture iOS?")]
-    public string? FileSizeAsString { get; init; }
-
     public int Height { get; init; }
 
     /// <summary>
@@ -63,6 +60,11 @@ public record MediaFile
     public Guid ImageId { get; init; }
 
     public int Index { get; init; }
+
+    /// <summary>
+    /// The media type
+    /// </summary>
+    public IdAndName? Type { get; init; }
 
     /// <summary>
     /// Image modality type (Dicom compliant)

@@ -1,16 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFrameworks>net8.0-windows10.0.17763.0</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <DefineConstants>$(DefineConstants);WINRT</DefineConstants>
 
-    <IsPackable>false</IsPackable>
+	  <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
 
 	  <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows10.0.17763.0'">
+		<DefineConstants>$(DefineConstants);WINRT</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<DefineConstants>$(DefineConstants);GITHUB_ACTION</DefineConstants>
+	</PropertyGroup>
+	
   <PropertyGroup>
     <NoWarn>1701;1702;8600;8602;8618</NoWarn>
   </PropertyGroup>
@@ -31,10 +41,6 @@
 
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extension\" />
   </ItemGroup>
 
 </Project>

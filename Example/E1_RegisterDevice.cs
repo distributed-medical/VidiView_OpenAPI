@@ -122,6 +122,10 @@ public class E1_RegisterDevice
             // The exception has more details on when it is expected to back online etc
             throw;
         }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     [TestMethod]

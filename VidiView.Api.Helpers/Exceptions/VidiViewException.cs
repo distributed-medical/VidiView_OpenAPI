@@ -15,7 +15,7 @@ public class VidiViewException : Exception
     /// </summary>
     /// <param name="problem"></param>
     /// <returns></returns>
-    public static Exception Factory(HttpStatusCode httpError, ProblemDetails problem)
+    public static Exception Factory(HttpStatusCode httpError, ProblemDetails problem, Uri? requestedUri)
     {
         // Check if we can instantiate the specific exception type
         try
@@ -25,21 +25,27 @@ public class VidiViewException : Exception
 
             var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
             var type = Type.GetType(typeName, false, true);
+
+            // Check if we have a local definition of this exception
             if (type != null)
             {
                 var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var ci = type.GetConstructor(flags, new[] { typeof(string) });
-                Debug.Assert(ci != null, "Our exceptions are always supposed to have a constructor accepting a string");
+                var constructor = type.GetConstructor(flags, new[] { typeof(string) });
+                Debug.Assert(constructor != null, "Our exceptions are always supposed to have a constructor accepting a string");
 
-                if (ci != null)
+                if (constructor != null)
                 {
-                    var exc = (Exception)ci.Invoke(new[] { problem.Detail });
+                    var exc = (Exception)constructor.Invoke(new[] { problem.Detail });
                     type.GetProperty(nameof(ErrorCode))?
                         .SetValue(exc, errorCode);
                     type.GetProperty(nameof(HttpStatusCode))?
                         .SetValue(exc, httpError);
                     type.GetProperty(nameof(Problem))?
                         .SetValue(exc, problem);
+                    type.GetProperty(nameof(RequestedUri))?
+                        .SetValue(exc, requestedUri);
+                    type.GetProperty(nameof(ThrownServerSide))?
+                        .SetValue(exc, true);
 
                     return exc;
                 }
@@ -49,7 +55,9 @@ public class VidiViewException : Exception
             {
                 ErrorCode = errorCode,
                 HttpStatusCode = httpError,
-                Problem = problem
+                Problem = problem,
+                RequestedUri = requestedUri,
+                ThrownServerSide = true
             };
         }
         catch
@@ -89,5 +97,10 @@ public class VidiViewException : Exception
     /// <summary>
     /// The requested URI that resulted in this error
     /// </summary>
-    public Uri? RequestedUri { get; set; }
+    public Uri? RequestedUri { get; init; }
+
+    /// <summary>
+    /// True if the server was thrown on the server and deserialized client side
+    /// </summary>
+    public bool ThrownServerSide { get; init; }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Web;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
@@ -19,6 +20,10 @@ public static class HttpConnectExtension
     /// <param name="cancellationToken"></param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="UriFormatException"></exception>
+    /// <exception cref="E1002_ConnectException"></exception>
+    /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
+    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="TaskCanceledException"></exception>
     /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
     /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
@@ -58,6 +63,12 @@ public static class HttpConnectExtension
     /// Construct a connection helper
     /// </summary>
     /// <param name="hostName">Host name. May include optional scheme, port and path</param>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="UriFormatException"></exception>
+    /// <exception cref="E1002_ConnectException"></exception>
+    /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
+    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="TaskCanceledException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
         var uri = HandleState(state, out var callHistory);
@@ -66,14 +77,39 @@ public static class HttpConnectExtension
         while (retryCount-- > 0)
         {
             HttpResponseMessage response;
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
                 callHistory.Add(uri);
                 response = await http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
             }
+            catch (TaskCanceledException)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Since the cancellation token is not cancelled, this must be a timeout
+                throw new E1421_NoResponseFromServerException(uri);
+            }
             catch (Exception ex)
             {
-                throw new E1002_ConnectException(ex.Message, ex)
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var message = ex.Message;
+                if (ex.TryGetInnerException<AuthenticationException>(out var ae))
+                {
+                    // This is the best exception to find detailed info
+                    message = ae.Message;
+                }
+                else if (ex.TryGetInnerException<System.Net.Sockets.SocketException>(out var se))
+                {
+                    if (se.SocketErrorCode == System.Net.Sockets.SocketError.TimedOut)
+                        throw new E1421_NoResponseFromServerException(uri, ex);
+
+                    // This is the second best exception to find detailed info
+                    message = se.Message;
+                }
+                throw new E1002_ConnectException(message, ex)
                 {
                     Uri = uri
                 };
@@ -98,7 +134,7 @@ public static class HttpConnectExtension
                     await response.AssertNotProblem().ConfigureAwait(false);
 
                     // Otherwise it is treated as the Web Server responded with the 404
-                    uri = RetryWithDefaultPath(uri);
+                    uri = GetDefaultPath(uri);
                     continue;
 
                 default:
@@ -106,11 +142,15 @@ public static class HttpConnectExtension
                     {
                         await response.AssertSuccessAsync().ConfigureAwait(false);
                     }
+                    catch (E1405_ServiceMaintenanceModeException)
+                    {
+                        throw;
+                    }
                     catch
                     {
                         try
                         {
-                            uri = RetryWithDefaultPath(uri);
+                            uri = GetDefaultPath(uri);
                             continue;
                         }
                         catch
@@ -137,7 +177,7 @@ public static class HttpConnectExtension
                     }
 
                     // Something other than a VidiView Server has answered
-                    uri = RetryWithDefaultPath(uri);
+                    uri = GetDefaultPath(uri);
                     continue;
             }
         }
@@ -170,13 +210,14 @@ public static class HttpConnectExtension
         }
     }
 
-    internal static Uri RetryWithDefaultPath(Uri uri)
+    internal static Uri GetDefaultPath(Uri uri)
     {
         if (uri.AbsolutePath == DefaultPath)
         {
             throw new E1002_ConnectException("Host is not a VidiView Server")
             {
-                Uri = uri
+                Uri = uri,
+                NotVidiViewServer = true
             };
         }
         // Retry using our default path
