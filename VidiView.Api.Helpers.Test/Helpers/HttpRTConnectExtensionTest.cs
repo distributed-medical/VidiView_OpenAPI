@@ -1,5 +1,7 @@
 ﻿using Windows.Web.Http;
 using VidiView.Api.Exceptions;
+using Windows.Web.Http.Filters;
+using Windows.Security.Cryptography.Certificates;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
 
@@ -9,7 +11,6 @@ namespace VidiView.Api.Helpers.Test.Helpers;
 public class HttpRTConnectExtensionTest
 {
     [TestMethod]
-    [DataRow("dc2.ad.vidiview.com")]
     [DataRow("expired.badssl.com")]
     [DataRow("wrong.host.badssl.com")]
     [DataRow("self-signed.badssl.com")]
@@ -25,10 +26,9 @@ public class HttpRTConnectExtensionTest
     }
 
     [TestMethod]
+    [DataRow("dc2.ad.vidiview.com")]
     [DataRow("dh480.badssl.com")]
     [DataRow("dh-small-subgroup.badssl.com")]
-    [DataRow("sha1-intermediate.badssl.com")]
-    [DataRow("sha1-2017.badssl.com")]
     [DataRow("https://tls-v1-0.badssl.com:1010")]
     [ExpectedException(typeof(E1400_ConnectServerException))]
     public async Task VerifyConnectFailException(string hostName)
@@ -59,7 +59,9 @@ public class HttpRTConnectExtensionTest
     }
 
     [TestMethod]
-    [DataRow("demo0.vidiview.com")]
+    [DataRow("demo0.vidiview.com")] // Real certificate
+    [DataRow("test2.ad.perspektivgruppen.se")] // VidiView License CA certificate
+    [DataRow("test1.ad.vidiview.com")] // VidiView License CA certificate
     public async Task VerifySuccess(string hostName)
     {
         var http = CreateHttpClient();
@@ -140,7 +142,16 @@ public class HttpRTConnectExtensionTest
 
     private static HttpClient CreateHttpClient()
     {
-        var http = new HttpClient();
+        var httpFilter = new HttpBaseProtocolFilter
+        {
+            AllowAutoRedirect = false,
+            AllowUI = false,
+            AutomaticDecompression = true,
+            CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies
+        };
+
+        httpFilter.AllowLegacyVidiViewServerCertificate();
+        var http = new HttpClient(httpFilter);
         return http;
     }
 }

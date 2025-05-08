@@ -105,6 +105,7 @@ public static class HttpConnectExtensionWinRT
 
                     continue;
 
+                case HttpStatusCode.ServiceUnavailable:
                 case HttpStatusCode.NotFound:
                     // A json problem here indicates the VidiView Server is answering.
                     await response.AssertNotProblem().ConfigureAwait(false);

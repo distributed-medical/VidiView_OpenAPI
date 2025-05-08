@@ -69,7 +69,8 @@ public static class HttpResponseMessageExtensionWinRT
 
             if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
             {
-                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, response.RequestMessage?.RequestUri);
+                var exc = VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, response.RequestMessage?.RequestUri);
+                throw exc;
             }
 
             throw new Exception(problem.Detail);
@@ -114,7 +115,10 @@ public static class HttpResponseMessageExtensionWinRT
 
                 case HttpStatusCode.ServiceUnavailable:
                     // No maintenance mode message presented
-                    throw new E1401_NoResponseFromServerException("Service unavailable");
+                    throw new E1401_NoResponseFromServerException("Service unavailable")
+                    {
+                        RequestedUri = response.RequestMessage?.RequestUri
+                    };
 
                 default:
                     // Just throw default error

@@ -70,6 +70,8 @@ public class HttpConnectExtensionTest
 
     [TestMethod]
     [DataRow("demo0.vidiview.com")]
+    [DataRow("test1.ad.vidiview.com")]
+    [DataRow("test2.ad.perspektivgruppen.se")]
     public async Task VerifySuccess(string hostName)
     {
         var http = CreateHttpClient(true);

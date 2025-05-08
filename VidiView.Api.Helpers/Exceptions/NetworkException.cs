@@ -13,6 +13,7 @@ namespace VidiView.Api.Exceptions;
 public class NetworkException : Exception
 {
     private const int WININET_E_INVALID_CA = unchecked( (int) 0x80072f0d );
+    private const int WININET_E_SECURITY_CHANNEL_ERROR = unchecked( (int) 0x80072f7d );
 
     [SupportedOSPlatform("windows10.0.17763.0")]
     public static E1400_ConnectServerException CreateFromWinRT(Uri requestedUri, Certificate? certificate, Exception exception)
@@ -20,7 +21,8 @@ public class NetworkException : Exception
         var status = WebError.GetStatus(exception.HResult);
         
         string? errorMessage = GetFromWebStatus(status)
-            ?? GetRestrictedDescription(exception);
+            ?? GetRestrictedDescription(exception)
+            ?? GetFromHR(exception.HResult);
 
         // Determine exception from web status
         switch (status)
@@ -28,6 +30,7 @@ public class NetworkException : Exception
             case Windows.Web.WebErrorStatus.CannotConnect:
                 throw new E1401_NoResponseFromServerException(requestedUri, exception)
                 {
+                    HResult = exception.HResult,
                     Status = status,
                     HostCertificate = certificate
                 };
@@ -39,6 +42,7 @@ public class NetworkException : Exception
             case Windows.Web.WebErrorStatus.CertificateIsInvalid:
                 throw new E1403_InvalidCertificateException(errorMessage ?? exception.Message, requestedUri, exception)
                 {
+                    HResult = exception.HResult,
                     Status = status,
                     HostCertificate = certificate
                 };
@@ -47,16 +51,17 @@ public class NetworkException : Exception
         switch (exception.HResult)
         {
             case WININET_E_INVALID_CA: // This error code is not mapped in Windows?
-                throw new E1403_InvalidCertificateException("The certificate authority is invalid or incorrect", requestedUri, exception)
+                throw new E1403_InvalidCertificateException(errorMessage ?? exception.Message, requestedUri, exception)
                 {
+                    HResult = exception.HResult,
                     Status = status,
                     HostCertificate = certificate
                 };
 
             default:
-                errorMessage ??= GetFromHR(exception.HResult) ?? exception.Message;
-                throw new E1400_ConnectServerException(errorMessage, exception)
+                throw new E1400_ConnectServerException(errorMessage ?? exception.Message, exception)
                 {
+                    HResult = exception.HResult,
                     RequestedUri = requestedUri,
                     Status = status,
                     HostCertificate = certificate
@@ -66,12 +71,22 @@ public class NetworkException : Exception
 
     private static string? GetFromHR(int hr)
     {
-        var exc = Marshal.GetExceptionForHR(hr);
-        if (exc != null)
+        switch (hr)
         {
-            return exc.Message;
-        }
-        return null;
+            case WININET_E_INVALID_CA:
+                return "The certificate authority is invalid or incorrect";
+
+            case WININET_E_SECURITY_CHANNEL_ERROR:
+                return "An error occurred in the secure channel support";
+
+            default:
+                var exc = Marshal.GetExceptionForHR(hr);
+                if (exc != null)
+                {
+                    return exc.Message;
+                }
+                return null;
+       }
     }
 
     private static string? GetRestrictedDescription(Exception exception)
