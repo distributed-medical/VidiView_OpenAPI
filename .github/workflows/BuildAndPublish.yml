@@ -64,20 +64,21 @@ jobs:
           dotnet build ${{ matrix.project }} --configuration ${{ matrix.configuration }}
           dotnet test ${{ matrix.project }}.Test --configuration ${{ matrix.configuration }}
     
-    # - name: Sign binaries
-    #   uses: azure/trusted-signing-action@v0.4.0
-    #   with:
-    #       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-    #       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-    #       azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-    #       endpoint: https://weu.codesigning.azure.net/ # Western Europe
-    #       trusted-signing-account-name: DMCodesigning
-    #       certificate-profile-name: DMCodesigning
-    #       files-folder: ${{ matrix.project }}\bin\Release\net8.0\
-    #       files-folder-filter: dll
-    #       file-digest: SHA256
-    #       timestamp-rfc3161: http://timestamp.acs.microsoft.com
-    #       timestamp-digest: SHA256
+    - name: Sign binaries
+      if: ${{ env.GitVersion_PreReleaseLabel == '' }}
+      uses: azure/trusted-signing-action@v0.4.0
+      with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://weu.codesigning.azure.net/ # Western Europe
+          trusted-signing-account-name: DMCodesigning
+          certificate-profile-name: DMCodesigning
+          files-folder: ${{ matrix.project }}\bin\Release\net8.0\
+          files-folder-filter: dll
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
 
     - name: Pack
       run: dotnet pack ${{ matrix.project }} --configuration ${{ matrix.configuration }} --no-build --no-restore
