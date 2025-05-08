@@ -67,7 +67,7 @@ jobs:
     # Only sign when building a main release
     - name: Sign binaries
       if: ${{ env.GitVersion_PreReleaseLabel == '' }}
-      uses: azure/trusted-signing-action@v0.5.x
+      uses: azure/trusted-signing-action@v0.5.1
       with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -85,7 +85,7 @@ jobs:
       run: dotnet pack ${{ matrix.project }} --configuration ${{ matrix.configuration }} --no-build --no-restore
 
     # - name: Sign NuGet package
-    #   uses: azure/trusted-signing-action@v0.5.x
+    #   uses: azure/trusted-signing-action@v0.5.1
     #   with:
     #       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
     #       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
