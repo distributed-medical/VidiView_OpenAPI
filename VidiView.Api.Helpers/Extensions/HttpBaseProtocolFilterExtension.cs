@@ -17,7 +17,7 @@ public static class HttpBaseProtocolFilterExtension
         AuthorityCertificate = VidiViewAuthority.Certificate2();
     }
 
-    public static void AllowLegacyVidiViewServerCertificate(this HttpBaseProtocolFilter filter)
+    public static void AcceptLegacyLicenseCertificate(this HttpBaseProtocolFilter filter)
     {
         filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
         filter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
@@ -41,7 +41,7 @@ public static class HttpBaseProtocolFilterExtension
         var def = args.GetDeferral();
 
         // We should accept our own certificate as issuer, but nothing else
-        bool isIssuedByLicenseAuthority = await args.ServerCertificate.IsIssuedByAsync(AuthorityCertificate);
+        bool isIssuedByLicenseAuthority = await args.ServerCertificate.IsLegacyLicenseCertificateAsync();
         isIssuedByLicenseAuthority &= args.ServerCertificate.Issuer == AuthorityCertificate.Subject;
 
         if (!isIssuedByLicenseAuthority)

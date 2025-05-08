@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Net.Security;
@@ -64,6 +63,11 @@ public class WSClient
     public bool IsConnected => _socket != null;
 
     /// <summary>
+    /// Set to true to accept legacy license certificate when connecting
+    /// </summary>
+    public bool AcceptLegacyLicenseCertificate { get; set; }
+
+    /// <summary>
     /// Connect to VidiView Web Socket and authenticate connection
     /// </summary>
     /// <param name="uri">The Uri to call</param>
@@ -79,7 +83,12 @@ public class WSClient
         var socket = new ClientWebSocket();
         socket.Options.AddSubProtocol(SubProtocol);
         socket.Options.UseDefaultCredentials = false;
-        socket.Options.RemoteCertificateValidationCallback = RemoteCertificateValidationCallback;
+
+        if (AcceptLegacyLicenseCertificate)
+        {
+            socket.Options.RemoteCertificateValidationCallback = RemoteCertificateValidationCallback;
+        }
+
         try
         {
             // Negotiate web socket
@@ -125,16 +134,8 @@ public class WSClient
         if (sslPolicyErrors == SslPolicyErrors.None)
             return true;
 
-        if (certificate is X509Certificate2 x2)
-        {
-            bool isLegacyCertificate = x2.IsVidiViewLicenseCertificate();
-            if (isLegacyCertificate)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return certificate is X509Certificate2 x2
+               && x2.IsLegacyLicenseCertificate();
     }
 
     /// <summary>

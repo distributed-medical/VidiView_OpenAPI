@@ -9,6 +9,22 @@ namespace VidiView.Api.Helpers;
 
 public static class VidiViewAuthority
 {
+    /// <summary>
+    /// Returns true if the certificate is issued by the VidiView License authority
+    /// </summary>
+    /// <param name="certificate"></param>
+    /// <returns></returns>
+    public static bool IsLegacyLicenseCertificate(this X509Certificate2 certificate)
+    {
+        ArgumentNullException.ThrowIfNull(certificate, nameof(certificate));
+
+        using var chain = new X509Chain();
+        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+        chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+        chain.ChainPolicy.CustomTrustStore.Add(Certificate()); // Add our own root CA here...
+
+        return chain.Build(certificate);
+    }
 
     /// <summary>
     /// The public key of the VidiView Authority certificate, that in many
@@ -90,6 +106,11 @@ public static class VidiViewAuthority
         return new Certificate(blob);
     }
 
+    public static async Task<bool> IsLegacyLicenseCertificateAsync(this Certificate certificate)
+    {
+        return await certificate.IsIssuedByAsync(Certificate2()).ConfigureAwait(false);
+    }
+
     public static async Task<bool> IsIssuedByAsync(this Certificate certificate, Certificate issuer)
     {
         var cbp = new ChainBuildingParameters()
@@ -109,7 +130,7 @@ public static class VidiViewAuthority
 
         try
         {
-            var chain = await certificate.BuildChainAsync(list, cbp);
+            var chain = await certificate.BuildChainAsync(list, cbp).AsTask().ConfigureAwait(false);
             var result = chain.Validate();
             switch (result)
             {

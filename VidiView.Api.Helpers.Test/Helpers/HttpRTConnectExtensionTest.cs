@@ -1,7 +1,6 @@
-﻿using Windows.Web.Http;
-using VidiView.Api.Exceptions;
+﻿using VidiView.Api.Exceptions;
+using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-using Windows.Security.Cryptography.Certificates;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
 
@@ -150,7 +149,7 @@ public class HttpRTConnectExtensionTest
             CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies
         };
 
-        httpFilter.AllowLegacyVidiViewServerCertificate();
+        httpFilter.AcceptLegacyLicenseCertificate();
         var http = new HttpClient(httpFilter);
         return http;
     }
