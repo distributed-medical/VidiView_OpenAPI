@@ -25,7 +25,7 @@ public class HttpConnectExtensionTest
     [DataRow("https://tls-v1-0.badssl.com:1010", "TLS Alert", "HandshakeFailure")]
 
     //[DataRow("no-sct.badssl.com", "TLS Alert", "HandshakeFailure")]
-    public async Task VerifyInvalidCertificateException(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyInvalidCertificate2Exception(string hostName, params string[] expectedErrorMessage)
     {
         var http = CreateHttpClient(true);
 
@@ -34,13 +34,10 @@ public class HttpConnectExtensionTest
             var result = await http.ConnectAsync(hostName, CancellationToken.None);
             Assert.Fail("Expected an exception to be thrown");
         }
-        catch (E1002_ConnectException ex)
-        {
-            if (ex.NotVidiViewServer)
-            {
-                Assert.Fail("The host certificate was accepted by the client, even though it is invalid!");
-            }
+        // Unable to determine as E1403_InvalidCertificateException for now...
 
+        catch (E1400_ConnectServerException ex)
+        {
             // Verify nice error message
             foreach (var s in expectedErrorMessage)
             {
@@ -50,28 +47,23 @@ public class HttpConnectExtensionTest
     }
 
     [TestMethod]
-    [DataRow("non.existent.host.com", "no such host")]
-    [DataRow("www.google.com", "Host is not a VidiView Server")]
-    public async Task VerifyNonVidiViewServerHostException(string hostName, params string[] expectedErrorMessage)
+    [DataRow("www.google.com")]
+    [ExpectedException(typeof(E1402_NoVidiViewServerException))]
+    public async Task VerifyNoVidiViewServerException(string hostName, params string[] expectedErrorMessage)
     {
         var http = CreateHttpClient(true);
 
-        try
-        {
-            var result = await http.ConnectAsync(hostName, CancellationToken.None);
-            Assert.Fail("Expected an exception to be thrown");
-        }
-        catch (E1002_ConnectException ex)
-        {
-            // Check the Uri parameter
-            Assert.AreEqual(hostName, ex.Uri?.Authority);
+        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+    }
 
-            // Verify nice error message
-            foreach (var s in expectedErrorMessage)
-            {
-                StringAssert.Contains(ex.Message, s, StringComparison.InvariantCultureIgnoreCase);
-            }
-        }
+    [TestMethod]
+    [DataRow("non.existent.host.com")]
+    [ExpectedException(typeof(E1400_ConnectServerException))]
+    public async Task VerifyHostNotFoundException(string hostName, params string[] expectedErrorMessage)
+    {
+        var http = CreateHttpClient(true);
+
+        var result = await http.ConnectAsync(hostName, CancellationToken.None);
     }
 
     [TestMethod]
@@ -109,6 +101,10 @@ public class HttpConnectExtensionTest
             var result = await http.ConnectAsync(hostName, CancellationToken.None);
             Assert.Inconclusive("The VidiView Server is responding. Please shut it down");
         }
+        catch (E1401_NoResponseFromServerException)
+        {
+            // This is the expected result
+        }
         catch (E1820_ApiKeyRequiredException)
         {
             // We have reached a VidiView Server
@@ -118,10 +114,6 @@ public class HttpConnectExtensionTest
         {
             // We have reached a VidiView Server
             Assert.Inconclusive("The VidiView Server is in maintenance mode. Please shut it down");
-        }
-        catch (E1421_NoResponseFromServerException)
-        {
-            // This is the expected result
         }
     }
 
@@ -165,7 +157,7 @@ public class HttpConnectExtensionTest
             UseCookies = false,
             UseDefaultCredentials = true,
         };
-        var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(30) };
+        var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
         return http;
     }
 }

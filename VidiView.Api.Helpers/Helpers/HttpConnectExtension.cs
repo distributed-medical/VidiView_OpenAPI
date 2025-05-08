@@ -22,7 +22,7 @@ public static class HttpConnectExtension
     /// <exception cref="UriFormatException"></exception>
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
-    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="E1401_NoResponseFromServerException"></exception>
     /// <exception cref="TaskCanceledException"></exception>
     /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
@@ -67,7 +67,7 @@ public static class HttpConnectExtension
     /// <exception cref="UriFormatException"></exception>
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
-    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="E1401_NoResponseFromServerException"></exception>
     /// <exception cref="TaskCanceledException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
@@ -89,7 +89,7 @@ public static class HttpConnectExtension
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // Since the cancellation token is not cancelled, this must be a timeout
-                throw new E1421_NoResponseFromServerException(uri);
+                throw new E1401_NoResponseFromServerException(uri);
             }
             catch (Exception ex)
             {
@@ -104,14 +104,15 @@ public static class HttpConnectExtension
                 else if (ex.TryGetInnerException<System.Net.Sockets.SocketException>(out var se))
                 {
                     if (se.SocketErrorCode == System.Net.Sockets.SocketError.TimedOut)
-                        throw new E1421_NoResponseFromServerException(uri, ex);
+                        throw new E1401_NoResponseFromServerException(uri, ex);
 
                     // This is the second best exception to find detailed info
                     message = se.Message;
                 }
-                throw new E1002_ConnectException(message, ex)
+
+                throw new E1400_ConnectServerException(message, ex)
                 {
-                    Uri = uri
+                    RequestedUri = uri
                 };
             }
 
@@ -182,9 +183,9 @@ public static class HttpConnectExtension
             }
         }
 
-        throw new E1002_ConnectException("Too many redirects")
+        throw new E1400_ConnectServerException("Too many redirects")
         {
-            Uri = callHistory.FirstOrDefault()
+            RequestedUri = callHistory.FirstOrDefault()
         };
     }
 
@@ -214,11 +215,7 @@ public static class HttpConnectExtension
     {
         if (uri.AbsolutePath == DefaultPath)
         {
-            throw new E1002_ConnectException("Host is not a VidiView Server")
-            {
-                Uri = uri,
-                NotVidiViewServer = true
-            };
+            throw new E1402_NoVidiViewServerException(uri);
         }
         // Retry using our default path
         uri = new Uri(uri.Scheme + "://" + uri.Host + DefaultPath);

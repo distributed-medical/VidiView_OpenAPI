@@ -33,7 +33,7 @@ public static class MaintenanceMode
             if (maintenanceMode?.MaintenanceMode == true)
             {
                 // The service is currently in maintenance mode. Throw appropriate error
-                throw new E1405_ServiceMaintenanceModeException(maintenanceMode.Message ?? "Maintenance mode", maintenanceMode.Until);
+                throw new E1405_ServiceMaintenanceModeException(requestedUri, maintenanceMode.Message ?? "Maintenance mode", maintenanceMode.Until);
             }
         }
     }

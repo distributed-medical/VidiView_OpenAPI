@@ -111,7 +111,7 @@ public static class HttpResponseMessageExtension
 
                 case HttpStatusCode.ServiceUnavailable:
                     // No maintenance mode message presented
-                    throw new E1421_NoResponseFromServerException("Service unavailable");
+                    throw new E1401_NoResponseFromServerException("Service unavailable");
 
                 default:
                     // Just throw default error

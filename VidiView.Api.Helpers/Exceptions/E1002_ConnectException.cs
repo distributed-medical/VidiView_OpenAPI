@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.Exceptions;
 
+[Obsolete("Replaced by E1400_ConnectServerException", true)]
 public class E1002_ConnectException : VidiViewException
 {
     public E1002_ConnectException(string message, Exception innerException)

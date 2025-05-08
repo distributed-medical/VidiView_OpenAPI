@@ -11,6 +11,8 @@ namespace VidiView.Api.Helpers;
 [SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpConnectExtensionWinRT
 {
+    private const int WININET_E_INVALID_CA = unchecked( (int) 0x80072f0d );
+
     /// <summary>
     /// Try to connect to the specific VidiView Server host. The specified host name may be a full url, host name only or a host and path. 
     /// The implementation will following redirects to get to the correct end point, if possible.
@@ -22,7 +24,7 @@ public static class HttpConnectExtensionWinRT
     /// <exception cref="UriFormatException"></exception>
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
-    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="E1401_NoResponseFromServerException"></exception>
     /// <exception cref="TaskCanceledException"></exception>    /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
     /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
@@ -65,7 +67,7 @@ public static class HttpConnectExtensionWinRT
     /// <exception cref="UriFormatException"></exception>
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
-    /// <exception cref="E1421_NoResponseFromServerException"></exception>
+    /// <exception cref="E1401_NoResponseFromServerException"></exception>
     /// <exception cref="TaskCanceledException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
@@ -84,17 +86,32 @@ public static class HttpConnectExtensionWinRT
             catch (Exception ex)
             {
                 var inner = NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
-                if (inner is NetworkException ne && ne.Status == Windows.Web.WebErrorStatus.CannotConnect)
+                if (inner is NetworkException ne)
                 {
-                    throw new E1421_NoResponseFromServerException(ne.RequestedUri, ne);
-                }
-                else
-                {                
-                    throw new E1002_ConnectException(inner.Message, inner)
+                    switch (ne.Status)
                     {
-                        Uri = uri
-                    };
+                        case Windows.Web.WebErrorStatus.CannotConnect:
+                            throw new E1401_NoResponseFromServerException(ne.RequestedUri, ne);
+
+                        case Windows.Web.WebErrorStatus.CertificateCommonNameIsIncorrect:
+                        case Windows.Web.WebErrorStatus.CertificateContainsErrors:
+                        case Windows.Web.WebErrorStatus.CertificateExpired:
+                        case Windows.Web.WebErrorStatus.CertificateIsInvalid:
+                        case Windows.Web.WebErrorStatus.CertificateRevoked:
+                            throw new E1403_InvalidCertificateException(ne.Message, ne.RequestedUri, ne);
+                    }
+
+                    if (ne.InnerException?.HResult == WININET_E_INVALID_CA)
+                    {
+                        // This type of error does not have an explicit WebErrorStatus
+                        throw new E1403_InvalidCertificateException(ne.Message, ne.RequestedUri, ne);
+                    }
                 }
+                    
+                throw new E1400_ConnectServerException(inner.Message, inner)
+                {
+                    RequestedUri = uri
+                };
             }
 
             switch (response.StatusCode)
@@ -146,9 +163,9 @@ public static class HttpConnectExtensionWinRT
         }
         while (retryCount-- > 0) ;
 
-        throw new E1002_ConnectException("Too many redirects")
+        throw new E1400_ConnectServerException("Too many redirects")
         {
-            Uri = callHistory.FirstOrDefault()
+            RequestedUri = callHistory.FirstOrDefault()
         };
     }
 }
