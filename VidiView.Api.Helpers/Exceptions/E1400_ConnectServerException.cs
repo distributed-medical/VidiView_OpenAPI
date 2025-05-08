@@ -16,4 +16,16 @@ public class E1400_ConnectServerException : VidiViewException
     {
         ErrorCode = 1400;
     }
+
+#if WINRT
+    /// <summary>
+    /// The certificate presented by the host
+    /// </summary>
+    public Windows.Security.Cryptography.Certificates.Certificate? HostCertificate { get; internal set; }
+
+    /// <summary>
+    /// Status code
+    /// </summary>
+    public Windows.Web.WebErrorStatus Status { get; internal set; }
+#endif
 }

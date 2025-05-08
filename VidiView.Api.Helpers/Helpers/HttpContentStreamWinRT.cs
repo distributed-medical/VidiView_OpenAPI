@@ -243,8 +243,13 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
                 .AsTask(cancellationToken, this).ConfigureAwait(false);
             HttpGetRequestCount++;
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             throw NetworkException.CreateFromWinRT(_requestUri, request.TransportInformation.ServerCertificate, ex);
         }
 

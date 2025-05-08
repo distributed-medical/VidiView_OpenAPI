@@ -165,6 +165,10 @@ public static class HttpMethodExtensionsWinRT
         {
             return await http.SendRequestAsync(request, HttpCompletionOption.ResponseContentRead).AsTask(cancellationToken ?? CancellationToken.None, progress);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             cancellationToken?.ThrowIfCancellationRequested();

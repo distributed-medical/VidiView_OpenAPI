@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
@@ -25,7 +27,7 @@ public class HttpConnectExtensionTest
     [DataRow("https://tls-v1-0.badssl.com:1010", "TLS Alert", "HandshakeFailure")]
 
     //[DataRow("no-sct.badssl.com", "TLS Alert", "HandshakeFailure")]
-    public async Task VerifyInvalidCertificate2Exception(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyInvalidCertificateException(string hostName, params string[] expectedErrorMessage)
     {
         var http = CreateHttpClient(true);
 

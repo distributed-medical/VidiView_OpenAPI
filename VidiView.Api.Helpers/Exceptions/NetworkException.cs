@@ -12,69 +12,85 @@ namespace VidiView.Api.Exceptions;
 
 public class NetworkException : Exception
 {
+    private const int WININET_E_INVALID_CA = unchecked( (int) 0x80072f0d );
+
     [SupportedOSPlatform("windows10.0.17763.0")]
-    public static Exception CreateFromWinRT(Uri requestedUri, Certificate? certificate, Exception exception)
+    public static E1400_ConnectServerException CreateFromWinRT(Uri requestedUri, Certificate? certificate, Exception exception)
     {
-        if (exception is OperationCanceledException)
-            return exception;
-
         var status = WebError.GetStatus(exception.HResult);
-        string statusDescription = null!;
-        if (status != WebErrorStatus.Unknown)
+        
+        string? errorMessage = GetFromWebStatus(status)
+            ?? GetRestrictedDescription(exception);
+
+        // Determine exception from web status
+        switch (status)
         {
-            statusDescription = GetDescription(status);
-        }
-        else
-        {
-            // Hack to find the best error message
-            foreach (DictionaryEntry de in exception.Data)
-            {
-                if ((string)de.Key == "RestrictedDescription" && !string.IsNullOrEmpty((string?)de.Value))
+            case Windows.Web.WebErrorStatus.CannotConnect:
+                throw new E1401_NoResponseFromServerException(requestedUri, exception)
                 {
-                    statusDescription = (string)de.Value;
-                    break;
-                }
-            }
+                    Status = status,
+                    HostCertificate = certificate
+                };
 
-            if (!string.IsNullOrEmpty(exception.Message))
-                statusDescription ??= exception.Message;
-            else 
-                statusDescription ??= Marshal.GetExceptionForHR(exception.HResult)?.Message ?? $"(HResult=0x{exception.HResult:X8})";
+            case Windows.Web.WebErrorStatus.CertificateCommonNameIsIncorrect:
+            case Windows.Web.WebErrorStatus.CertificateExpired:
+            case Windows.Web.WebErrorStatus.CertificateContainsErrors:
+            case Windows.Web.WebErrorStatus.CertificateRevoked:
+            case Windows.Web.WebErrorStatus.CertificateIsInvalid:
+                throw new E1403_InvalidCertificateException(errorMessage ?? exception.Message, requestedUri, exception)
+                {
+                    Status = status,
+                    HostCertificate = certificate
+                };
         }
 
-        var result = new NetworkException(requestedUri, certificate, statusDescription, status, exception);
+        switch (exception.HResult)
+        {
+            case WININET_E_INVALID_CA: // This error code is not mapped in Windows?
+                throw new E1403_InvalidCertificateException("The certificate authority is invalid or incorrect", requestedUri, exception)
+                {
+                    Status = status,
+                    HostCertificate = certificate
+                };
 
-        return result;
+            default:
+                errorMessage ??= GetFromHR(exception.HResult) ?? exception.Message;
+                throw new E1400_ConnectServerException(errorMessage, exception)
+                {
+                    RequestedUri = requestedUri,
+                    Status = status,
+                    HostCertificate = certificate
+                };
+        }
     }
 
-    private NetworkException(Uri requestedUri, Certificate? certificate, string message, WebErrorStatus status, Exception innerException)
-        : base(message, innerException)
+    private static string? GetFromHR(int hr)
     {
-        RequestedUri = requestedUri;
-        HostCertificate = certificate;
-        Status = status;
+        var exc = Marshal.GetExceptionForHR(hr);
+        if (exc != null)
+        {
+            return exc.Message;
+        }
+        return null;
     }
 
-    /// <summary>
-    /// The certificate presented by the host
-    /// </summary>
-    public Certificate? HostCertificate { get; }
+    private static string? GetRestrictedDescription(Exception exception)
+    {
+        foreach (DictionaryEntry de in exception.Data)
+        {
+            if ((string)de.Key == "RestrictedDescription" && !string.IsNullOrEmpty((string?)de.Value))
+            {
+                return (string)de.Value;
+            }
+        }
+        return null;
+    }
 
-    /// <summary>
-    /// The URI that was requested
-    /// </summary>
-    public Uri RequestedUri { get; }
-
-    /// <summary>
-    /// Status code
-    /// </summary>
-    public WebErrorStatus Status { get; }
-
-    private static string GetDescription(WebErrorStatus status)
+    private static string? GetFromWebStatus(WebErrorStatus status)
     {
         switch (status)
         {
-            case Windows.Web.WebErrorStatus.Unknown: return "An unknown error has occurred.";
+            case Windows.Web.WebErrorStatus.Unknown: return null; // "An unknown error has occurred.";
             case Windows.Web.WebErrorStatus.CertificateCommonNameIsIncorrect: return "The SSL certificate common name does not match the host name.";
             case Windows.Web.WebErrorStatus.CertificateExpired: return "The SSL certificate has expired.";
             case Windows.Web.WebErrorStatus.CertificateContainsErrors: return "The SSL certificate contains errors.";

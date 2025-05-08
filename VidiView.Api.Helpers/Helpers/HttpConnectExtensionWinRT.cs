@@ -11,8 +11,6 @@ namespace VidiView.Api.Helpers;
 [SupportedOSPlatform("windows10.0.17763.0")]
 public static class HttpConnectExtensionWinRT
 {
-    private const int WININET_E_INVALID_CA = unchecked( (int) 0x80072f0d );
-
     /// <summary>
     /// Try to connect to the specific VidiView Server host. The specified host name may be a full url, host name only or a host and path. 
     /// The implementation will following redirects to get to the correct end point, if possible.
@@ -83,35 +81,14 @@ public static class HttpConnectExtensionWinRT
                 callHistory.Add(uri);
                 response = await http.SendRequestAsync(request).AsTask(cancellationToken);
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                var inner = NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
-                if (inner is NetworkException ne)
-                {
-                    switch (ne.Status)
-                    {
-                        case Windows.Web.WebErrorStatus.CannotConnect:
-                            throw new E1401_NoResponseFromServerException(ne.RequestedUri, ne);
-
-                        case Windows.Web.WebErrorStatus.CertificateCommonNameIsIncorrect:
-                        case Windows.Web.WebErrorStatus.CertificateContainsErrors:
-                        case Windows.Web.WebErrorStatus.CertificateExpired:
-                        case Windows.Web.WebErrorStatus.CertificateIsInvalid:
-                        case Windows.Web.WebErrorStatus.CertificateRevoked:
-                            throw new E1403_InvalidCertificateException(ne.Message, ne.RequestedUri, ne);
-                    }
-
-                    if (ne.InnerException?.HResult == WININET_E_INVALID_CA)
-                    {
-                        // This type of error does not have an explicit WebErrorStatus
-                        throw new E1403_InvalidCertificateException(ne.Message, ne.RequestedUri, ne);
-                    }
-                }
-                    
-                throw new E1400_ConnectServerException(inner.Message, inner)
-                {
-                    RequestedUri = uri
-                };
+                cancellationToken.ThrowIfCancellationRequested();
+                throw NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
             }
 
             switch (response.StatusCode)
