@@ -149,7 +149,7 @@ public class HttpRTConnectExtensionTest
             CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies
         };
 
-        httpFilter.AcceptLegacyLicenseCertificate();
+        //httpFilter.AcceptLegacyLicenseCertificate();
         var http = new HttpClient(httpFilter);
         return http;
     }

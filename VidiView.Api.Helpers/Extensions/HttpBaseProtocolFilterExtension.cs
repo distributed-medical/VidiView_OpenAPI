@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Web.Http.Filters;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Web.Http.Filters;
 
 namespace VidiView.Api.Helpers;
 
@@ -17,10 +17,16 @@ public static class HttpBaseProtocolFilterExtension
         AuthorityCertificate = VidiViewAuthority.Certificate2();
     }
 
-    public static void AcceptLegacyLicenseCertificate(this HttpBaseProtocolFilter filter)
+    public static void AcceptLegacyLicenseCertificate(this HttpBaseProtocolFilter filter, bool accept)
     {
-        filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-        filter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
+        filter.ServerCustomValidationRequested -= HttpFilter_ServerCustomValidationRequested;
+        filter.IgnorableServerCertificateErrors.Remove(ChainValidationResult.Untrusted);
+
+        if (accept)
+        {
+            filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+            filter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
+        }
     }
 
     /// <summary>
