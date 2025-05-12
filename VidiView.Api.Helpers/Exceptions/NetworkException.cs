@@ -3,8 +3,6 @@
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Linq;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Web;
 

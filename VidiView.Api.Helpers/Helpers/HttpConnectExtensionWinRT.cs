@@ -111,7 +111,16 @@ public static class HttpConnectExtensionWinRT
                     await response.AssertNotProblem().ConfigureAwait(false);
 
                     // Otherwise it is treated as the Web Server responded with the 404
-                    uri = HttpConnectExtension.GetDefaultPath(uri);
+                    try
+                    {
+                        uri = HttpConnectExtension.GetDefaultPath(uri);
+                    }
+                    catch (E1402_NoVidiViewServerException ex)
+                    {
+                        ex.HostCertificate = request.TransportInformation.ServerCertificate;
+                        throw;
+                    }
+
                     continue;
 
                 default:

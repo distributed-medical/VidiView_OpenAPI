@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using VidiView.Api.DataModel;
 
 namespace VidiView.Api.Exceptions;
@@ -21,10 +22,14 @@ public class VidiViewException : Exception
         try
         {
             if (!int.TryParse(problem.ErrorCode, out int errorCode))
+            {
                 errorCode = 1000;
+            }
 
             var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
             var type = Type.GetType(typeName, false, true);
+
+            IReadOnlyDictionary<string, JsonElement> props = DeserializeProperties(problem.RawResponse);
 
             // Check if we have a local definition of this exception
             if (type != null)
@@ -46,6 +51,8 @@ public class VidiViewException : Exception
                         .SetValue(exc, requestedUri);
                     type.GetProperty(nameof(ThrownServerSide))?
                         .SetValue(exc, true);
+                    type.GetProperty(nameof(Properties))?
+                        .SetValue(exc, props);
 
                     return exc;
                 }
@@ -57,7 +64,8 @@ public class VidiViewException : Exception
                 HttpStatusCode = httpError,
                 Problem = problem,
                 RequestedUri = requestedUri,
-                ThrownServerSide = true
+                ThrownServerSide = true,
+                Properties = props
             };
         }
         catch
@@ -66,6 +74,53 @@ public class VidiViewException : Exception
             Debug.Assert(false);
 
             return new Exception($"Failed to instantiate corresponding exception class. Details {problem?.Detail ?? "<null>"}");
+        }
+    }
+
+    private static IReadOnlyDictionary<string, JsonElement> DeserializeProperties(string rawValue)
+    {
+        if (!string.IsNullOrEmpty(rawValue))
+        {
+            try
+            {
+                // Deserialize additional properties
+                using var jdoc = JsonDocument.Parse(rawValue);
+                var result = jdoc.RootElement.EnumerateObject()
+                    .SelectMany(p => GetLeaves(null, p))
+                    .ToDictionary(k => k.Path, v => v.P.Value.Clone()); //Clone so that we can use the values outside of using
+
+                result.Remove("type");
+                result.Remove("title");
+                result.Remove("detail");
+                result.Remove("description");
+                result.Remove("error-code");
+                return result;
+            }
+            catch
+            {
+                Debug.Assert(false);
+            }
+        }
+
+        return new Dictionary<string, JsonElement>();
+    }
+
+    private static IEnumerable<(string Path, JsonProperty P)> GetLeaves(string? path, JsonProperty p)
+    {
+        path = (path == null) ? p.Name : path + "." + p.Name;
+        if (p.Value.ValueKind != JsonValueKind.Object)
+        {
+            yield return (Path: path, P: p);
+        }
+        else
+        {
+            foreach (JsonProperty child in p.Value.EnumerateObject())
+            {
+                foreach (var leaf in GetLeaves(path, child))
+                {
+                    yield return leaf;
+                }
+            }
         }
     }
 
@@ -103,4 +158,9 @@ public class VidiViewException : Exception
     /// True if the server was thrown on the server and deserialized client side
     /// </summary>
     public bool ThrownServerSide { get; init; }
+
+    /// <summary>
+    /// Raw Json properties
+    /// </summary>
+    public IReadOnlyDictionary<string, JsonElement>? Properties { get; init; }
 }
