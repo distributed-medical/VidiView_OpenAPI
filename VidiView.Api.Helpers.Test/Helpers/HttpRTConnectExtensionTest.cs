@@ -59,8 +59,9 @@ public class HttpRTConnectExtensionTest
 
     [TestMethod]
     [DataRow("demo0.vidiview.com")] // Real certificate
-    [DataRow("test2.ad.perspektivgruppen.se")] // VidiView License CA certificate
     [DataRow("test1.ad.vidiview.com")] // VidiView License CA certificate
+    [DataRow("test2.ad.perspektivgruppen.se")] // VidiView License CA certificate
+    [DataRow("https://test2.ad.perspektivgruppen.se/vidiview/api/")] // VidiView License CA certificate
     public async Task VerifySuccess(string hostName)
     {
         var http = CreateHttpClient();
@@ -148,8 +149,13 @@ public class HttpRTConnectExtensionTest
             AutomaticDecompression = true,
             CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies
         };
+        // Disable caching
+        httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+        httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 
-        //httpFilter.AcceptLegacyLicenseCertificate();
+        // Legacy certificate support
+        httpFilter.AcceptLegacyLicenseCertificate(true);
+
         var http = new HttpClient(httpFilter);
         return http;
     }

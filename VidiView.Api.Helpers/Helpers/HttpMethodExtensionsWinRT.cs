@@ -172,7 +172,7 @@ public static class HttpMethodExtensionsWinRT
         catch (Exception ex)
         {
             cancellationToken?.ThrowIfCancellationRequested();
-            throw NetworkException.CreateFromWinRT(request.RequestUri, request.TransportInformation.ServerCertificate, ex);
+            throw ConnectServerException.CreateFromWinRT(request.RequestUri, request.TransportInformation.ServerCertificate, ex);
         }
     }
 }

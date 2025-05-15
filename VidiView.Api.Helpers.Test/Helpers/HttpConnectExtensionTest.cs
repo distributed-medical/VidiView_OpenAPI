@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
@@ -152,17 +152,30 @@ public class HttpConnectExtensionTest
 
     private static HttpClient CreateHttpClient(bool checkRevocation)
     {
-        var handler = new HttpClientHandler()
+        var handler = new SocketsHttpHandler
         {
+            // Allow Windows authentication
+            Credentials = CredentialCache.DefaultCredentials,
+            PreAuthenticate = true,
             AllowAutoRedirect = false,
-            AutomaticDecompression = DecompressionMethods.Deflate,
-            CheckCertificateRevocationList = checkRevocation,
-            ClientCertificateOptions = ClientCertificateOption.Manual,
-            UseCookies = false,
-            UseDefaultCredentials = true,
+            AutomaticDecompression = DecompressionMethods.All,
+            UseCookies = false
         };
+
+        // Support custom VidiView License certificate
+        handler.SslOptions.RemoteCertificateValidationCallback = RemoteCertificateValidationCallback;
+
         var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
         return http;
+    }
+
+    static bool RemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+    {
+        if (sslPolicyErrors == SslPolicyErrors.None)
+            return true;
+
+        return certificate is X509Certificate2 x2
+               && x2.IsLegacyLicenseCertificate();
     }
 }
 

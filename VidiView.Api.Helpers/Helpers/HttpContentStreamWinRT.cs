@@ -250,7 +250,7 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
         catch (Exception ex)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            throw NetworkException.CreateFromWinRT(_requestUri, request.TransportInformation.ServerCertificate, ex);
+            throw ConnectServerException.CreateFromWinRT(_requestUri, request.TransportInformation.ServerCertificate, ex);
         }
 
         try

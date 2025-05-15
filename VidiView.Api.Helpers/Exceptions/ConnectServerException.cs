@@ -3,12 +3,14 @@
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
 using System.Collections;
+using System.Collections.Specialized;
+using System.Linq;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Web;
 
 namespace VidiView.Api.Exceptions;
 
-public class NetworkException : Exception
+public class ConnectServerException : Exception
 {
     private const int WININET_E_INVALID_CA = unchecked( (int) 0x80072f0d );
     private const int WININET_E_SECURITY_CHANNEL_ERROR = unchecked( (int) 0x80072f7d );

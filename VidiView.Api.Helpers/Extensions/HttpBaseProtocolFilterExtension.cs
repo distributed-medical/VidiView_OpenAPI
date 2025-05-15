@@ -44,13 +44,24 @@ public static class HttpBaseProtocolFilterExtension
             return;
         }
 
+        bool acceptCertificate = false;
         var def = args.GetDeferral();
 
-        // We should accept our own certificate as issuer, but nothing else
-        bool isIssuedByLicenseAuthority = await args.ServerCertificate.IsLegacyLicenseCertificateAsync();
-        isIssuedByLicenseAuthority &= args.ServerCertificate.Issuer == AuthorityCertificate.Subject;
+        try
+        {
+            // We should accept our own certificate as issuer, but nothing else
+            if (args.ServerCertificateErrorSeverity == Windows.Networking.Sockets.SocketSslErrorSeverity.Ignorable)
+            {
+                acceptCertificate = await args.ServerCertificate.IsLegacyLicenseCertificateAsync();
+                acceptCertificate &= args.ServerCertificate.Issuer == AuthorityCertificate.Subject;
+            }
+        }
+        catch 
+        {
+            acceptCertificate = false;
+        }
 
-        if (!isIssuedByLicenseAuthority)
+        if (acceptCertificate == false)
         {
             args.Reject();
         }

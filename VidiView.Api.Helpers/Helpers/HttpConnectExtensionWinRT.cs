@@ -88,7 +88,7 @@ public static class HttpConnectExtensionWinRT
             catch (Exception ex)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                throw NetworkException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
+                throw ConnectServerException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
             }
 
             switch (response.StatusCode)
