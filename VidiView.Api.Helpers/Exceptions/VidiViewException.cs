@@ -19,11 +19,13 @@ public class VidiViewException : Exception
     public static Exception Factory(HttpStatusCode httpError, ProblemDetails problem, Uri? requestedUri)
     {
         // Check if we can instantiate the specific exception type
+        problem ??= new ProblemDetails();
+
         try
         {
             if (!int.TryParse(problem.ErrorCode, out int errorCode))
             {
-                errorCode = 1000;
+                errorCode = -1;
             }
 
             var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
@@ -58,7 +60,8 @@ public class VidiViewException : Exception
                 }
             }
 
-            return new VidiViewException(problem?.Detail ?? $"{(int)httpError} {httpError}")
+            string message = string.IsNullOrWhiteSpace(problem?.Detail) ? $"{(int)httpError} {httpError}" : problem.Detail;
+            return new VidiViewException(message)
             {
                 ErrorCode = errorCode,
                 HttpStatusCode = httpError,

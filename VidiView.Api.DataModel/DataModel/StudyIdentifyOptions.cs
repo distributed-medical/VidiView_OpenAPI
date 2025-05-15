@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record StudyIdentifyOptions
 {
     /// <summary>

@@ -53,7 +53,6 @@ public static class HttpBaseProtocolFilterExtension
             if (args.ServerCertificateErrorSeverity == Windows.Networking.Sockets.SocketSslErrorSeverity.Ignorable)
             {
                 acceptCertificate = await args.ServerCertificate.IsLegacyLicenseCertificateAsync();
-                acceptCertificate &= args.ServerCertificate.Issuer == AuthorityCertificate.Subject;
             }
         }
         catch 

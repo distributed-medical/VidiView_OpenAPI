@@ -3,6 +3,7 @@
 /// <summary>
 /// Information about an active conference
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Conference
 {
     /// <summary>

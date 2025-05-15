@@ -3,6 +3,7 @@
 /// <summary>
 /// This record represents a trackable find
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Trackable
 {
     /// <summary>

@@ -19,6 +19,7 @@ public enum TaskState
     Failed
 }
 
+[ExcludeFromCodeCoverage]
 public record AsyncTaskStatus
 {
     public Guid TaskId { get; init; }

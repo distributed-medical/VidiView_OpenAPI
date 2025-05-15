@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record MaintenanceInfo
 {
     public bool MaintenanceMode { get; init; }

@@ -1,4 +1,6 @@
 ﻿namespace VidiView.Api;
+
+[ExcludeFromCodeCoverage]
 public static class ApiVersion
 {
     /// <summary>

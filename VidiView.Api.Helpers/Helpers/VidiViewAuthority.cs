@@ -113,49 +113,68 @@ public static class VidiViewAuthority
 
     public static async Task<bool> IsIssuedByAsync(this Certificate certificate, Certificate issuer)
     {
-        var cbp = new ChainBuildingParameters()
+        ArgumentNullException.ThrowIfNull(certificate, nameof(certificate));
+        ArgumentNullException.ThrowIfNull(issuer, nameof(issuer));
+
+        // The certificate validation does not work with custom roots?
+        // https://github.com/dotnet/sdk/issues/48899
+
+        return await Task.Run(() =>
         {
-            CurrentTimeValidationEnabled = true,
-            NetworkRetrievalEnabled = false,
-            RevocationCheckEnabled = false,
-        };
+            using var chain = new X509Chain();
+            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+            chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+            chain.ChainPolicy.CustomTrustStore.Add(issuer.AsX509Certificate()); 
 
-        // Why is this not the way to do it?
-        //cbp.ExclusiveTrustRoots.Add(issuer);
-
-        var list = new List<Certificate>
-        {
-            issuer
-        };
-
-        try
-        {
-            var chain = await certificate.BuildChainAsync(list, cbp).AsTask().ConfigureAwait(false);
-            var result = chain.Validate();
-            switch (result)
-            {
-                case ChainValidationResult.Success:
-                case ChainValidationResult.Untrusted: // The chain is complete, but the root is not trusted
-
-                    // This feels really strange... 
-
-                    return true;
-
-                case ChainValidationResult.IncompleteChain:
-                    // Either we are missing some intermediate cert(s),
-                    // or it is not issued by this certificate
-                    goto default;
-
-                default:
-                    break;
-            }
-        }
-        catch 
-        {
-        }
-
-        return false;
+            return chain.Build(certificate.AsX509Certificate());
+        });
     }
+
+//    public static async Task<bool> IsIssuedByAsync(this Certificate certificate, Certificate issuer)
+//    {
+//        var cbp = new ChainBuildingParameters()
+//        {
+//            CurrentTimeValidationEnabled = true,
+//            NetworkRetrievalEnabled = false,
+//            RevocationCheckEnabled = false,
+//        };
+
+//        // Why is this not the way to do it?
+//        //cbp.ExclusiveTrustRoots.Add(issuer);
+
+//        var list = new List<Certificate>
+//        {
+////            issuer
+//        };
+
+//        try
+//        {
+//            var chain = await certificate.BuildChainAsync(list, cbp).AsTask().ConfigureAwait(false);
+//            var result = chain.Validate();
+//            switch (result)
+//            {
+//                case ChainValidationResult.Success:
+//                case ChainValidationResult.Untrusted: // The chain is complete, but the root is not trusted
+
+//                    // This feels really strange... 
+
+//                    return true;
+
+//                case ChainValidationResult.IncompleteChain:
+//                    // Either we are missing some intermediate cert(s),
+//                    // or it is not issued by this certificate
+//                    goto default;
+
+//                default:
+//                    break;
+//            }
+//        }
+//        catch 
+//        {
+//        }
+
+//        return false;
+//    }
 
 #endif
 

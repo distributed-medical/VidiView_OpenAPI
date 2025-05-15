@@ -3,6 +3,7 @@
 /// <summary>
 /// Event id information
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record AuditEventId
 {
     /// <summary>

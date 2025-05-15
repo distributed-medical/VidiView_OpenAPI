@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public static class UserClaimType
 {
     public const string ActiveDirectoryUser = "UserSid";

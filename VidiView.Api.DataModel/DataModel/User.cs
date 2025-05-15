@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record User
 {
     // Well-known issuers
@@ -117,6 +118,7 @@ public record User
     }
 }
 
+[ExcludeFromCodeCoverage]
 public record EmbeddedUserObjects
 {
     public UserRole[]? Roles { get; init; }

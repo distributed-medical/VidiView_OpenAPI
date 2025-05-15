@@ -3,12 +3,32 @@
 namespace VidiView.Api.DataModel;
 
 /// <summary>
-/// The collection of links for a model. This is a struct, ensuring it is never null. 
+/// The collection of links for a model. 
 /// The contained Links dictionary is treated as read only
 /// </summary>
-public class LinkCollection : IDictionary<string, Link>, IEquatable<LinkCollection> 
+[ExcludeFromCodeCoverage]
+public class LinkCollection : IDictionary<string, Link>, IEquatable<LinkCollection>
 {
     readonly Dictionary<string, Link> _links = new();
+
+    public LinkCollection()
+    {
+    }
+
+    /// <summary>
+    /// Create a link collection
+    /// </summary>
+    /// <param name="links"></param>
+    public LinkCollection(IEnumerable<Link>? links)
+    {
+        if (links != null)
+        {
+            foreach (var link in links)
+            {
+                _links.Add(link.Rel, link);
+            }
+        }
+    }
 
     /// <summary>
     /// Return the number of Links in the collection
@@ -31,7 +51,8 @@ public class LinkCollection : IDictionary<string, Link>, IEquatable<LinkCollecti
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    Link IDictionary<string, Link>.this[string key] {
+    Link IDictionary<string, Link>.this[string key]
+    {
         get => _links[key];
         set
         {

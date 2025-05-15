@@ -3,6 +3,7 @@
 /// <summary>
 /// The Image contains data for a specific image
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record MediaFile
 {
     public DateTimeOffset AcquisitionDate { get; init; }

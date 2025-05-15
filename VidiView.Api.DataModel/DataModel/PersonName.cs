@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record PersonName 
 {
     public string Display { get; init; } = null!;

@@ -8,7 +8,8 @@ public static class DateRangeExtension
     /// <returns></returns>
     public static bool IsEmpty(this DateRange? dateRange)
     {
-        return IsNullOrEmpty(dateRange?.FromDate) && IsNullOrEmpty(dateRange?.ToDate);
+        return IsNullOrEmpty(dateRange?.FromDate)
+            && IsNullOrEmpty(dateRange?.ToDate);
     }
 
     /// <summary>

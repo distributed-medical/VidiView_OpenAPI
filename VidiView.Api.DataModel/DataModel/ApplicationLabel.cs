@@ -3,6 +3,7 @@
 /// <summary>
 /// The application label
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ApplicationLabel
 {
     public string? Name { get; init; }

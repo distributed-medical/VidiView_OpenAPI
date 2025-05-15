@@ -10,14 +10,14 @@ public class TimeSpanConverter : JsonConverter<TimeSpan>
     {
         var value = reader.GetString();
         if (string.IsNullOrEmpty(value))
-            return TimeSpan.MinValue;
+            return TimeSpan.Zero;
         else
             return TimeSpan.Parse(value, CultureInfo.InvariantCulture);
     }
 
     public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options)
     {
-        if (value == TimeSpan.Zero)
+        if (value == TimeSpan.Zero || value == TimeSpan.MinValue)
             writer.WriteNullValue();
         else
             writer.WriteStringValue(value.ToString("c", CultureInfo.InvariantCulture));

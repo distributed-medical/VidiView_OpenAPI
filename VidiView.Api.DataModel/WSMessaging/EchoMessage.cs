@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.WSMessaging;
 
+[ExcludeFromCodeCoverage]
 public record EchoMessage : IWSMessage
 {
     public EchoMessage()

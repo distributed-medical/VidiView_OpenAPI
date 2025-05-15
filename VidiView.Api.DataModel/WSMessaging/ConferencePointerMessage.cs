@@ -5,6 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to all clients having a specific study open, when the conference pointer is moved
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ConferencePointerMessage : IWSReply
 {
     public ConferencePointerMessage()

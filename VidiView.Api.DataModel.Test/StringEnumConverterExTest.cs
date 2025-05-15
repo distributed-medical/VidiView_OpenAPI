@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using VidiView.Api.DataModel;
 
 namespace VidiView.Api.DataModel.Test;
 
@@ -154,6 +148,15 @@ public class StringEnumConverterExTest
 
         var mf = JsonSerializer.Deserialize<MediaFile>(json, DefaultOptions);
         Assert.AreEqual(MediaFileStatus.Unknown, mf.Status);
+    }
+
+    [TestMethod]
+    public void Deserialize_Undefined_Name_To_None()
+    {
+        string json = "{\"ConferenceType\":\"NewUndefinedState\"}";
+
+        var mf = JsonSerializer.Deserialize<Conference>(json, DefaultOptions);
+        Assert.AreEqual(ConferenceType.None, mf.ConferenceType);
     }
 
     [TestMethod]

@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record TrustedIssuer
 {
     public string Thumbprint { get; init; } = null!;

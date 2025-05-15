@@ -3,6 +3,7 @@
 /// <summary>
 /// Link to other resource (HATEOAS)
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Link
 {
     /// <summary>
@@ -23,12 +24,12 @@ public record Link
     /// <summary>
     /// True if Href is templated (RFC 6570)
     /// </summary>
-    public bool Templated { get; init; } 
+    public bool Templated { get; init; }
 
     /// <summary>
     /// An optional human readable title of the link representation
     /// </summary>
-    public string? Title { get; init; } 
+    public string? Title { get; init; }
 
     /// <summary>
     /// The content-type to expect when fetching this resource

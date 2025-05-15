@@ -6,6 +6,7 @@ namespace VidiView.Api.WSMessaging;
 /// This is sent to all clients having a specific study open, when the active
 /// conference state for that conference has changed
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ConferenceActiveMessage : IWSMessage
 {
     public ConferenceActiveMessage()

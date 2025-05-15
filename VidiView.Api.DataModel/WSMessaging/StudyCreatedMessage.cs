@@ -5,6 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent when a study is created for a patient
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record StudyCreatedMessage : IWSActorMessage
 {
     public StudyCreatedMessage()

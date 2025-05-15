@@ -3,6 +3,7 @@
 /// <summary>
 /// Extends the study record with properties assigned to personal worklist items
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record BookmarkedStudy : Study
 {
     /// <summary>

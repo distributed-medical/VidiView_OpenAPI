@@ -2,6 +2,7 @@
 
 namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record VideoInformation
 {
     /// <summary>

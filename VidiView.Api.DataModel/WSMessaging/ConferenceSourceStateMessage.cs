@@ -5,6 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent to all conference participants, when conference state is updated.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ConferenceSourceStateMessage : IWSMessage
 {
     public ConferenceSourceStateMessage()

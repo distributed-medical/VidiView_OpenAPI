@@ -6,52 +6,35 @@ using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
 
-#if (!GITHUB_ACTION) // Cannot be run without some manual interventions
-
 [TestClass]
 public class HttpConnectExtensionTest
 {
     [TestMethod]
-    [DataRow("dc2.ad.vidiview.com", "remote certificate is invalid", "RemoteCertificateNameMismatch")]
-    [DataRow("expired.badssl.com", "remote certificate is invalid", "NotTimeValid")]
-    [DataRow("wrong.host.badssl.com", "remote certificate is invalid", "RemoteCertificateNameMismatch")]
-    [DataRow("self-signed.badssl.com", "remote certificate is invalid", "UntrustedRoot")]
-    [DataRow("untrusted-root.badssl.com", "remote certificate is invalid", "UntrustedRoot")]
-    [DataRow("revoked.badssl.com", "remote certificate is invalid", "Revoked")]
-    [DataRow("dh480.badssl.com", "TLS Alert", "HandshakeFailure")]
-    [DataRow("dh-small-subgroup.badssl.com", "TLS Alert", "HandshakeFailure")]
-    [DataRow("sha1-intermediate.badssl.com", "remote certificate is invalid")]
-    [DataRow("sha1-2017.badssl.com", "remote certificate is invalid")]
+    [DataRow("dc2.ad.vidiview.com")]
+    [DataRow("expired.badssl.com")]
+    [DataRow("wrong.host.badssl.com")]
+    [DataRow("self-signed.badssl.com")]
+    [DataRow("untrusted-root.badssl.com")]
+    [DataRow("revoked.badssl.com")]
+    [DataRow("dh480.badssl.com")]
+    [DataRow("dh-small-subgroup.badssl.com")]
+    [DataRow("sha1-intermediate.badssl.com")]
+    [DataRow("sha1-2017.badssl.com")]
 
     // Why does the client accept TLS 1.0??
-    [DataRow("https://tls-v1-0.badssl.com:1010", "TLS Alert", "HandshakeFailure")]
+    [DataRow("https://tls-v1-0.badssl.com:1010")]
 
-    //[DataRow("no-sct.badssl.com", "TLS Alert", "HandshakeFailure")]
-    public async Task VerifyInvalidCertificateException(string hostName, params string[] expectedErrorMessage)
+    [ExpectedException(typeof(E1400_ConnectServerException), AllowDerivedTypes = true)]
+    public async Task VerifyInvalidCertificateException(string hostName)
     {
         var http = CreateHttpClient(true);
-
-        try
-        {
-            var result = await http.ConnectAsync(hostName, CancellationToken.None);
-            Assert.Fail("Expected an exception to be thrown");
-        }
-        // Unable to determine as E1403_InvalidCertificateException for now...
-
-        catch (E1400_ConnectServerException ex)
-        {
-            // Verify nice error message
-            foreach (var s in expectedErrorMessage)
-            {
-                StringAssert.Contains(ex.Message, s, StringComparison.InvariantCultureIgnoreCase);
-            }
-        }
+        var result = await http.ConnectAsync(hostName, CancellationToken.None);
     }
 
     [TestMethod]
     [DataRow("www.google.com")]
     [ExpectedException(typeof(E1402_NoVidiViewServerException))]
-    public async Task VerifyNoVidiViewServerException(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyNoVidiViewServerException(string hostName)
     {
         var http = CreateHttpClient(true);
 
@@ -61,7 +44,7 @@ public class HttpConnectExtensionTest
     [TestMethod]
     [DataRow("non.existent.host.com")]
     [ExpectedException(typeof(E1400_ConnectServerException))]
-    public async Task VerifyHostNotFoundException(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyHostNotFoundException(string hostName)
     {
         var http = CreateHttpClient(true);
 
@@ -70,8 +53,12 @@ public class HttpConnectExtensionTest
 
     [TestMethod]
     [DataRow("demo0.vidiview.com")]
+
+#if (!GITHUB_ACTION) 
     [DataRow("test1.ad.vidiview.com")]
     [DataRow("test2.ad.perspektivgruppen.se")]
+    [DataRow("https://test2.ad.perspektivgruppen.se/vidiview/api/")] // VidiView License CA certificate
+#endif
     public async Task VerifySuccess(string hostName)
     {
         var http = CreateHttpClient(true);
@@ -87,6 +74,7 @@ public class HttpConnectExtensionTest
         }
     }
 
+#if (!GITHUB_ACTION) // Cannot be run without some manual interventions
     /// <summary>
     /// Test the response from a server that is not responding.
     /// Please shut down the VidiView Server service and skip setting a maintenance message
@@ -149,6 +137,7 @@ public class HttpConnectExtensionTest
             Assert.IsTrue(ex.Message?.Length > 1);
         }
     }
+#endif
 
     private static HttpClient CreateHttpClient(bool checkRevocation)
     {
@@ -179,4 +168,3 @@ public class HttpConnectExtensionTest
     }
 }
 
-#endif

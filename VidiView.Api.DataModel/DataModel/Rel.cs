@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public static class Rel
 {
     public const string ActiveSessions = "active-sessions";

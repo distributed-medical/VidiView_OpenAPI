@@ -3,6 +3,7 @@
 /// <summary>
 /// Update a specific study
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record StudyPatch
 {
     /// <summary>

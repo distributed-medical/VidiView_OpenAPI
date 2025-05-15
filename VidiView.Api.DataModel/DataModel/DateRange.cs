@@ -4,6 +4,7 @@
 /// This record represents a date range 
 /// </summary>
 /// <remarks>Only used for date range excluding time information</remarks>
+[ExcludeFromCodeCoverage]
 public record DateRange 
 {
     public DateRange()

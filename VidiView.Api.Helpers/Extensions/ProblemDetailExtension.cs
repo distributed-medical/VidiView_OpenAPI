@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace VidiView.Api.DataModel;
 
@@ -103,6 +97,10 @@ public static class ProblemDetailExtension
 
                     case Type type when type == typeof(Guid):
                         value = (TValue)(object)prop.Value.Value.GetGuid();
+                        return true;
+
+                    case Type type when type == typeof(IdAndName):
+                        value = (TValue)(object)prop.Value.Value.Deserialize<IdAndName>(options)!;
                         return true;
 
                     default:

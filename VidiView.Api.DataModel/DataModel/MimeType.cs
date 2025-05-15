@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record MimeType
 {
     [JsonPropertyName("mime-type")]
@@ -17,14 +18,14 @@ public record MimeType
 
 
     [JsonIgnore]
-    public bool IsVideoType => Type.StartsWith("video/");
+    public bool IsVideoType => Type?.StartsWith("video/") == true;
 
     [JsonIgnore]
-    public bool IsImageType => Type.StartsWith("image/");
+    public bool IsImageType => Type?.StartsWith("image/") == true;
 
     [JsonIgnore]
-    public bool IsAudioType => Type.StartsWith("audio/");
+    public bool IsAudioType => Type?.StartsWith("audio/") == true;
 
     [JsonIgnore]
-    public bool IsDicomType => Type.StartsWith("application/dicom");
+    public bool IsDicomType => Type?.StartsWith("application/dicom") == true;
 }

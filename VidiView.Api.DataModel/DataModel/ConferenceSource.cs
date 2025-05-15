@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents a live conference source
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ConferenceSource
 {
     /// <summary>

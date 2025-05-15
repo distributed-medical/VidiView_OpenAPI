@@ -4,16 +4,12 @@ using Windows.Web.Http.Filters;
 
 namespace VidiView.Api.Helpers.Test.Helpers;
 
-#if (!GITHUB_ACTION) // Cannot be run without some manual interventions
-
 [TestClass]
 public class HttpRTConnectExtensionTest
 {
     [TestMethod]
     [DataRow("expired.badssl.com")]
     [DataRow("wrong.host.badssl.com")]
-    [DataRow("self-signed.badssl.com")]
-    [DataRow("untrusted-root.badssl.com")]
     [DataRow("revoked.badssl.com")]
     [DataRow("sha1-intermediate.badssl.com")]
     [DataRow("sha1-2017.badssl.com")]
@@ -25,7 +21,19 @@ public class HttpRTConnectExtensionTest
     }
 
     [TestMethod]
+    [DataRow("self-signed.badssl.com")]
+    [DataRow("untrusted-root.badssl.com")]
+    [ExpectedException(typeof(E1400_ConnectServerException), AllowDerivedTypes = true)] // Since we are using a custom validator, the correct certificate exception is lost
+    public async Task VerifyInvalidCertificateException2(string hostName)
+    {
+        var http = CreateHttpClient();
+        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+    }
+
+    [TestMethod]
+#if (!GITHUB_ACTION) // Cannot be run without some manual interventions
     [DataRow("dc2.ad.vidiview.com")]
+#endif
     [DataRow("dh480.badssl.com")]
     [DataRow("dh-small-subgroup.badssl.com")]
     [DataRow("https://tls-v1-0.badssl.com:1010")]
@@ -40,7 +48,7 @@ public class HttpRTConnectExtensionTest
     [TestMethod]
     [DataRow("www.google.com")]
     [ExpectedException(typeof(E1402_NoVidiViewServerException))]
-    public async Task VerifyNoVidiViewServerException(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyNoVidiViewServerException(string hostName)
     {
         var http = CreateHttpClient();
 
@@ -50,7 +58,7 @@ public class HttpRTConnectExtensionTest
     [TestMethod]
     [DataRow("non.existent.host.com")]
     [ExpectedException(typeof(E1400_ConnectServerException))]
-    public async Task VerifyHostNotFoundException(string hostName, params string[] expectedErrorMessage)
+    public async Task VerifyHostNotFoundException(string hostName)
     {
         var http = CreateHttpClient();
 
@@ -59,9 +67,12 @@ public class HttpRTConnectExtensionTest
 
     [TestMethod]
     [DataRow("demo0.vidiview.com")] // Real certificate
+
+#if (!GITHUB_ACTION)
     [DataRow("test1.ad.vidiview.com")] // VidiView License CA certificate
     [DataRow("test2.ad.perspektivgruppen.se")] // VidiView License CA certificate
     [DataRow("https://test2.ad.perspektivgruppen.se/vidiview/api/")] // VidiView License CA certificate
+#endif
     public async Task VerifySuccess(string hostName)
     {
         var http = CreateHttpClient();
@@ -77,6 +88,7 @@ public class HttpRTConnectExtensionTest
         }
     }
 
+#if (!GITHUB_ACTION) // Cannot be run without some manual interventions
     /// <summary>
     /// Test the response from a server that is not responding.
     /// Please shut down the VidiView Server service and skip setting a maintenance message
@@ -139,6 +151,7 @@ public class HttpRTConnectExtensionTest
             Assert.IsTrue(ex.Message?.Length > 1);
         }
     }
+#endif
 
     private static HttpClient CreateHttpClient()
     {
@@ -160,4 +173,3 @@ public class HttpRTConnectExtensionTest
         return http;
     }
 }
-#endif

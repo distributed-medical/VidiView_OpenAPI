@@ -85,4 +85,33 @@ public class TemplatedLinkTest
         Assert.AreEqual("https://demo.vidiview.com/20%2F10/", url);
     }
 
+    [TestMethod]
+    public void Cast_Link()
+    {
+        var link = new Link
+        {
+            Href = "https://demo0.vidiview.com/vidiview/api/studies/654ED724FC5E45A28CB0F52CE4E0DE0F/{media}/{?width,height}",
+            Templated = true
+        };
+
+        TemplatedLink tl = link;
+
+        Assert.AreEqual(3, tl.Parameters.Count);
+        Assert.AreEqual("media", tl.Parameters[0].Name);
+        Assert.IsTrue(tl.Parameters[0].IsPathParam);
+        Assert.AreEqual("width", tl.Parameters[1].Name);
+        Assert.IsFalse(tl.Parameters[1].IsPathParam);
+        Assert.AreEqual("height", tl.Parameters[2].Name);
+        Assert.IsFalse(tl.Parameters[2].IsPathParam);
+
+        tl.TrySetParameterValue("media", "id");
+        tl.TrySetParameterValue("width", "100");
+
+        Assert.AreEqual("https://demo0.vidiview.com/vidiview/api/studies/654ED724FC5E45A28CB0F52CE4E0DE0F/id/?width=100", tl.ToUrl());
+
+        tl.TrySetParameterValue("height", "90");
+        Assert.AreEqual("https://demo0.vidiview.com/vidiview/api/studies/654ED724FC5E45A28CB0F52CE4E0DE0F/id/?width=100&height=90", tl.ToUrl());
+
+    }
+
 }

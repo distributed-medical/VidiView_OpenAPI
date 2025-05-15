@@ -3,6 +3,7 @@
 /// <summary>
 /// This record represents an annotation in an image
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Annotation
 {
     /// <summary>

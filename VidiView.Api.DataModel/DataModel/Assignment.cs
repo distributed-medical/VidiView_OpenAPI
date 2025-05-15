@@ -3,6 +3,7 @@
 /// <summary>
 /// Study assignment
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Assignment
 {
     /// <summary>

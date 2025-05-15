@@ -1,4 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
+
+[ExcludeFromCodeCoverage]
 public record VideoExtractFrameRequest
 {
     public TimeSpan Position { get; init; }

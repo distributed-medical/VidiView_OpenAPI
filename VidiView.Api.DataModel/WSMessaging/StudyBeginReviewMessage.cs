@@ -3,6 +3,7 @@
 /// <summary>
 /// Sent when beginning review of study
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record StudyBeginReviewMessage : IWSMessage
 {
     public StudyBeginReviewMessage()

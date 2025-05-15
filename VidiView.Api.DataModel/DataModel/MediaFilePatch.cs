@@ -1,4 +1,5 @@
 ﻿namespace VidiView.Api.DataModel;
+[ExcludeFromCodeCoverage]
 public record MediaFilePatch
 {
     /// <summary>

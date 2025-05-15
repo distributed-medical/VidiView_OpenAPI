@@ -15,7 +15,11 @@ public class VidiViewNamingPolicy : JsonNamingPolicy
 
     public override string ConvertName(string name)
     {
-        Debug.Assert(name != "Links", "Name should explicitly be set to _links");
+        if (name == "Links")
+        {
+//            Debug.Assert(name != "Links", "Name should explicitly be set to _links for performance");
+            return "_links";
+        }
 
         if (_nameCache.TryGetValue(name, out var result))
             return result;

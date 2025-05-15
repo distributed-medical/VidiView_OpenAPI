@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public static class SettingKey
 {
     public const string ServerDescription = "Server/Description";

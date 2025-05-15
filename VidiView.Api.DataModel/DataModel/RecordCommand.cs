@@ -3,6 +3,7 @@
 /// <summary>
 /// Execute a remote record command
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record RecordCommand
 {
     /// <summary>

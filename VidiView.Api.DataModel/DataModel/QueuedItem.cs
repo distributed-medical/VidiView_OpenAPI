@@ -3,6 +3,7 @@
 /// <summary>
 /// Export status of a media file
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record QueuedItem
 {
     /// <summary>

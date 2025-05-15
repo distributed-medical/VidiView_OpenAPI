@@ -4,6 +4,7 @@
 /// This record represents the information provided by the 
 /// VidiView Server when requesting the Api starting address
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record ApiHome
 {
     /// <summary>

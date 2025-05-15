@@ -5,6 +5,7 @@ namespace VidiView.Api.WSMessaging;
 /// <summary>
 /// This is sent when a study is deleted
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record StudyDeletedMessage : IWSActorMessage
 {
     public StudyDeletedMessage()

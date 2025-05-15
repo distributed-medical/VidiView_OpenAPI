@@ -1,4 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
+
+[ExcludeFromCodeCoverage]
 public record StudyType
 {
     /// <summary>

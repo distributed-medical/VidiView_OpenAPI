@@ -3,6 +3,7 @@
 /// <summary>
 /// This record defines equipment that may have been used during a study
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record Equipment
 {
     /// <summary>

@@ -3,6 +3,7 @@
 /// <summary>
 /// Execute a camera command
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record CameraCommand
 {
     /// <summary>

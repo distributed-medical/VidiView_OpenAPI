@@ -3,6 +3,7 @@
 /// <summary>
 /// Request pseudonymization on messages 
 /// </summary>
+[ExcludeFromCodeCoverage]
 public record PseudonymizeMessage : IWSMessage
 {
     public PseudonymizeMessage()

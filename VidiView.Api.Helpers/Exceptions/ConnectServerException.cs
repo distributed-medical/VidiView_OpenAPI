@@ -101,6 +101,8 @@ public class ConnectServerException : Exception
         return null;
     }
 
+    [ExcludeFromCodeCoverage]
+
     private static string? GetFromWebStatus(WebErrorStatus status)
     {
         switch (status)

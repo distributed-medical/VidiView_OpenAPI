@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[ExcludeFromCodeCoverage]
 public record VideoTrimRequest
 {
     public TimeSpan StartPosition { get; init; }
