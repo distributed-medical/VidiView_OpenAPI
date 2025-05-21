@@ -48,9 +48,9 @@ public static class HttpResponseMessageExtension
     /// <returns></returns>
     public static async Task<T> DeserializeAsync<T>(this HttpResponseMessage response)
     {
+        // Deserialize as Json
         try
         {
-            // Deserialize as Json
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             return (await JsonSerializer.DeserializeAsync<T>(stream, Options))!;
         }
