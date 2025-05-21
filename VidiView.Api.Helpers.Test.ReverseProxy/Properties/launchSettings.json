@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VidiView.Api.Helpers.Test.ReverseProxy (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "VidiView.Api.Helpers.Test.ReverseProxy (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
