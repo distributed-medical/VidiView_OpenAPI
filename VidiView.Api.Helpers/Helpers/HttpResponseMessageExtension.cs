@@ -23,8 +23,21 @@ public static class HttpResponseMessageExtension
     public static T Deserialize<T>(this HttpResponseMessage response)
     {
         // Deserialize as Json
-        var stream = response.Content.ReadAsStream();
-        return JsonSerializer.Deserialize<T>(stream, Options)!;
+        try
+        {
+            var stream = response.Content.ReadAsStream();
+            return JsonSerializer.Deserialize<T>(stream, Options)!;
+        }
+        catch (Exception ex)
+        {
+            string? body = null;
+            try { body = response.Content.ReadAsStringAsync().Result; } catch { }
+
+            throw new E1039_DeserializeException(typeof(T), ex)
+            {
+                RawResponse = body
+            };
+        }
     }
 
     /// <summary>
@@ -35,9 +48,22 @@ public static class HttpResponseMessageExtension
     /// <returns></returns>
     public static async Task<T> DeserializeAsync<T>(this HttpResponseMessage response)
     {
-        // Deserialize as Json
-        var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        return (await JsonSerializer.DeserializeAsync<T>(stream, Options))!;
+        try
+        {
+            // Deserialize as Json
+            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return (await JsonSerializer.DeserializeAsync<T>(stream, Options))!;
+        }
+        catch (Exception ex)
+        {
+            string? body = null;
+            try { body = await response.Content.ReadAsStringAsync(); } catch { }
+
+            throw new E1039_DeserializeException(typeof(T), ex)
+            {
+                RawResponse = body
+            };
+        }
     }
 
     /// <summary>
@@ -49,19 +75,24 @@ public static class HttpResponseMessageExtension
     {
         if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
         {
+            // This is an error that can be deserialized into an exception
+            string bufferedResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             ProblemDetails problem;
             try
             {
                 // This is an error that can be deserialized into an exception
-                string bufferedResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 problem = JsonSerializer.Deserialize<ProblemDetails>(bufferedResponse, Options)
-                    ?? throw new Exception("Failed to deserialize response as ProblemDetails");
+                    ?? throw new E1039_DeserializeException("The response was empty", typeof(ProblemDetails), null);
                 problem.RawResponse = bufferedResponse;
             }
-            catch
+            catch (Exception ex)
             {
                 // Failed to deserialize as problem. This is really a problem
-                throw new Exception("The server responded with an indication of a problem, but the application was unable to deserialize the details");
+                throw new E1039_DeserializeException(typeof(ProblemDetails), ex)
+                {
+                    RawResponse = bufferedResponse
+                };
             }
 
             if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))

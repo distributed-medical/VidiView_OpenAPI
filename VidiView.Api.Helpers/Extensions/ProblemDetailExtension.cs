@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.DataModel;
 
@@ -123,7 +124,19 @@ public static class ProblemDetailExtension
 
         var stringComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
-        var json = JsonSerializer.Deserialize<JsonElement>(problem.RawResponse);
+        JsonElement json;
+        try
+        {
+            json = JsonSerializer.Deserialize<JsonElement>(problem.RawResponse);
+        }
+        catch (Exception ex)
+        {
+            throw new E1039_DeserializeException(typeof(JsonElement), ex)
+            {
+                RawResponse = problem.RawResponse
+            };
+        }
+
         foreach (var p in json.EnumerateObject().OfType<JsonProperty>())
         {
             if (p.Name.Equals(propertyName, stringComparison))

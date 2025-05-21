@@ -4,6 +4,7 @@ using VidiView.Api.Authentication;
 using VidiView.Api.DataModel;
 using VidiView.Api.Helpers;
 using System.Diagnostics;
+using VidiView.Api.Exceptions;
 
 namespace VidiView.Example;
 
@@ -100,6 +101,7 @@ public class E3_OpenStudy
         // The quickest way to open a study when we know the VidiView ID (or StudyInstanceUid)
         var tl = start.Links.GetRequired(Rel.Study).AsTemplatedLink();
         tl.TrySetParameterValue("studyId", TestConfig.StudyId);
+
         var study = await _http.GetAsync<Study>(tl);
 
         // Load media files for this study as well
@@ -134,9 +136,24 @@ public class E3_OpenStudy
         using var stream = await _http.GetStreamAsync(link);
         Assert.AreEqual("image/jpeg", stream.ContentType);
         Assert.IsTrue(stream.Length > 10000);
-
     }
 
 
+    /// <summary>
+    /// Load a study by a unique identifier and download thumbnails for all media files
+    /// </summary>
+    /// <returns></returns>
+    [TestMethod]
+    [ExpectedException(typeof(E1738_StudyNotFoundException))]
+    public async Task Open_NonExistingStudy_Throws()
+    {
+        var start = await _http.HomeAsync();
+
+        // The quickest way to open a study when we know the VidiView ID (or StudyInstanceUid)
+        var tl = start.Links.GetRequired(Rel.Study).AsTemplatedLink();
+
+        tl.TrySetParameterValue("studyId", "1.2.3.4.5.6.1111.2222");
+        var study = await _http.GetAsync<Study>(tl);
+    }
 
 }
