@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Web;
@@ -175,6 +176,17 @@ public static class HttpConnectExtension
                     }
                     catch
                     {
+                        try
+                        {
+                            if (response.Content.Headers.ContentLength < 65536)
+                            {
+                                var body = await response.Content.ReadAsStringAsync();
+                                Debug.WriteLine($"{(int)response.StatusCode} {response.StatusCode}: {body}");
+                            }
+                        }
+                        catch
+                        {
+                        }
                     }
 
                     // Something other than a VidiView Server has answered
