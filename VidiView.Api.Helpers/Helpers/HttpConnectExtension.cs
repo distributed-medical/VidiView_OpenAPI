@@ -24,7 +24,7 @@ public static class HttpConnectExtension
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
     /// <exception cref="E1401_NoResponseFromServerException"></exception>
-    /// <exception cref="TaskCanceledException"></exception>
+    /// <exception cref="OperationCanceledException"></exception>
     /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
     /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
@@ -69,136 +69,131 @@ public static class HttpConnectExtension
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
     /// <exception cref="E1401_NoResponseFromServerException"></exception>
-    /// <exception cref="TaskCanceledException"></exception>
+    /// <exception cref="OperationCanceledException"></exception>
     public static async Task<IConnectState> ConnectAsync(this HttpClient http, IConnectState state, CancellationToken cancellationToken)
     {
         var uri = HandleState(state, out var callHistory);
 
-        int retryCount = 5;
-        while (retryCount-- > 0)
+        try
         {
-            HttpResponseMessage response;
-            cancellationToken.ThrowIfCancellationRequested();
-
-            try
+            int retryCount = 5;
+            while (retryCount-- > 0)
             {
-                callHistory.Add(uri);
-                response = await http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
-            }
-            catch (TaskCanceledException)
-            {
+                HttpResponseMessage response;
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Since the cancellation token is not cancelled, this must be a timeout
-                throw new E1401_NoResponseFromServerException(uri);
-            }
-            catch (Exception ex)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var message = ex.Message;
-                if (ex.TryGetInnerException<AuthenticationException>(out var ae))
+                try
                 {
-                    // This is the best exception to find detailed info
-                    message = ae.Message;
+                    callHistory.Add(uri);
+                    response = await http.GetAsync(uri, cancellationToken).ConfigureAwait(false);
                 }
-                else if (ex.TryGetInnerException<System.Net.Sockets.SocketException>(out var se))
+                catch (OperationCanceledException)
                 {
-                    if (se.SocketErrorCode == System.Net.Sockets.SocketError.TimedOut)
-                        throw new E1401_NoResponseFromServerException(uri, ex);
+                    throw new E1401_NoResponseFromServerException(uri);
+                }
+                catch (Exception ex)
+                {
+                    var message = ex.Message;
+                    if (ex.TryGetInnerException<AuthenticationException>(out var ae))
+                    {
+                        // This is the best exception to find detailed info
+                        message = ae.Message;
+                    }
+                    else if (ex.TryGetInnerException<System.Net.Sockets.SocketException>(out var se))
+                    {
+                        if (se.SocketErrorCode == System.Net.Sockets.SocketError.TimedOut)
+                            throw new E1401_NoResponseFromServerException(uri, ex);
 
-                    // This is the second best exception to find detailed info
-                    message = se.Message;
+                        // This is the second best exception to find detailed info
+                        message = se.Message;
+                    }
+
+                    throw new E1400_ConnectServerException(message, ex)
+                    {
+                        RequestedUri = uri
+                    };
                 }
 
-                throw new E1400_ConnectServerException(message, ex)
+                switch (response.StatusCode)
                 {
-                    RequestedUri = uri
-                };
-            }
+                    // Follow redirects
+                    case HttpStatusCode.MovedPermanently:
+                    case HttpStatusCode.Found:
+                    case HttpStatusCode.PermanentRedirect:
+                    case HttpStatusCode.TemporaryRedirect:
+                        var redirectUri = response.Headers.Location ?? throw new Exception("No Location header provided for redirect");
+                        uri = HandleRedirect(uri, redirectUri, callHistory, out var preauth);
+                        if (preauth != null)
+                            return preauth;
 
-            switch (response.StatusCode)
-            {
-                // Follow redirects
-                case HttpStatusCode.MovedPermanently:
-                case HttpStatusCode.Found:
-                case HttpStatusCode.PermanentRedirect:
-                case HttpStatusCode.TemporaryRedirect:
-                    var redirectUri = response.Headers.Location ?? throw new Exception("No Location header provided for redirect");
-                    uri = HandleRedirect(uri, redirectUri, callHistory, out var preauth);
-                    if (preauth != null)
-                        return preauth;
+                        continue;
 
-                    continue;
+                    case HttpStatusCode.ServiceUnavailable:
+                    case HttpStatusCode.NotFound:
+                        // A json problem here indicates the VidiView Server is answering.
+                        await response.AssertNotProblem().ConfigureAwait(false);
 
-                case HttpStatusCode.NotFound:
-                    // A json problem here indicates the VidiView Server is answering.
-                    await response.AssertNotProblem().ConfigureAwait(false);
+                        // Otherwise it is treated as the Web Server responded with the 404
+                        uri = GetDefaultPath(uri);
+                        continue;
 
-                    // Otherwise it is treated as the Web Server responded with the 404
-                    uri = GetDefaultPath(uri);
-                    continue;
-
-                default:
-                    try
-                    {
-                        await response.AssertSuccessAsync().ConfigureAwait(false);
-                    }
-                    catch (E1405_ServiceMaintenanceModeException)
-                    {
-                        throw;
-                    }
-                    catch
-                    {
+                    default:
                         try
                         {
-                            uri = GetDefaultPath(uri);
-                            continue;
+                            await response.AssertSuccessAsync().ConfigureAwait(false);
+                        }
+                        catch (E1405_ServiceMaintenanceModeException)
+                        {
+                            throw;
                         }
                         catch
                         {
+                            try
+                            {
+                                uri = GetDefaultPath(uri);
+                                continue;
+                            }
+                            catch
+                            {
+                            }
+
+                            // Throw first exception here
+                            throw;
                         }
 
-                        // Throw first exception here
-                        throw;
-                    }
-
-                    try
-                    {
-                        // Check if we are successfully connected
-                        var home = response.Deserialize<ApiHome>();
-                        if (home != null)
-                        {
-                            // Cache the home uri and api page with this HttpClient instance
-                            http.SetAddressAndHome(uri, home);
-                            return new ConnectionSuccessful(uri, home, callHistory);
-                        }
-                    }
-                    catch
-                    {
                         try
                         {
-                            if (response.Content.Headers.ContentLength < 65536)
+                            // Check if we are successfully connected
+                            var home = response.Deserialize<ApiHome>();
+                            if (home != null)
                             {
-                                var body = await response.Content.ReadAsStringAsync();
-                                Debug.WriteLine($"{(int)response.StatusCode} {response.StatusCode}: {body}");
+                                // Cache the home uri and api page with this HttpClient instance
+                                http.SetAddressAndHome(uri, home);
+                                return new ConnectionSuccessful(uri, home, callHistory);
                             }
                         }
                         catch
                         {
                         }
-                    }
 
-                    // Something other than a VidiView Server has answered
-                    uri = GetDefaultPath(uri);
-                    continue;
+                        // Something other than a VidiView Server has answered
+                        uri = GetDefaultPath(uri);
+                        continue;
+                }
             }
-        }
 
-        throw new E1400_ConnectServerException("Too many redirects")
+            throw new E1400_ConnectServerException("Too many redirects")
+            {
+                RequestedUri = callHistory.FirstOrDefault()
+            };
+        }
+        catch
         {
-            RequestedUri = callHistory.FirstOrDefault()
-        };
+            // Throw cancellation if the token is cancelled
+            cancellationToken.ThrowIfCancellationRequested();
+
+            throw;
+        }
     }
 
     internal static Uri HandleState(IConnectState state, out List<Uri> callHistory)

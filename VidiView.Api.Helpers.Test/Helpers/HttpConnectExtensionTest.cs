@@ -151,20 +151,10 @@ public class HttpConnectExtensionTest
             UseCookies = false
         };
 
-        // Support custom VidiView License certificate
-        handler.SslOptions.RemoteCertificateValidationCallback = RemoteCertificateValidationCallback;
+        handler.AcceptLegacyLicenseCertificate(true);
 
         var http = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) };
         return http;
-    }
-
-    static bool RemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
-    {
-        if (sslPolicyErrors == SslPolicyErrors.None)
-            return true;
-
-        return certificate is X509Certificate2 x2
-               && x2.IsLegacyLicenseCertificate();
     }
 }
 

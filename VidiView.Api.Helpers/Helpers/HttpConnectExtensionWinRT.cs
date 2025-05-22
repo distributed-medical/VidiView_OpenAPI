@@ -23,7 +23,7 @@ public static class HttpConnectExtensionWinRT
     /// <exception cref="E1002_ConnectException"></exception>
     /// <exception cref="E1405_ServiceMaintenanceModeException"></exception>
     /// <exception cref="E1401_NoResponseFromServerException"></exception>
-    /// <exception cref="TaskCanceledException"></exception>    /// <returns>
+    /// <exception cref="OperationCanceledException"></exception>    /// <returns>
     /// A <see cref="ConnectionSuccessful"/> object when the connection is established. This document will contain server info. The API's uri is cached for the HttpClient instance and used in subsequent calls for the Api home page.
     /// If preauthentication is required, a <see cref="PreauthenticateRequired"/> object is returned with the specific IdP type to use and a redirect uri. When authentication is completed, the <see cref="PreauthenticateRequired"/> instance should be submitted again to the ConnectAsync call to complete the connection
     /// </returns>
@@ -71,89 +71,100 @@ public static class HttpConnectExtensionWinRT
     {
         var uri = HttpConnectExtension.HandleState(state, out var callHistory);
 
-        int retryCount = 5;
-        while (retryCount-- > 0)
+        try
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            HttpResponseMessage response;
-            try
-            {
-                callHistory.Add(uri);
-                response = await http.SendRequestAsync(request).AsTask(cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception ex)
+            int retryCount = 5;
+            while (retryCount-- > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                throw ConnectServerException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
-            }
 
-            switch (response.StatusCode)
-            {
-                // Follow redirects
-                case HttpStatusCode.MovedPermanently:
-                case HttpStatusCode.Found:
-                case HttpStatusCode.PermanentRedirect:
-                case HttpStatusCode.TemporaryRedirect:
-                    var redirectUri = response.Headers.Location ?? throw new Exception("No Location header provided for redirect");
-                    uri = HttpConnectExtension.HandleRedirect(uri, redirectUri, callHistory, out var preauth);
-                    if (preauth != null)
-                        return preauth;
+                using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+                HttpResponseMessage response;
+                try
+                {
+                    callHistory.Add(uri);
+                    response = await http.SendRequestAsync(request).AsTask(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw new E1401_NoResponseFromServerException(uri);
+                }
+                catch (Exception ex)
+                {
+                    throw ConnectServerException.CreateFromWinRT(uri, request.TransportInformation.ServerCertificate, ex);
+                }
 
-                    continue;
+                switch (response.StatusCode)
+                {
+                    // Follow redirects
+                    case HttpStatusCode.MovedPermanently:
+                    case HttpStatusCode.Found:
+                    case HttpStatusCode.PermanentRedirect:
+                    case HttpStatusCode.TemporaryRedirect:
+                        var redirectUri = response.Headers.Location ?? throw new Exception("No Location header provided for redirect");
+                        uri = HttpConnectExtension.HandleRedirect(uri, redirectUri, callHistory, out var preauth);
+                        if (preauth != null)
+                            return preauth;
 
-                case HttpStatusCode.ServiceUnavailable:
-                case HttpStatusCode.NotFound:
-                    // A json problem here indicates the VidiView Server is answering.
-                    await response.AssertNotProblem().ConfigureAwait(false);
+                        continue;
 
-                    // Otherwise it is treated as the Web Server responded with the 404
-                    try
-                    {
-                        uri = HttpConnectExtension.GetDefaultPath(uri);
-                    }
-                    catch (E1402_NoVidiViewServerException ex)
-                    {
-                        ex.HostCertificate = request.TransportInformation.ServerCertificate;
-                        throw;
-                    }
+                    case HttpStatusCode.ServiceUnavailable:
+                    case HttpStatusCode.NotFound:
+                        // A json problem here indicates the VidiView Server is answering.
+                        await response.AssertNotProblem().ConfigureAwait(false);
 
-                    continue;
-
-                default:
-                    await response.AssertSuccessAsync();
-
-                    try
-                    {
-                        // Check if we are successfully connected
-                        var home = response.Deserialize<ApiHome>();
-                        if (home != null)
+                        // Otherwise it is treated as the Web Server responded with the 404
+                        try
                         {
-                            // Cache the home uri and api page with this HttpClient instance
-                            http.SetAddressAndHome(uri, home);
-                            return new ConnectionSuccessful(uri, home, request.TransportInformation.ServerCertificate, callHistory);
+                            uri = HttpConnectExtension.GetDefaultPath(uri);
                         }
-                    }
-                    catch
-                    {
-                    }
+                        catch (E1402_NoVidiViewServerException ex)
+                        {
+                            ex.HostCertificate = request.TransportInformation.ServerCertificate;
+                            throw;
+                        }
 
-                    // Something other than a VidiView Server has answered
-                    uri = HttpConnectExtension.GetDefaultPath(uri);
-                    continue;
+                        continue;
+
+                    default:
+                        await response.AssertSuccessAsync();
+
+                        try
+                        {
+                            // Check if we are successfully connected
+                            var home = response.Deserialize<ApiHome>();
+                            if (home != null)
+                            {
+                                // Cache the home uri and api page with this HttpClient instance
+                                http.SetAddressAndHome(uri, home);
+                                return new ConnectionSuccessful(uri, home, request.TransportInformation.ServerCertificate, callHistory);
+                            }
+                        }
+                        catch
+                        {
+                        }
+
+                        // Something other than a VidiView Server has answered
+                        uri = HttpConnectExtension.GetDefaultPath(uri);
+                        continue;
+                }
+
+                throw new Exception($"Failed to deserialize ApiHome document");
             }
+            while (retryCount-- > 0) ;
 
-            throw new Exception($"Failed to deserialize ApiHome document");
+            throw new E1400_ConnectServerException("Too many redirects")
+            {
+                RequestedUri = callHistory.FirstOrDefault()
+            };
         }
-        while (retryCount-- > 0) ;
-
-        throw new E1400_ConnectServerException("Too many redirects")
+        catch
         {
-            RequestedUri = callHistory.FirstOrDefault()
-        };
+            // Throw cancellation if the token is cancelled
+            cancellationToken.ThrowIfCancellationRequested();
+
+            throw;
+        }
     }
 }
 #endif

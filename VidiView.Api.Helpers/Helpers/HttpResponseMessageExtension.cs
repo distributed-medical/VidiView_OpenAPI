@@ -6,7 +6,6 @@ using System.Text.Json;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
 using VidiView.Api.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidiView.Api.Helpers;
 

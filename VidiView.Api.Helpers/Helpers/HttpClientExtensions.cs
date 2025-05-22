@@ -79,12 +79,19 @@ public static class HttpClientExtensions
             throw new InvalidOperationException("You must call ConnectAsync()");
         }
 
-        var response = await http.GetAsync(uri, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
-        await response.AssertSuccessAsync().ConfigureAwait(false);
-        home = await response.DeserializeAsync<ApiHome>().ConfigureAwait(false);
-
-        _cache[http] = home;
-        return home;
+        try
+        {
+            var response = await http.GetAsync(uri, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
+            await response.AssertSuccessAsync().ConfigureAwait(false);
+            home = await response.DeserializeAsync<ApiHome>().ConfigureAwait(false);
+            _cache[http] = home;
+            return home;
+        }
+        catch
+        {
+            cancellationToken?.ThrowIfCancellationRequested();
+            throw;
+        }
     }
 
     /// <summary>
