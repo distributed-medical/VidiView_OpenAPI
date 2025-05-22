@@ -54,6 +54,14 @@ public partial class UnitTest1
 
         Assert.IsInstanceOfType<PreauthenticateRequired>(state);
 
+        /*
+         * 
+         * 
+         * How to use Oidc discovery here?
+         * 
+         * 
+         */
+
         var oidc = (PreauthenticateRequired)state;
         Assert.AreEqual("oidc", oidc.IdP);
 

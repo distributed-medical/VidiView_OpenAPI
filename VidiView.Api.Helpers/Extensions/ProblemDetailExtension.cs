@@ -34,13 +34,13 @@ public static class ProblemDetailExtension
     {
         value = default;
 
-        if (problem?.RawResponse == null)
-            return false;
-
-        var prop = GetJsonProperty(problem, propertyName, options);
-        if (prop != null)
+        try
         {
-            try
+            if (problem?.RawResponse == null)
+                return false;
+
+            var prop = GetJsonProperty(problem, propertyName, options);
+            if (prop != null)
             {
                 switch (typeof(TValue))
                 {
@@ -108,10 +108,11 @@ public static class ProblemDetailExtension
                         throw new NotImplementedException("Result value type not implemented");
                 }
             }
-            catch
-            {
-            }
         }
+        catch
+        {
+        }
+     
         return false;
     }
 

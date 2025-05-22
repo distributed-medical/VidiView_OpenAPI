@@ -31,10 +31,11 @@ public static class HttpResponseMessageExtension
         {
             string? body = null;
             try { body = response.Content.ReadAsStringAsync().Result; } catch { }
-
+            
             throw new E1039_DeserializeException(typeof(T), ex)
             {
-                RawResponse = body
+                RawResponse = body,
+                RequestedUri = response.RequestMessage?.RequestUri,
             };
         }
     }
@@ -60,7 +61,8 @@ public static class HttpResponseMessageExtension
 
             throw new E1039_DeserializeException(typeof(T), ex)
             {
-                RawResponse = body
+                RawResponse = body,
+                RequestedUri = response.RequestMessage?.RequestUri,
             };
         }
     }
@@ -76,27 +78,37 @@ public static class HttpResponseMessageExtension
         {
             // This is an error that can be deserialized into an exception
             string bufferedResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var requestedUri = response.RequestMessage?.RequestUri;
 
             ProblemDetails problem;
             try
             {
-                // This is an error that can be deserialized into an exception
                 problem = JsonSerializer.Deserialize<ProblemDetails>(bufferedResponse, Options)
-                    ?? throw new E1039_DeserializeException("The response was empty", typeof(ProblemDetails), null);
+                    ?? throw new E1039_DeserializeException("The response was empty", typeof(ProblemDetails), null)
+                    {
+                        RawResponse = bufferedResponse,
+                        RequestedUri = requestedUri,
+                    }; 
+
                 problem.RawResponse = bufferedResponse;
+            }
+            catch (E1039_DeserializeException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
                 // Failed to deserialize as problem. This is really a problem
                 throw new E1039_DeserializeException(typeof(ProblemDetails), ex)
                 {
-                    RawResponse = bufferedResponse
+                    RawResponse = bufferedResponse,
+                    RequestedUri = requestedUri,
                 };
             }
 
             if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
             {
-                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, response.RequestMessage?.RequestUri);
+                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, requestedUri);
             }
 
             throw new Exception(problem.Detail);
@@ -124,6 +136,8 @@ public static class HttpResponseMessageExtension
             // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage?.RequestUri);
 
+            string? reasonPhrase = !string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : null;
+
             // Check if this a generic error
             switch (response.StatusCode)
             {
@@ -134,10 +148,10 @@ public static class HttpResponseMessageExtension
                     throw new E1030_NotSupportedException("This method is not implemented in the server service");
 
                 case HttpStatusCode.RequestedRangeNotSatisfiable:
-                    throw new ArgumentOutOfRangeException(null, "Position is out of range");
+                    throw new ArgumentOutOfRangeException(null, reasonPhrase ?? "Position is out of range");
 
                 case HttpStatusCode.Forbidden:
-                    throw new E1003_AccessDeniedException(!string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : "403 Forbidden");
+                    throw new E1003_AccessDeniedException(reasonPhrase ?? "403 Forbidden");
 
                 case HttpStatusCode.ServiceUnavailable:
                     // No maintenance mode message presented
