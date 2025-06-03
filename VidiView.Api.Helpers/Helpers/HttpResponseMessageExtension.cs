@@ -67,12 +67,18 @@ public static class HttpResponseMessageExtension
         }
     }
 
+    [Obsolete("Use AssertNotProblemAsync instead", true)]
+    public static async Task AssertNotProblem(this HttpResponseMessage response)
+    {
+        await AssertNotProblemAsync(response);
+    }
+
     /// <summary>
     /// Deserializes any problem indicated by the server and rethrows as exception
     /// </summary>
     /// <param name="response"></param>
     /// <returns></returns>
-    public static async Task AssertNotProblem(this HttpResponseMessage response)
+    public static async Task AssertNotProblemAsync(this HttpResponseMessage response)
     {
         if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
         {
@@ -131,7 +137,7 @@ public static class HttpResponseMessageExtension
         else
         {
             // Check if we have any additional error information
-            await AssertNotProblem(response);
+            await AssertNotProblemAsync(response);
 
             // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage?.RequestUri);

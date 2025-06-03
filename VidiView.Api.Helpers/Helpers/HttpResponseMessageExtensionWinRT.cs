@@ -75,8 +75,7 @@ public static class HttpResponseMessageExtensionWinRT
     /// <param name="response"></param>
     /// <exception cref="VidiViewException">Thrown for known exceptions serialized as ProblemDetails</exception>
     /// <exception cref="Exception">Thrown if the content type indicates a problem, but this could not be matched as an exception</exception>
-    /// 
-    public static async Task AssertNotProblem(this HttpResponseMessage response)
+    public static async Task AssertNotProblemAsync(this HttpResponseMessage response)
     {
         if (response.Content.Headers.ContentType?.MediaType?.Equals(ProblemDetails.ContentType, StringComparison.OrdinalIgnoreCase) == true)
         {
@@ -135,7 +134,7 @@ public static class HttpResponseMessageExtensionWinRT
         else
         {
             // Check if we have any additional error information
-            await AssertNotProblem(response);
+            await AssertNotProblemAsync(response);
 
             // Check if server is in maintenance mode
             await MaintenanceMode.ThrowIfMaintenanceModeAsync((System.Net.HttpStatusCode)(int)response.StatusCode, response.RequestMessage?.RequestUri);

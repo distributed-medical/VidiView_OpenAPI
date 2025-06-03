@@ -20,7 +20,7 @@ public class HttpResponseExtensionTest
         var http = CreateHttpClient(true);
 
         var response = await http.GetAsync("https://distributedmedical.com");
-        await response.AssertNotProblem();
+        await response.AssertNotProblemAsync();
 
         try
         {
