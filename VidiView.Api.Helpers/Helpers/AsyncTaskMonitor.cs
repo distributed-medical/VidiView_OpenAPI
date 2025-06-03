@@ -58,14 +58,15 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
     /// <param name="client"></param>
     /// <param name="status">The task information to await</param>
     /// <returns>The final status of this task</returns>
-    public async Task<AsyncTaskStatus> WaitForCompletion(HttpClient client, AsyncTaskStatus status)
+    public async Task<AsyncTaskStatus> WaitForCompletionAsync(HttpClient client, AsyncTaskStatus status)
     {
         ArgumentNullException.ThrowIfNull(client, nameof(client));
         CurrentStatus = status ?? throw new ArgumentNullException(nameof(status));
 
         return await Task.Run(async () =>
         {
-            while (true)
+            while (CurrentStatus.State == TaskState.WaitingForExecution 
+                   || CurrentStatus.State == TaskState.Running)
             {
                 var link = status.Links.GetRequired(Rel.Self).AsTemplatedLink();
 
@@ -76,29 +77,38 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
                     Content = HttpContentFactory.CreateBody(null)
                 };
 
+                // Always wait a while before querying status
+                await Task.Delay(PollingInterval).ConfigureAwait(false);
                 var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                if (response.IsSuccessStatusCode)
-                {
-                    // Updated status
-                    status = await response.DeserializeAsync<AsyncTaskStatus>();
-                    CurrentStatus = status;
-                }
-                else if (response.StatusCode == HttpStatusCode.SeeOther)
+
+                if (response.StatusCode == HttpStatusCode.SeeOther)
                 {
                     // Completed
-                    status = await response.DeserializeAsync<AsyncTaskStatus>();
-                    Debug.Assert(status.State == TaskState.SuccessfullyCompleted);
+                    CurrentStatus = await response.DeserializeAsync<AsyncTaskStatus>()
+                    with
+                    {
+                        // It is expected that the status is Success when we get a redirect,
+                        // but to be certain the loop exits, we explicitly sets the state here too
+                        State = TaskState.SuccessfullyCompleted
+                    };
 
-                    CurrentStatus = status;
-                    return status;
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    // Updated status
+                    CurrentStatus = await response.DeserializeAsync<AsyncTaskStatus>();
+
+                    // If the status indicates a failure, it will exit the loop
                 }
                 else
                 {
+                    // Some kind of error
                     await response.AssertSuccessAsync().ConfigureAwait(false);
                 }
-
-                await Task.Delay(PollingInterval).ConfigureAwait(false);
             }
+
+            // Exit and return status
+            return CurrentStatus;
         });
     }
 
@@ -110,14 +120,15 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
     /// <param name="client"></param>
     /// <param name="status">The task information to await</param>
     /// <returns>The final status of this task</returns>
-    public async Task<AsyncTaskStatus> WaitForCompletion(Windows.Web.Http.HttpClient client, AsyncTaskStatus status)
+    public async Task<AsyncTaskStatus> WaitForCompletionAsync(Windows.Web.Http.HttpClient client, AsyncTaskStatus status)
     {
         ArgumentNullException.ThrowIfNull(client, nameof(client));
         CurrentStatus = status ?? throw new ArgumentNullException(nameof(status));
 
         return await Task.Run(async () =>
         {
-            while (true)
+            while (CurrentStatus.State == TaskState.WaitingForExecution 
+                   || CurrentStatus.State == TaskState.Running)
             {
                 var link = status.Links.GetRequired(Rel.Self).AsTemplatedLink();
 
@@ -128,29 +139,37 @@ public class AsyncTaskMonitor : INotifyPropertyChanged
                     Content = HttpContentFactoryWinRT.CreateBody(null)
                 };
 
+                // Always wait a while before querying status
+                await Task.Delay(PollingInterval).ConfigureAwait(false);
                 var response = await client.SendRequestAsync(request, Windows.Web.Http.HttpCompletionOption.ResponseHeadersRead);
-                if (response.IsSuccessStatusCode)
-                {
-                    // Updated status
-                    status = response.Deserialize<AsyncTaskStatus>();
-                    CurrentStatus = status;
-                }
-                else if (response.StatusCode == Windows.Web.Http.HttpStatusCode.SeeOther)
+
+                if (response.StatusCode == Windows.Web.Http.HttpStatusCode.SeeOther)
                 {
                     // Completed
-                    status = response.Deserialize<AsyncTaskStatus>();
-                    Debug.Assert(status.State == TaskState.SuccessfullyCompleted);
+                    CurrentStatus = await response.DeserializeAsync<AsyncTaskStatus>()
+                    with
+                    {
+                        // It is expected that the status is Success when we get a redirect,
+                        // but to be certain the loop exits, we explicitly sets the state here too
+                        State = TaskState.SuccessfullyCompleted
+                    };
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    // Updated status
+                    CurrentStatus = await response.DeserializeAsync<AsyncTaskStatus>();
 
-                    CurrentStatus = status;
-                    return status;
+                    // If the status indicates a failure, it will exit the loop
                 }
                 else
                 {
+                    // Some kind of error
                     await response.AssertSuccessAsync().ConfigureAwait(false);
                 }
-
-                await Task.Delay(PollingInterval).ConfigureAwait(false);
             }
+
+            // Exit and return status
+            return CurrentStatus;
         });
     }
 #endif

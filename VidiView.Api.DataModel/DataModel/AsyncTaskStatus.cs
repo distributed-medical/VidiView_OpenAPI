@@ -11,7 +11,7 @@ public enum AsyncTaskType
 [JsonConverter(typeof(StringEnumConverterEx<TaskState>))]
 public enum TaskState
 {
-    Unknown,
+    Unknown = 0,
     WaitingForExecution,
     Running,
     SuccessfullyCompleted,
@@ -39,8 +39,6 @@ public record AsyncTaskStatus
     public TimeSpan Elapsed { get; init; }
 
     public TimeSpan? EstimatedRemainingTime { get; init; }
-
-    public bool NotCompleted => State == TaskState.Running || State == TaskState.WaitingForExecution;
 
     /// <summary>
     /// Any HAL Rest links associated with this object
