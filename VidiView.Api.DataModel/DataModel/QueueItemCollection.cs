@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 [ExcludeFromCodeCoverage]
-public record ExportQueueCollection
+public record QueueItemCollection
 {
     /// <summary>
     /// Number of items in this collection
@@ -14,7 +14,7 @@ public record ExportQueueCollection
     /// <summary>
     /// The items
     /// </summary>
-    public ExportQueue[] Items => Embedded.Items;
+    public QueuedItem[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -33,7 +33,7 @@ public record ExportQueueCollection
 
     public record EmbeddedArray
     {
-        public ExportQueue[] Items
+        public QueuedItem[] Items
         {
             get; init;
         }

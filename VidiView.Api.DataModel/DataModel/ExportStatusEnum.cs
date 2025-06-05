@@ -21,13 +21,13 @@ public enum ExportStatus
     /// </summary>
     ReadyForTransfer = 20,
 
-    // < 30 = Prepare phase
-    // >= 30 Progress phase
     TransferInProgress = 30,
 
     // >= 50 Result phase
     ConversionFailed = 50,
 
     TransferFailed = 60,
+    ProcessingFailure = 61,
+
     TransferCompleted = 70,
 }
