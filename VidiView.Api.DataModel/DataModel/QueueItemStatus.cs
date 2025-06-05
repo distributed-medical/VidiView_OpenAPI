@@ -4,7 +4,7 @@
 /// Export status of a media file
 /// </summary>
 [ExcludeFromCodeCoverage]
-public record QueuedItemStatus
+public record QueueItemStatus
 {
     /// <summary>
     /// Queued item id

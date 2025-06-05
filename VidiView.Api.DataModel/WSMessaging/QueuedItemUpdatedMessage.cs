@@ -24,7 +24,7 @@ public record QueuedItemUpdatedMessage : IWSMessage
     /// <summary>
     /// The updated status
     /// </summary>
-    public QueuedItemStatus Status { get; init; }
+    public QueueItemStatus Status { get; init; }
 
 }
 

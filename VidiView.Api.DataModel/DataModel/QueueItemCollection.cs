@@ -14,7 +14,7 @@ public record QueueItemCollection
     /// <summary>
     /// The items
     /// </summary>
-    public QueuedItem[] Items => Embedded.Items;
+    public QueueItem[] Items => Embedded.Items;
 
     /// <summary>
     /// Any HAL Rest links associated with this collection
@@ -33,7 +33,7 @@ public record QueueItemCollection
 
     public record EmbeddedArray
     {
-        public QueuedItem[] Items
+        public QueueItem[] Items
         {
             get; init;
         }

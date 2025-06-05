@@ -45,7 +45,7 @@ public record MediaFile
 
     public TimeSpan? Duration { get; init; }
 
-    public QueuedItemStatus[]? ExportState { get; init; }
+    public QueueItemStatus[]? ExportState { get; init; }
 
     public ImageFlags Flags { get; init; }
 

@@ -4,7 +4,7 @@
 /// Export status of a media file
 /// </summary>
 [ExcludeFromCodeCoverage]
-public record QueuedItem
+public record QueueItem
 {
     /// <summary>
     /// Queued item id
@@ -75,6 +75,16 @@ public record QueuedItem
     /// Media file size
     /// </summary>
     public long FileSize { get; init; }
+
+    /// <summary>
+    /// Station name of media file origin
+    /// </summary>
+    public string? StationName { get; init; }
+
+    /// <summary>
+    /// Media file modality
+    /// </summary>
+    public string? Modality { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
