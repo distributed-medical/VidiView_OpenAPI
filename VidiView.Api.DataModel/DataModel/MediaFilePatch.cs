@@ -26,4 +26,9 @@ public record MediaFilePatch
     /// Anatomic region
     /// </summary>
     public Patch<string?>? AnatomicRegionXml { get; init; }
+
+    /// <summary>
+    /// Media type
+    /// </summary>
+    public Patch<Guid>? MediaTypeId { get; init; }
 }

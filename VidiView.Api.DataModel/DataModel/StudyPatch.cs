@@ -46,4 +46,9 @@ public record StudyPatch
     /// </summary>
     public Patch<string?>? ReferringPhysicianName { get; init; }
 
+    /// <summary>
+    /// Study type
+    /// </summary>
+    public Patch<Guid>? StudyTypeId { get; init; }
+
 }

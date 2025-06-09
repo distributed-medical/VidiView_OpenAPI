@@ -3,6 +3,11 @@
 [ExcludeFromCodeCoverage]
 public record User
 {
+    public static implicit operator IdAndName(User user)
+    {
+        return user == null ? null! : new IdAndName(user.Id, user.Name);
+    }
+
     // Well-known issuers
     public const string IdentityActiveDirectory = "http://schema.vidiview.com/2022/03/identity/claims/ad";
     public const string IdentityVidiView = "http://schema.vidiview.com/2022/03/identity/claims/vidiview";
@@ -108,14 +113,6 @@ public record User
 
     public override string ToString() => Name;
 
-    public static explicit operator IdAndName?(User? user)
-    {
-        return user == null ? null : new IdAndName
-        {
-            Id = user.Id,
-            Name = user.Name
-        };
-    }
 }
 
 [ExcludeFromCodeCoverage]

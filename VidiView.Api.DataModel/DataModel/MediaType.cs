@@ -1,20 +1,20 @@
 ﻿namespace VidiView.Api.DataModel;
 
 [ExcludeFromCodeCoverage]
-public record StudyType
+public record MediaType
 {
-    public static implicit operator IdAndName(StudyType type)
+    public static implicit operator IdAndName(MediaType type)
     {
         return type == null ? null! : new IdAndName(type.Id, type.Name);
     }
 
     /// <summary>
-    /// Study type ID
+    /// Media type ID
     /// </summary>
     public Guid Id { get; init; }
 
     /// <summary>
-    /// The display name of the study type
+    /// The display name of the media type
     /// </summary>
     public string Name { get; init; }
 
@@ -42,16 +42,4 @@ public record StudyType
     /// Type flags
     /// </summary>
     public TypeFlags Flags { get; init; }
-
-    /// <summary>
-    /// Supported media types
-    /// </summary>
-    /// <remarks>If <see cref="Flags"/> defines AcceptAnyMediaType, these media types 
-    /// are considered recommendations, but any media type can be set</remarks>
-    public MediaType[] MediaTypes { get; set; }
-
-    /// <summary>
-    /// The default media type that is assigned to media files
-    /// </summary>
-    public Guid? DefaultMediaType { get; set; }
 }

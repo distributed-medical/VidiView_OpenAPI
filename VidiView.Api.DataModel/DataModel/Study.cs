@@ -21,7 +21,7 @@ public record Study
     /// <summary>
     /// The study type
     /// </summary>
-    public IdAndName Type { get; init; }
+    public StudyType Type { get; init; }
 
     /// <summary>
     /// Study accession number

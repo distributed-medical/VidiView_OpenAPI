@@ -65,7 +65,7 @@ public record MediaFile
     /// <summary>
     /// The media type
     /// </summary>
-    public IdAndName? Type { get; init; }
+    public MediaType? Type { get; init; }
 
     /// <summary>
     /// Image modality type (Dicom compliant)

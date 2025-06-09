@@ -3,6 +3,11 @@
 [ExcludeFromCodeCoverage]
 public record Worklist
 {
+    public static implicit operator IdAndName(Worklist worklist)
+    {
+        return worklist == null ? null! : new IdAndName(worklist.Id, worklist.Name);
+    }
+
     /// <summary>
     /// The id of this worklist
     /// </summary>
@@ -25,13 +30,4 @@ public record Worklist
     public LinkCollection? Links { get; init; }
 
     public override string ToString() => Name;
-
-    public static explicit operator IdAndName?(Worklist? worklist)
-    {
-        return worklist == null ? null : new IdAndName
-        {
-            Id = worklist.Id,
-            Name = worklist.Name
-        };
-    }
 }

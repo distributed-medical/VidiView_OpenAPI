@@ -3,6 +3,11 @@
 [ExcludeFromCodeCoverage]
 public record Department
 {
+    public static implicit operator IdAndName(Department department)
+    {
+        return department == null ? null! : new IdAndName(department.Id, department.Name);
+    }
+
     /// <summary>
     /// Department id
     /// </summary>
@@ -56,19 +61,15 @@ public record Department
     public WorklistType WorklistType { get; init; } = WorklistType.None;
 
     /// <summary>
+    /// The study types supported by this department
+    /// </summary>
+    public StudyType[]? StudyTypes { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
     public LinkCollection? Links { get; init; }
 
     public override string ToString() => Name;
-
-    public static explicit operator IdAndName?(Department? department)
-    {
-        return department == null ? null : new IdAndName
-        {
-            Id = department.Id,
-            Name = department.Name
-        };
-    }
 }

@@ -23,6 +23,13 @@ public record ApiHome
     public string CompatibleApiVersion { get; init; } = null!;
 
     /// <summary>
+    /// This is an indication to the client of which application version
+    /// is intended to be used to access the VidiView Server
+    /// </summary>
+    /// <remarks>The implementation is client specific</remarks>
+    public VersionRange? IntendedClientApplicationVersion { get; init; }
+
+    /// <summary>
     /// The server id
     /// </summary>
     public Guid ServerId { get; init; }

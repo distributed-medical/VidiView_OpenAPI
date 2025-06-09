@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 [ExcludeFromCodeCoverage]
-public record IdAndName
+public record IdAndName : IEquatable<IdAndName>
 {
     /// <summary>
     /// Create instance with only a specific Id
@@ -43,7 +43,12 @@ public record IdAndName
 
     public virtual bool Equals(IdAndName? other)
     {
-        return other?.Id == this.Id;
+        return other?.Id.Equals(this.Id) == true;
+    }
+
+    public virtual bool Equals(Guid id)
+    {
+        return this.Id.Equals(id);
     }
 
     public override int GetHashCode()
