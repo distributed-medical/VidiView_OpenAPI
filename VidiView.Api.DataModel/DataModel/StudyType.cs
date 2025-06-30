@@ -48,10 +48,20 @@ public record StudyType
     /// </summary>
     /// <remarks>If <see cref="Flags"/> defines AcceptAnyMediaType, these media types 
     /// are considered recommendations, but any media type can be set</remarks>
-    public MediaType[] MediaTypes { get; set; }
+    public MediaType[] MediaTypes { get; init; }
 
     /// <summary>
     /// The default media type that is assigned to media files
     /// </summary>
     public Guid? DefaultMediaType { get; set; }
+
+    /// <summary>
+    /// Supported anatomic maps
+    /// </summary>
+    public IdAndName[]? AnatomicMaps { get; init; }
+
+    /// <summary>
+    /// Supported modalities (as defined in DICOM)
+    /// </summary>
+    public string[]? Modalities { get; init; }
 }

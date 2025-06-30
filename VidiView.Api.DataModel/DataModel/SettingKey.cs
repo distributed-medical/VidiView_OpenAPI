@@ -229,10 +229,12 @@ public static class SettingKey
     public const string ClientFeaturesPatientPersonalWorklists = "Client/Options/Features/PersonalWorklists";
     public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
     public const string ClientFeaturesScheduledStudies = "Client/Options/Features/ScheduledStudies";
-
     public const string ClientFeaturesVoiceCapture = "Client/Options/Features/VoiceCapture";
     public const string ClientFeaturesCameraCapture = "Client/Options/Features/CameraCapture";
     public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
+    public const string ClientFeaturesPhotoMeasure = "Client/Options/Features/PhotoMeasure";
+    public const string ClientFeaturesBatchUpdateMediaFile = "Client/Options/Features/BatchUpdateMediaFile";
+
     public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
 
     public const string ClientReportDefaultFont = "Client/Report/Default/Font";

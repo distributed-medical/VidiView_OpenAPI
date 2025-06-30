@@ -3,6 +3,12 @@
 public record MediaFilePatch
 {
     /// <summary>
+    /// For batch updates, specify a unique id to keep 
+    /// logging of batch operations together
+    /// </summary>
+    public Guid? BatchId { get; init; }
+
+    /// <summary>
     /// File description
     /// </summary>
     public Patch<string?>? Description { get; init; }
@@ -30,5 +36,5 @@ public record MediaFilePatch
     /// <summary>
     /// Media type
     /// </summary>
-    public Patch<Guid>? MediaTypeId { get; init; }
+    public Patch<Guid?>? MediaTypeId { get; init; }
 }
