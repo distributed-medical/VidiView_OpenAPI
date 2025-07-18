@@ -6,11 +6,45 @@
 [ExcludeFromCodeCoverage]
 public record Link
 {
+    private string? _rel;
+
+    public Link()
+    {
+    }
+
+    /// <summary>
+    /// This is mostly intended for testing purposes
+    /// </summary>
+    /// <param name="rel"></param>
+    /// <param name="href"></param>
+    /// <param name="templated"></param>
+    public Link(string rel, string href, bool templated = false)
+    {
+        Rel = rel;
+        Href = href;
+        Templated = templated;
+    }
+
     /// <summary>
     /// The link relation 
     /// </summary>
     [JsonIgnore]
-    public string Rel { get; internal set; } = null!; // Since this is not serialized, we need to set this value internally when deserializing
+    public string Rel 
+    { 
+        get => _rel ?? throw new InvalidOperationException("Rel must be set before using the Link object.");
+
+        // Since this is not serialized,
+        // we need to set this value internally
+        // when deserializing.
+        internal set
+        { 
+            if (_rel != null)
+            {
+                throw new InvalidOperationException("Rel can only be set once.");
+            }
+            _rel = value;
+        } 
+    } 
 
     /// <summary>
     /// The full uri to the resource

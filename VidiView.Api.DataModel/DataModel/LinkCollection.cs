@@ -19,6 +19,21 @@ public class LinkCollection : IDictionary<string, Link>, IEquatable<LinkCollecti
     /// Create a link collection
     /// </summary>
     /// <param name="links"></param>
+    public LinkCollection(params Link[] links)
+    {
+        if (links != null)
+        {
+            foreach (var link in links)
+            {
+                _links.Add(link.Rel, link);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Create a link collection
+    /// </summary>
+    /// <param name="links"></param>
     public LinkCollection(IEnumerable<Link>? links)
     {
         if (links != null)
