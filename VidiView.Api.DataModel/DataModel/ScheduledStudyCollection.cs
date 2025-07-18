@@ -8,8 +8,15 @@ public class ScheduledStudyCollection
     /// </summary>
     public int Count { get; init; }
 
-    public DateTime FromDate { get; init; }
-    public DateTime ToDateExclusive { get; init; }
+    /// <summary>
+    /// The queried date
+    /// </summary>
+    public DateTime Date { get; init; }
+
+    /// <summary>
+    /// Gets the timestamp indicating when the instance was created or initialized.
+    /// </summary>
+    public DateTimeOffset InstanceTime { get; init; }
 
     /// <summary>
     /// The configured interval to be used for auto-refresh
