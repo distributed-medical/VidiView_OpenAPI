@@ -127,7 +127,28 @@ public static class HttpConnectExtensionWinRT
                         continue;
 
                     default:
-                        await response.AssertSuccessAsync();
+                        try
+                        {
+                            await response.AssertSuccessAsync().ConfigureAwait(false);
+                        }
+                        catch (E1405_ServiceMaintenanceModeException)
+                        {
+                            throw;
+                        }
+                        catch
+                        {
+                            try
+                            {
+                                uri = HttpConnectExtension.GetDefaultPath(uri);
+                                continue;
+                            }
+                            catch
+                            {
+                            }
+
+                            // Throw first exception here
+                            throw;
+                        }
 
                         try
                         {
