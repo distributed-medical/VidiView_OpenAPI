@@ -12,6 +12,9 @@ using VidiView.Api.WSMessaging;
 
 namespace VidiView.Api.Helpers;
 
+/// <summary>
+/// This is the Web Socket client that connects to VidiView server
+/// </summary>
 public class WSClient
 {
     public const string DefaultSubProtocol = "vidiview.com+json";
@@ -19,8 +22,8 @@ public class WSClient
     readonly byte[] _receiveBuffer = new byte[16 * 1024];
     readonly SemaphoreSlim _receiveLock = new SemaphoreSlim(1);
     readonly SemaphoreSlim _sendLock = new SemaphoreSlim(1);
-    readonly ILogger _logger;
     readonly ConcurrentDictionary<string, TaskCompletionSource<IWSReply>> _messageAwaitingReply = new();
+    readonly ILogger _logger;
 
     ClientWebSocket? _socket;
     CancellationTokenSource? _cts;
@@ -104,21 +107,23 @@ public class WSClient
             await SendMessageInternalAsync(authMessage, socket, cancellationToken);
             var message = await ReadMessageInternalAsync(socket, cancellationToken);
 
-            if (message is AuthenticateReplyMessage response
-                && response.InReplyTo == authMessage.MessageId)
+            if (message is not AuthenticateReplyMessage response)
             {
-                // Successfully connected
-                _logger.LogInformation("Web socket to {uri} connected and authenticated", uri);
-
-                _socket = socket;
-                StartMessageReader();
-
-                return response;
+                throw new E1431_AuthenticateWebSocketException($"Unexpected response to authenticate request: {message?.GetType().Name}");
             }
-            else
+
+            if (response.InReplyTo != authMessage.MessageId)
             {
-                throw new Exception("Unexpected response to authenticate request");
+                throw new E1431_AuthenticateWebSocketException($"Unexpected message id in response to authenticate request");
             }
+
+            // Successfully connected
+            _logger.LogInformation("Web socket to {uri} connected and authenticated", uri);
+
+            _socket = socket;
+            StartMessageReader();
+
+            return response;
         }
         catch (Exception ex)
         {
@@ -132,10 +137,30 @@ public class WSClient
     bool RemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
     {
         if (sslPolicyErrors == SslPolicyErrors.None)
+        {
+            _logger.LogDebug("Certificate {Subject} is valid", certificate?.Subject);
             return true;
+        }
 
-        return certificate is X509Certificate2 x2
-               && x2.IsLegacyLicenseCertificate();
+        if (certificate is X509Certificate2 x2
+            && x2.IsLegacyLicenseCertificate())
+        {
+            _logger.LogDebug("Certificate {Subject} is legacy license certificate", certificate?.Subject);
+            return true;
+        }
+
+        string? message = null;
+        if (chain?.ChainStatus.Length > 0)
+        {
+            message = chain.ChainStatus[0].StatusInformation;
+        }
+        if (string.IsNullOrEmpty(message))
+        {
+            message = sslPolicyErrors.ToString();
+        }
+
+        _logger.LogError("Certificate {Subject} is not valid: {Detail}", certificate?.Subject, message);
+        return false;
     }
 
     /// <summary>
@@ -177,7 +202,7 @@ public class WSClient
                         // The ReadMessageLoop will signal connection closed event
                         _logger.LogDebug("Web socket successfully closed");
                     }
-                    catch (ConnectionClosedException)
+                    catch (E1430_WebSocketClosedException)
                     {
                         // Expected
                         _logger.LogDebug("Web socket successfully closed");
@@ -211,7 +236,7 @@ public class WSClient
     /// <param name="message"></param>
     /// <returns></returns>
     /// <exception cref="TimeoutException">Thrown if timeout</exception>
-    /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
+    /// <exception cref="E1430_WebSocketClosedException">Thrown if connection is closed</exception>
     /// <remarks>If the awaited reply is received, <see cref="MessageReceived"/> event will not be raised for the reply message</remarks>
     public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message)
     {
@@ -232,7 +257,7 @@ public class WSClient
     /// <param name="message"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    /// <exception cref="ConnectionClosedException">Thrown if connection is closed</exception>
+    /// <exception cref="E1430_WebSocketClosedException">Thrown if connection is closed</exception>
     /// <remarks>If the awaited reply is received, <see cref="MessageReceived"/> event will not be raised for the reply message</remarks>
     public async Task<IWSReply> SendAndAwaitReplyAsync(IWSMessage message, CancellationToken cancellationToken)
     {
@@ -296,7 +321,7 @@ public class WSClient
             {
                 _logger.LogWarning(ex, "Web socket unexpectedly closed");
 
-                var ex2 = new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+                var ex2 = new E1430_WebSocketClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
                 _socket = null;
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
                 throw ex2;
@@ -436,7 +461,7 @@ public class WSClient
                                 _logger.LogError("Input message too large (> {bytes}). Closing connection", MaxMessageSize);
 
                                 await socket.CloseAsync(WebSocketCloseStatus.MessageTooBig, "Input message too large", CancellationToken.None);
-                                throw new ConnectionClosedException(WebSocketCloseStatus.MessageTooBig, $"Input message larger than {MaxMessageSize} bytes");
+                                throw new E1430_WebSocketClosedException(WebSocketCloseStatus.MessageTooBig, $"Input message larger than {MaxMessageSize} bytes");
                             }
 
                             if (!result.EndOfMessage)
@@ -450,7 +475,7 @@ public class WSClient
 
                     case WebSocketMessageType.Close:
                         _logger.LogInformation("Web socket closed. {status}: {reason}", result.CloseStatus, result.CloseStatusDescription);
-                        throw new ConnectionClosedException(result.CloseStatus, result.CloseStatusDescription);
+                        throw new E1430_WebSocketClosedException(result.CloseStatus, result.CloseStatusDescription);
 
                     case WebSocketMessageType.Binary:
                         _logger.LogDebug("Binary frame ignored");
@@ -471,7 +496,7 @@ public class WSClient
                 case WebSocketError.Faulted:
                 case WebSocketError.ConnectionClosedPrematurely:
                 case WebSocketError.InvalidState:
-                    throw new ConnectionClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+                    throw new E1430_WebSocketClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
             }
 
             throw;
