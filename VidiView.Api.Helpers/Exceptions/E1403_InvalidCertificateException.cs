@@ -1,4 +1,6 @@
-﻿namespace VidiView.Api.Exceptions;
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace VidiView.Api.Exceptions;
 
 /// <summary>
 /// The host did not present a valid certificate
@@ -17,4 +19,6 @@ public class E1403_InvalidCertificateException : E1400_ConnectServerException
     {
         ErrorCode = 1402;
     }
+
+    public X509Certificate2? Certificate { get; set; }
 }
