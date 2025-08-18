@@ -109,7 +109,7 @@ public class WSClient
 
             if (message is not AuthenticateReplyMessage response)
             {
-                throw new E1431_AuthenticateWebSocketException($"Unexpected response to authenticate request: {message?.GetType().Name}");
+                throw new E1431_AuthenticateWebSocketException($"Received message type: {message?.GetType().Name}");
             }
 
             if (response.InReplyTo != authMessage.MessageId)

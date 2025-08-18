@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Linq.Expressions;
 using System.Text.Json;
 using VidiView.Api.WSMessaging;
 
@@ -167,10 +168,7 @@ public static class WSMessageSerializer
 
     private static Type FindPrototypeType(string typeName, string[] genericTypeParams)
     {
-        var allTypes = AppDomain.CurrentDomain
-            .GetAssemblies()
-            .SelectMany(a => a.GetTypes());
-
+        var allTypes = EnumerateAllTypes();
         var messageType = from t in allTypes
                           where (t.IsGenericType
                                 && t.ToString().StartsWith(typeName + '`' + genericTypeParams.Length.ToString()))
@@ -187,14 +185,30 @@ public static class WSMessageSerializer
         if (type != null)
             return new[] { type };
 
-        // Enumerate all types
-        var allTypes = AppDomain.CurrentDomain
-            .GetAssemblies()
-            .SelectMany(a => a.GetTypes());
+        var allTypes = EnumerateAllTypes();
 
         return from t in allTypes
                where (t.ToString() == typeName)
                select t;
+    }
+
+    private static IEnumerable<Type> EnumerateAllTypes()
+    {
+        // Enumerate all types
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(a =>
+            {
+                // We must catch exceptions here, as some assemblies may not be loaded correctly
+                try
+                {
+                    return a.GetTypes();
+                }
+                catch
+                {
+                    return Array.Empty<Type>();
+                }
+            });
     }
 
     /// <summary>
