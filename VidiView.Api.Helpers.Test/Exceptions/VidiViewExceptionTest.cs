@@ -86,4 +86,17 @@ public class VidiViewExceptionTest
 
     }
 
+    [TestMethod]
+    public void Deserialize_Exception_WithPropertyOverload()
+    {
+        // Arrange - imitate the code in AssertNotProblem
+        string problemJson = "{\"type\":\"http://schema.vidiview.com/exception/E1007_DeviceNotGrantedAccessException\",\"title\":\"Error 1007\",\"detail\":\"Device not granted\",\"description\":\"Device not granted\",\"error-code\":\"1007\",\"verification-code\":\"ABC123\"}";
+        var problem = JsonSerializer.Deserialize<ProblemDetails>(problemJson, VidiViewJson.DefaultOptions);
+        problem.RawResponse = problemJson;
+
+        var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, problem, null);
+        Assert.IsInstanceOfType<E1007_DeviceNotGrantedAccessException>(exc);
+        Assert.AreEqual("ABC123", ((E1007_DeviceNotGrantedAccessException)exc).VerificationCode);
+    }
+
 }

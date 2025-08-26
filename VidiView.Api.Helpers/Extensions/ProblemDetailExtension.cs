@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using VidiView.Api.Exceptions;
 
 namespace VidiView.Api.DataModel;
@@ -32,6 +33,22 @@ public static class ProblemDetailExtension
     /// <returns>True if successful</returns>
     public static bool TryGetPropertyValue<TValue>(this ProblemDetails? problem, string propertyName, JsonSerializerOptions options, out TValue? value)
     {
+        bool success = TryGetPropertyValue(problem, typeof(TValue), propertyName, options, out var obj);
+        value = success ? (TValue?)obj : default;
+        return success;
+    }
+
+    /// <summary>
+    /// Use this helper method to deserialize additional problem properties
+    /// </summary>
+    /// <param name="problem"></param>
+    /// <param name="propertyType"></param>
+    /// <param name="propertyName"></param>
+    /// <param name="options"></param>
+    /// <param name="value"></param>
+    /// <returns>True if successful</returns>
+    public static bool TryGetPropertyValue(this ProblemDetails? problem, Type propertyType, string propertyName, JsonSerializerOptions options, out object? value)
+    {
         value = default;
 
         try
@@ -42,10 +59,10 @@ public static class ProblemDetailExtension
             var prop = GetJsonProperty(problem, propertyName, options);
             if (prop != null)
             {
-                switch (typeof(TValue))
+                switch (propertyType)
                 {
                     case Type type when type == typeof(string):
-                        value = (TValue?)(object?)prop.Value.Value.GetString();
+                        value = prop.Value.Value.GetString();
                         return true;
 
                     case Type type when type == typeof(bool):
@@ -53,21 +70,21 @@ public static class ProblemDetailExtension
                         {
                             case JsonValueKind.False:
                             case JsonValueKind.Null:
-                                value = (TValue)(object)false;
+                                value = false;
                                 return true;
                             case JsonValueKind.True:
-                                value = (TValue)(object)true;
+                                value = true;
                                 return true;
                             case JsonValueKind.String:
                                 switch (prop.Value.Value.GetString())
                                 {
                                     case "0":
                                     case "false":
-                                        value = (TValue)(object)false;
+                                        value = false;
                                         return true;
                                     case "1":
                                     case "true":
-                                        value = (TValue)(object)true;
+                                        value = true;
                                         return true;
                                     default:
                                         throw new ArgumentException("Cannot convert string to bool");
@@ -77,42 +94,43 @@ public static class ProblemDetailExtension
                         }
 
                     case Type type when type == typeof(int):
-                        value = (TValue)(object)prop.Value.Value.GetInt32();
+                        value = prop.Value.Value.GetInt32();
                         return true;
 
                     case Type type when type == typeof(long):
-                        value = (TValue)(object)prop.Value.Value.GetInt64();
+                        value = prop.Value.Value.GetInt64();
                         return true;
 
                     case Type type when type == typeof(double):
-                        value = (TValue)(object)prop.Value.Value.GetDouble();
+                        value = prop.Value.Value.GetDouble();
                         return true;
 
                     case Type type when type == typeof(float):
-                        value = (TValue)(object)prop.Value.Value.GetSingle();
+                        value = prop.Value.Value.GetSingle();
                         return true;
 
                     case Type type when type == typeof(decimal):
-                        value = (TValue)(object)prop.Value.Value.GetDecimal();
+                        value = prop.Value.Value.GetDecimal();
                         return true;
 
                     case Type type when type == typeof(Guid):
-                        value = (TValue)(object)prop.Value.Value.GetGuid();
+                        value = prop.Value.Value.GetGuid();
                         return true;
 
                     case Type type when type == typeof(IdAndName):
-                        value = (TValue)(object)prop.Value.Value.Deserialize<IdAndName>(options)!;
+                        value = prop.Value.Value.Deserialize<IdAndName>(options)!;
                         return true;
 
                     default:
-                        throw new NotImplementedException("Result value type not implemented");
+                        Debug.Assert(false, "Not implemented");
+                        return false;
                 }
             }
         }
         catch
         {
         }
-     
+
         return false;
     }
 

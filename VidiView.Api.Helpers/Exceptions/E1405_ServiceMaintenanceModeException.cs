@@ -2,7 +2,6 @@
 
 public class E1405_ServiceMaintenanceModeException : E1400_ConnectServerException
 {
-    public DateTimeOffset? ExpectedOnline { get; }
     public E1405_ServiceMaintenanceModeException(Uri requestedUri, string message, DateTimeOffset? expectedOnline)
         : base(message)
     {
@@ -10,4 +9,6 @@ public class E1405_ServiceMaintenanceModeException : E1400_ConnectServerExceptio
         ExpectedOnline = expectedOnline;
         RequestedUri = requestedUri;
     }
+
+    public DateTimeOffset? ExpectedOnline { get; init; }
 }

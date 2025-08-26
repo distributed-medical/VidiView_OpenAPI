@@ -81,8 +81,7 @@ jobs:
     - name: Build and test
       run: |
           dotnet build ${{ matrix.project }} --configuration ${{ matrix.configuration }}
-          # Cannot run tests until demo0.vidiview.com is up and running again
-         # dotnet test ${{ matrix.project }}.Test --configuration ${{ matrix.configuration }}
+          dotnet test ${{ matrix.project }}.Test --configuration ${{ matrix.configuration }}
     
     # Only sign when building a main release
     - name: Sign binaries

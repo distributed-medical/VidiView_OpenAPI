@@ -10,5 +10,6 @@ public class E1037_FieldReadOnlyException : VidiViewException
     {
     }
 
-    public string? FieldLevel => Problem.GetPropertyValue<string>(nameof(FieldLevel), VidiViewJson.DefaultOptions);
+    public string? FieldLevel { get; init; }
+    public string? FieldName { get; init; }
 }

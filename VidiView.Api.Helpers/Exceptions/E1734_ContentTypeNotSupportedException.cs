@@ -6,4 +6,6 @@ public class E1734_ContentTypeNotSupportedException : VidiViewException
         : base(message)
     {
     }
+
+    public string? ContentType { get; init; }
 }

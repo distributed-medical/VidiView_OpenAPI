@@ -1,4 +1,5 @@
 ﻿using VidiView.Api.DataModel;
+using VidiView.Api.Serialization;
 
 namespace VidiView.Api.Exceptions;
 

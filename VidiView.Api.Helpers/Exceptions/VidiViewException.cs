@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using VidiView.Api.DataModel;
+using VidiView.Api.Serialization;
 
 namespace VidiView.Api.Exceptions;
 
@@ -55,6 +56,23 @@ public class VidiViewException : Exception
                         .SetValue(exc, true);
                     type.GetProperty(nameof(Properties))?
                         .SetValue(exc, props);
+
+                    // Set all properties we can find
+                    var additionalProps = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+                    foreach (var prop in additionalProps)
+                    {
+                        if (problem.TryGetPropertyValue(prop.PropertyType, prop.Name, VidiViewJson.DefaultOptions, out var value))
+                        {
+                            try
+                            {
+                                prop.SetValue(exc, value);
+                            }
+                            catch
+                            {
+                                Debug.Assert(false, $"Failed to set property {prop.Name} of type {prop.PropertyType}");
+                            }
+                        }
+                    }
 
                     return exc;
                 }
@@ -165,5 +183,5 @@ public class VidiViewException : Exception
     /// <summary>
     /// Raw Json properties
     /// </summary>
-    public IReadOnlyDictionary<string, JsonElement>? Properties { get; init; }
+    internal IReadOnlyDictionary<string, JsonElement>? Properties { get; init; }
 }

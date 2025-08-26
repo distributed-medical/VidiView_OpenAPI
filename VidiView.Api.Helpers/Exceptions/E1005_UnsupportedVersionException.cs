@@ -7,4 +7,6 @@ public class E1005_UnsupportedVersionException : VidiViewException
     {
         ErrorCode = 1005;
     }
+
+    public string? MinimumSupportedVersion { get; init; }
 }
