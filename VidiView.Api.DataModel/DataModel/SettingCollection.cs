@@ -9,6 +9,21 @@ public record SettingCollection
     public int Count { get; init; }
 
     /// <summary>
+    /// The server id
+    /// </summary>
+    public Guid ServerId { get; init; }
+
+    /// <summary>
+    /// The user id these settings apply to, or null for default server settings
+    /// </summary>
+    public Guid? UserId { get; init; }
+
+    /// <summary>
+    /// The department id these settings apply to (if any)
+    /// </summary>
+    public Guid? DepartmentId { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this collection
     /// </summary>
     [JsonPropertyName("_links")]
