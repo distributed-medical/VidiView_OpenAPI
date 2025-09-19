@@ -38,9 +38,9 @@ public record Link
         // when deserializing.
         internal set
         { 
-            if (_rel != null)
+            if (_rel != null && _rel != value)
             {
-                throw new InvalidOperationException("Rel can only be set once.");
+                throw new InvalidOperationException("Rel is read only after assignment");
             }
             _rel = value;
         } 
