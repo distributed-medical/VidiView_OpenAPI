@@ -190,6 +190,8 @@ public static class SettingKey
     public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
     public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
 
+    public const string CaptureOptionsGeoTagMediaFiles = "Capture/Options/Geolocation/TagMediaFiles";
+
     public const string CaptureOptionsSnapshotResolution = "Capture/Options/SnapshotResolution";
     public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
     public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
