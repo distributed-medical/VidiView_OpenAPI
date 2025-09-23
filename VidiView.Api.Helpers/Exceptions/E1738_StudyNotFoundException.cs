@@ -6,4 +6,6 @@ public class E1738_StudyNotFoundException : E1712_NotFoundException
         : base(message)
     {
     }
+
+    public string? StudyId { get; init; }
 }

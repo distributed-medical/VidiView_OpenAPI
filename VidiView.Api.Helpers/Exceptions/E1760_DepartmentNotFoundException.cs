@@ -6,4 +6,6 @@ public class E1760_DepartmentNotFoundException : E1712_NotFoundException
         : base(message)
     {
     }
+
+    public string? DepartmentId { get; init; }
 }

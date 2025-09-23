@@ -69,4 +69,9 @@ public record StudyCreateOptions : Study
     /// Set to true to assign the newly created study to the current user
     /// </summary>
     public bool? AssignToSelf { get; init; }
+
+    /// <summary>
+    /// Used to create a study on behalf of a different user
+    /// </summary>
+    public Guid? CreateOnBehalfOf { get; init; }
 }
