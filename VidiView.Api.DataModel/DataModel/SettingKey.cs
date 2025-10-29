@@ -171,6 +171,7 @@ public static class SettingKey
     public const string CaptureServiceAllowPin = "Capture/Service/Authentication/AllowPin";
     public const string CaptureServicePinMinLength = "Capture/Service/Authentication/PinMinimumLength";
     public const string CaptureServicePinMaxInvalidAttempts = "Capture/Service/Authentication/PinMaxInvalidAttempts";
+
     public const string CaptureServiceAllowBiometric = "Capture/Service/Authentication/AllowBiometric";
     public const string CaptureServiceBiometricLifetime = "Capture/Service/Authentication/BiometricLifetime";
     public const string CaptureServiceBiometricAutoExtend = "Capture/Service/Authentication/BiometricAutoExtend";
@@ -178,27 +179,30 @@ public static class SettingKey
     public const string CaptureServiceActiveSyncEnable = "Capture/Service/ActiveSync/Enable";
     public const string CaptureServiceStudyDeleteEmpty = "Capture/Service/Study/DeleteEmpty";
 
-    public const string CaptureOptionsScreenSaverAllowDuringActiveStudy = "Capture/Options/ScreenSaver/AllowDuringActiveStudy";
-    public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
+    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
+    public const string CaptureOptionsAllowLaunchDermalyser = "Capture/Options/AllowLaunchDermalyser";
+    public const string CaptureOptionsAllowTakePhotoWhenRecordingVideo = "Capture/Options/AllowTakePhotoWhenRecordingVideo";
+    public const string CaptureOptionsAllowUploadFromCameraRoll = "Capture/Options/AllowUploadFromCameraRoll";
     public const string CaptureOptionsAnatomicMap = "Capture/Options/AnatomicMap";
     public const string CaptureOptionsAnatomicTagging = "Capture/Options/AnatomicTagging";
     public const string CaptureOptionsContinueStudyAllowed = "Capture/Options/ContinueStudyAllowed";
     public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
     public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
-    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
+    public const string CaptureOptionsGeoTagMediaFiles = "Capture/Options/Geolocation/TagMediaFiles";
     public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";
     public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
     public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
+    public const string CaptureOptionsScreenSaverAllowDuringActiveStudy = "Capture/Options/ScreenSaver/AllowDuringActiveStudy";
+    public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
 
-    public const string CaptureOptionsGeoTagMediaFiles = "Capture/Options/Geolocation/TagMediaFiles";
-
+    [Obsolete]
     public const string CaptureOptionsSnapshotResolution = "Capture/Options/SnapshotResolution";
     public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
+    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
     public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
     public const string CaptureOptionsVideoMaxLengthSeconds = "Capture/Options/VideoMaxLengthSeconds";
     public const string CaptureOptionsVideoRecordAudio = "Capture/Options/VideoRecordAudio";
     public const string CaptureOptionsVideoResolution = "Capture/Options/VideoResolution";
-    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
     #endregion
 
     #region VidiView Client
