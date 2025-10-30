@@ -14,6 +14,7 @@ public static class MaintenanceMode
     /// <param name="response"></param>
     /// <returns></returns>
     /// <exception cref="E1405_ServiceMaintenanceModeException">Thrown if the server is in maintenance mode</exception>
+//    [Obsolete("Use AssertNotMaintenanceModeAsync extension method on HttpResponseMessage instead")]
     public static async Task ThrowIfMaintenanceModeAsync(HttpStatusCode statusCode, Uri? requestedUri)
     {
         if (statusCode == HttpStatusCode.ServiceUnavailable && requestedUri != null)
@@ -34,6 +35,37 @@ public static class MaintenanceMode
             {
                 // The service is currently in maintenance mode. Throw appropriate error
                 throw new E1405_ServiceMaintenanceModeException(requestedUri, maintenanceMode.Message ?? "Maintenance mode", maintenanceMode.Until);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Check if the response failed due to maintenance mode
+    /// </summary>
+    /// <param name="response"></param>
+    /// <param name="httpClient"></param>
+    /// <returns></returns>
+    /// <exception cref="E1405_ServiceMaintenanceModeException">Thrown if the server is in maintenance mode</exception>
+    public static async Task AssertNotMaintenanceModeAsync(this HttpResponseMessage response, HttpClient httpClient)
+    {
+        var uri = response.RequestMessage?.RequestUri;
+        if (response?.StatusCode == HttpStatusCode.ServiceUnavailable && uri != null)
+        {
+            // This indicates the computer is responding, but no service is found on the expected url
+            MaintenanceInfo? maintenanceMode = null;
+            try
+            {
+                maintenanceMode = await GetMaintenanceInfoAsync(httpClient, uri);
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            if (maintenanceMode?.MaintenanceMode == true)
+            {
+                // The service is currently in maintenance mode. Throw appropriate error
+                throw new E1405_ServiceMaintenanceModeException(uri, maintenanceMode.Message ?? "Maintenance mode", maintenanceMode.Until);
             }
         }
     }
