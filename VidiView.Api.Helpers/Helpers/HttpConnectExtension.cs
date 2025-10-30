@@ -5,6 +5,7 @@ using System.Security.Authentication;
 using System.Web;
 using VidiView.Api.DataModel;
 using VidiView.Api.Exceptions;
+using static System.Net.WebRequestMethods;
 
 namespace VidiView.Api.Helpers;
 
@@ -132,6 +133,7 @@ public static class HttpConnectExtension
                     case HttpStatusCode.NotFound:
                         // A json problem here indicates the VidiView Server is answering.
                         await response.AssertNotProblemAsync().ConfigureAwait(false);
+                        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
 
                         // Otherwise it is treated as the Web Server responded with the 404
                         uri = GetDefaultPath(uri);

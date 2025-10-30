@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using VidiView.Api.DataModel;
+using static System.Net.WebRequestMethods;
 
 namespace VidiView.Api.Helpers;
 
@@ -32,6 +33,7 @@ public static class DeviceRegistration
         var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
         var response = await http.PutAsync(link, device).ConfigureAwait(false);
+        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
         var result = await response.DeserializeAsync<ClientDevice>().ConfigureAwait(false);
         http.InvalidateHome();
@@ -64,7 +66,8 @@ public static class DeviceRegistration
         var link = api.Links.GetRequired(Rel.RegisterClientDevice);
 
         var response = await http.PutAsync(link, device);
-        await response.AssertSuccessAsync();
+        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
         var result = response.Deserialize<ClientDevice>();
         http.InvalidateHome();
         

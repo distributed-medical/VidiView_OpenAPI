@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using VidiView.Api.DataModel;
+using static System.Net.WebRequestMethods;
 
 namespace VidiView.Api.Helpers;
 
@@ -27,6 +28,7 @@ public static class HttpMethodExtensions
         };
 
         var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
+        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
         await response.AssertSuccessAsync().ConfigureAwait(false);
 
         if (typeof(T) == typeof(string))
@@ -60,6 +62,7 @@ public static class HttpMethodExtensions
         try
         {
             var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+            await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
             await response.AssertSuccessAsync();
             return await HttpContentStream.CreateFromResponse(http, response);
         }

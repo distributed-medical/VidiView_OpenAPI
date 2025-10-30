@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using VidiView.Api.DataModel;
 using VidiView.Api.Headers;
+using static System.Net.WebRequestMethods;
 
 namespace VidiView.Api.Helpers;
 
@@ -82,6 +83,7 @@ public static class HttpClientExtensions
         try
         {
             var response = await http.GetAsync(uri, cancellationToken ?? CancellationToken.None).ConfigureAwait(false);
+            await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
             await response.AssertSuccessAsync().ConfigureAwait(false);
             home = await response.DeserializeAsync<ApiHome>().ConfigureAwait(false);
             _cache[http] = home;

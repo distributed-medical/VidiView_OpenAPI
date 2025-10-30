@@ -150,6 +150,7 @@ public class X509Authenticator : IAuthenticator
             link = User.Links.GetRequired(Rel.RequestToken);
 
             var response = await _http.PostAsync(link, Options).ConfigureAwait(false);
+            await response.AssertNotMaintenanceModeAsync(_http).ConfigureAwait(false);
             await response.AssertSuccessAsync().ConfigureAwait(false);
             Token = response.Deserialize<AuthToken>();
 

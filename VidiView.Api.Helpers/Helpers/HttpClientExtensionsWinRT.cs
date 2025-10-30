@@ -74,7 +74,8 @@ public static class HttpClientExtensionsWinRT
             throw new InvalidOperationException("You must call ConnectAsync()");
 
         var response = await http.GetAsync(uri);
-        await response.AssertSuccessAsync();
+        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
+        await response.AssertSuccessAsync().ConfigureAwait(false);
         home = response.Deserialize<ApiHome>();
 
         _cache[http] = home;

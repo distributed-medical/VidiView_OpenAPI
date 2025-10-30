@@ -215,6 +215,7 @@ public class HttpContentStream : Stream
             request.Headers.Range = range;
             var response = await _http.SendAsync(request, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false)
                 ?? throw new NullReferenceException("Response unexpectedly null after completed send request");
+            await response.AssertNotMaintenanceModeAsync(_http).ConfigureAwait(false);
             await response.AssertSuccessAsync();
 
             await AssignPart(response).ConfigureAwait(false);

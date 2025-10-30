@@ -65,6 +65,7 @@ public class UploadHelper
             httpContent.Headers.ContentRange = new ContentRangeHeaderValue(stream.Position, stream.Position + rangeStream.Length - 1, stream.Length);
 
             response = await _http.PostAsync(link.ToUrl(), httpContent, cancellationToken).ConfigureAwait(false);
+            await response.AssertNotMaintenanceModeAsync(_http).ConfigureAwait(false);
             await response.AssertSuccessAsync().ConfigureAwait(false);
 
             // In MAUI, the underlying code will reset the stream's position

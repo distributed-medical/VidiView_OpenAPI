@@ -30,6 +30,7 @@ public static class HttpMethodExtensionsWinRT
         };
         
         var response = await SendRequestInternal(http, request, cancellationToken);
+        await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
         await response.AssertSuccessAsync();
 
         if (typeof(T) == typeof(string))

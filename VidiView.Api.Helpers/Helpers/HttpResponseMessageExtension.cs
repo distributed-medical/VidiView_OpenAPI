@@ -139,9 +139,6 @@ public static class HttpResponseMessageExtension
             // Check if we have any additional error information
             await AssertNotProblemAsync(response);
 
-            // Check if server is in maintenance mode
-            await MaintenanceMode.ThrowIfMaintenanceModeAsync(response.StatusCode, response.RequestMessage?.RequestUri);
-
             string? reasonPhrase = !string.IsNullOrEmpty(response.ReasonPhrase) ? response.ReasonPhrase : null;
 
             // Check if this a generic error

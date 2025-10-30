@@ -6,6 +6,7 @@ using VidiView.Api.Exceptions;
 using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
+using static System.Net.WebRequestMethods;
 
 namespace VidiView.Api.Helpers;
 
@@ -256,6 +257,7 @@ public sealed class HttpContentStreamWinRT : IRandomAccessStreamWithContentType,
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
+            await response.AssertNotMaintenanceModeAsync(_httpClient).ConfigureAwait(false);
             await response.AssertSuccessAsync();
 
             var info = ParseResponse(response);

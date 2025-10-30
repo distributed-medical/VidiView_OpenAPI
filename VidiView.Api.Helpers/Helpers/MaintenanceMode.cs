@@ -14,7 +14,7 @@ public static class MaintenanceMode
     /// <param name="response"></param>
     /// <returns></returns>
     /// <exception cref="E1405_ServiceMaintenanceModeException">Thrown if the server is in maintenance mode</exception>
-//    [Obsolete("Use AssertNotMaintenanceModeAsync extension method on HttpResponseMessage instead")]
+    [Obsolete("Use AssertNotMaintenanceModeAsync extension method on HttpResponseMessage instead", true)]
     public static async Task ThrowIfMaintenanceModeAsync(HttpStatusCode statusCode, Uri? requestedUri)
     {
         if (statusCode == HttpStatusCode.ServiceUnavailable && requestedUri != null)
@@ -69,6 +69,32 @@ public static class MaintenanceMode
             }
         }
     }
+
+#if WINRT
+    public static async Task AssertNotMaintenanceModeAsync(this Windows.Web.Http.HttpResponseMessage response, Windows.Web.Http.HttpClient http)
+    {
+        var uri = response.RequestMessage?.RequestUri;
+        if (response?.StatusCode == Windows.Web.Http.HttpStatusCode.ServiceUnavailable && uri != null)
+        {
+            // This indicates the computer is responding, but no service is found on the expected url
+            MaintenanceInfo? maintenanceMode = null;
+            try
+            {
+                maintenanceMode = await GetMaintenanceInfoAsync(http, uri);
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            if (maintenanceMode?.MaintenanceMode == true)
+            {
+                // The service is currently in maintenance mode. Throw appropriate error
+                throw new E1405_ServiceMaintenanceModeException(uri, maintenanceMode.Message ?? "Maintenance mode", maintenanceMode.Until);
+            }
+        }
+    }
+#endif
 
     /// <summary>
     /// Query the maintenance mode endpoint, derived from the supplied uri
