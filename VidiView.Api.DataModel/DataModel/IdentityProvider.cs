@@ -34,6 +34,11 @@ public record IdentityProvider
     public string? Prompt { get; init; }
 
     /// <summary>
+    /// The redirect URL
+    /// </summary>
+    public string RedirectUrl { get; init; } = null!;
+
+    /// <summary>
     /// Flags
     /// </summary>
     public IdentityProviderFlags Flags { get; init; }
@@ -43,6 +48,7 @@ public record IdentityProvider
         return $"{Name} ({Issuer})";
     }
 
+    [Obsolete("Not used anymore", true)]
     public bool SkipIdPLogout => Flags.HasFlag(IdentityProviderFlags.SkipIdPLogout);
 
     public bool PrivateSession => Flags.HasFlag(IdentityProviderFlags.PrivateSession);
