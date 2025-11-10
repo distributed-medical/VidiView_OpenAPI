@@ -66,6 +66,11 @@ public record Department
     public StudyType[]? StudyTypes { get; init; }
 
     /// <summary>
+    /// The permissions granted to the current user for this department
+    /// </summary>
+    public long GrantedPermission { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]

@@ -43,6 +43,11 @@ public enum DepartmentPermissions
     OverrideBlockedPatient = 0x2000,
 
     /// <summary>
+    /// Manage study locks manually
+    /// </summary>
+    ManageStudyLock = 0x4000,
+
+    /// <summary>
     /// Save file from study to local disk
     /// </summary>
     DownloadFile = 0x8000,
