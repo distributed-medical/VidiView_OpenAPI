@@ -1,7 +1,7 @@
 ﻿namespace VidiView.Api.DataModel;
 
 [ExcludeFromCodeCoverage]
-public record Snomed
+public record Snomed : IEquatable<Snomed>
 {
     public Snomed()
     {
@@ -26,4 +26,19 @@ public record Snomed
     /// Verbose meaning of expression
     /// </summary>
     public string? Meaning { get; init; }
+
+    /// <summary>
+    /// Compare two Snomed instances for equality. Only Expression is considered
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public virtual bool Equals(Snomed? other)
+    {
+        return other != null && other.Expression == this.Expression;
+    }
+
+    public override int GetHashCode()
+    {
+        return Expression.GetHashCode();
+    }
 }

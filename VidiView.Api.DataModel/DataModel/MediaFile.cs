@@ -151,6 +151,21 @@ public record MediaFile
     public string Timestamp { get; init; }
 
     /// <summary>
+    /// Position where this media file was created
+    /// </summary>
+    public double? GeoLongitude { get; init; }
+
+    /// <summary>
+    /// Position where this media file was created
+    /// </summary>
+    public double? GeoLatitude { get; init; }
+
+    /// <summary>
+    /// Accuracy of geo location
+    /// </summary>
+    public double? GeoAccuracy { get; init; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
