@@ -10,6 +10,7 @@ namespace VidiView.Api.Exceptions;
 /// <summary>
 /// This is the base VidiView exception class
 /// </summary>
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
 public class VidiViewException : Exception
 {
     /// <summary>
