@@ -41,6 +41,7 @@ public record StudyType
     /// <summary>
     /// Type flags
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public TypeFlags Flags { get; init; }
 
     /// <summary>

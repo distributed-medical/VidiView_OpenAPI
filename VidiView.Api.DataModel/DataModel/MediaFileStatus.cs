@@ -19,6 +19,21 @@ public enum MediaFileStatus
     Verified = 20,
 
     /// <summary>
+    /// This is an image that has been received from an external system (modality receive)
+    /// </summary>
+    ModalityReceive = 62,
+
+    /// <summary>
+    /// Image is exported but not present in this system
+    /// </summary>
+    ExportedNotPresent = 70,
+
+    /// <summary>
+    /// Image is exported and restored from archive
+    /// </summary>
+    ExportedRestoredFromArchive = 71,
+
+    /// <summary>
     /// File has been erased on the server
     /// </summary>
     FileErased = 80,
