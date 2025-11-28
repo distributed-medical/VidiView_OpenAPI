@@ -51,13 +51,13 @@ public enum UserFlags
     RequirePasswordChange = 0x0200,
 
     /// <summary>
-    /// Disabled user
+    /// Disabled account
     /// </summary>
     Disabled = 0x1000,
 
     /// <summary>
     /// This user is actually a group
     /// </summary>
-    IsGroupClaim = 0x2000,
+    IsGroup = 0x2000,
 
 }

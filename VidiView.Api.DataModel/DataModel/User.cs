@@ -8,20 +8,16 @@ public record User
         return user == null ? null! : new IdAndName(user.Id, user.Name);
     }
 
-    // Well-known issuers
-    public const string IdentityActiveDirectory = "http://schema.vidiview.com/2022/03/identity/claims/ad";
-    public const string IdentityVidiView = "http://schema.vidiview.com/2022/03/identity/claims/vidiview";
-
-    public const string DefaultUserClaimType = "Subject";
-
     /// <summary>
-    /// The user id
+    /// The internal VidiView ID of this user
     /// </summary>
     public Guid Id { get; init; }
 
     /// <summary>
     /// The user id authority
     /// </summary>
+    /// <remarks>The issuer is either a well-known issuer (<see cref="WellKnownIssuerAuthority"/>)
+    /// or an identifier of an external identity provider</remarks>
     public string Issuer { get; init; } = null!;
 
     /// <summary>
@@ -30,8 +26,10 @@ public record User
     public string? IssuerName { get; init; }
 
     /// <summary>
-    /// The type of this claim
+    /// The authority's type of claim-value
     /// </summary>
+    /// <remarks>The claim type is either a well-known claim type (<see cref="WellKnownClaimType"/>)
+    /// or an identifier of an external claim type (for external identity providers)</remarks>
     public string ClaimType { get; init; } = null!;
 
     /// <summary>
