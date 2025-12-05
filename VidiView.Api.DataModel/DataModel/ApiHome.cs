@@ -55,6 +55,18 @@ public record ApiHome
     public IdentityProvider[]? IdentityProviders { get; init; }
 
     /// <summary>
+    /// Returns application startup time
+    /// </summary>
+    /// <remarks>Only returned by configuration API</remarks>
+    public DateTimeOffset? ApplicationStartupTime { get; set; }
+
+    /// <summary>
+    /// Returns license status
+    /// </summary>
+    /// <remarks>Only returned by configuration API</remarks>
+    public string? LicenseStatus { get; set; }
+
+    /// <summary>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")] 
