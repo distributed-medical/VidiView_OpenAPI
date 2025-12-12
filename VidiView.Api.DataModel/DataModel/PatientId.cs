@@ -3,6 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record PatientId
 {
+    /// <summary>
+    /// The VidiView ID of the patient
+    /// </summary>
     public Guid? Guid { get; init; }
 
     /// <summary>
@@ -14,6 +17,11 @@ public record PatientId
     /// The assigning authority id 
     /// </summary>
     public string Authority { get; init; } = string.Empty;
+
+    /// <summary>
+    /// The assigning authority name
+    /// </summary>
+    public string? AuthorityName { get; init; }
 
     /// <summary>
     /// The desired UI presentation of the patient id

@@ -11,4 +11,9 @@ public enum PatientFlags
     /// This patient record has been merged into the specified Id.Guid
     /// </summary>
     Merged = 0x0001,
+
+    /// <summary>
+    /// The patient record returned is a redirection from the requested id
+    /// </summary>
+    IsRedirection = 0x0002,
 }
