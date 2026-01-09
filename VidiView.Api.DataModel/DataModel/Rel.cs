@@ -8,6 +8,7 @@ public static class Rel
     public const string AddAnnotation = "add-annotation";
     public const string AddFileToExportQueue = "add-for-export";
     public const string AddStudy = "add-study";
+    [Obsolete("Use Studies instead, with 'any' as department id", true)]
     public const string AllStudies = "all-studies";
     public const string AnnounceUpload = "announce-upload";
     public const string Assign = "assign";
