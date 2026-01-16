@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record User
 {
-    public static implicit operator IdAndName(User user)
+    public static implicit operator IdAndName?(User? user)
     {
-        return user == null ? null! : new IdAndName(user.Id, user.Name);
+        return user == null ? null : new IdAndName(user.Id, user.Name);
     }
 
     /// <summary>

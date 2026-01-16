@@ -34,6 +34,7 @@ public record IdAndName : IEquatable<IdAndName>
     /// Any HAL Rest links associated with this object
     /// </summary>
     [JsonPropertyName("_links")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public LinkCollection? Links { get; init; }
 
     public override string ToString()

@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record ServiceHost
 {
-    public static implicit operator IdAndName(ServiceHost host)
+    public static implicit operator IdAndName?(ServiceHost? host)
     {
-        return host == null ? null! : new IdAndName(host.Id, host.Name);
+        return host == null ? null : new IdAndName(host.Id, host.Name);
     }
 
     /// <summary>

@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record Worklist
 {
-    public static implicit operator IdAndName(Worklist worklist)
+    public static implicit operator IdAndName?(Worklist? worklist)
     {
-        return worklist == null ? null! : new IdAndName(worklist.Id, worklist.Name);
+        return worklist == null ? null : new IdAndName(worklist.Id, worklist.Name);
     }
 
     /// <summary>

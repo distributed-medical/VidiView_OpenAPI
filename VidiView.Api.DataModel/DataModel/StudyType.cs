@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record StudyType
 {
-    public static implicit operator IdAndName(StudyType type)
+    public static implicit operator IdAndName?(StudyType? type)
     {
-        return type == null ? null! : new IdAndName(type.Id, type.Name);
+        return type == null ? null : new IdAndName(type.Id, type.Name);
     }
 
     /// <summary>

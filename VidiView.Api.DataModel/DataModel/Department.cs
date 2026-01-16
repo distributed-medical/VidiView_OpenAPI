@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record Department
 {
-    public static implicit operator IdAndName(Department department)
+    public static implicit operator IdAndName?(Department? department)
     {
-        return department == null ? null! : new IdAndName(department.Id, department.Name);
+        return department == null ? null : new IdAndName(department.Id, department.Name);
     }
 
     /// <summary>

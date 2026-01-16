@@ -3,9 +3,9 @@
 [ExcludeFromCodeCoverage]
 public record MediaType
 {
-    public static implicit operator IdAndName(MediaType type)
+    public static implicit operator IdAndName?(MediaType? type)
     {
-        return type == null ? null! : new IdAndName(type.Id, type.Name);
+        return type == null ? null : new IdAndName(type.Id, type.Name);
     }
 
     /// <summary>
