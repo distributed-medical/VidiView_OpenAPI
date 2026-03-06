@@ -107,6 +107,11 @@ public record MediaFile
     /// </summary>
     public string? Source { get; init; }
 
+    /// <summary>
+    /// Detailed information on the source, i.e. hardware identification
+    /// </summary>
+    public string? SourceDetails { get; init; }
+
     public string? StationName { get; init; }
 
     /// <summary>
