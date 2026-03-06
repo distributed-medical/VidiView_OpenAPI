@@ -21,6 +21,8 @@ public static class VidiViewAuthority
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+        chain.ChainPolicy.VerificationTime = certificate.NotBefore;
+
         chain.ChainPolicy.CustomTrustStore.Add(Certificate()); // Add our own root CA here...
 
         return chain.Build(certificate);
@@ -106,28 +108,9 @@ public static class VidiViewAuthority
         return new Certificate(blob);
     }
 
-    public static async Task<bool> IsLegacyLicenseCertificateAsync(this Certificate certificate)
+    public static Task<bool> IsLegacyLicenseCertificateAsync(this Certificate certificate)
     {
-        return await certificate.IsIssuedByAsync(Certificate2()).ConfigureAwait(false);
-    }
-
-    public static async Task<bool> IsIssuedByAsync(this Certificate certificate, Certificate issuer)
-    {
-        ArgumentNullException.ThrowIfNull(certificate, nameof(certificate));
-        ArgumentNullException.ThrowIfNull(issuer, nameof(issuer));
-
-        // The certificate validation does not work with custom roots?
-        // https://github.com/dotnet/sdk/issues/48899
-
-        return await Task.Run(() =>
-        {
-            using var chain = new X509Chain();
-            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-            chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-            chain.ChainPolicy.CustomTrustStore.Add(issuer.AsX509Certificate()); 
-
-            return chain.Build(certificate.AsX509Certificate());
-        });
+        return Task.FromResult(certificate.AsX509Certificate().IsLegacyLicenseCertificate());
     }
 
 //    public static async Task<bool> IsIssuedByAsync(this Certificate certificate, Certificate issuer)

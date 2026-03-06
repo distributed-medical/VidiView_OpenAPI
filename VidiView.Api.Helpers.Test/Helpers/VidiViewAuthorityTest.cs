@@ -13,8 +13,8 @@ public class VidiViewAuthorityTest
     public async Task VerifyInvalidCertificateException()
     {
         var cert = Test1Certificate();
-        Assert.IsFalse( await cert.IsIssuedByAsync(TeliaRootCert()) );
-        Assert.IsTrue( await cert.IsIssuedByAsync(VidiViewAuthority.Certificate2() ));
+        Assert.IsFalse( await TeliaRootCert().IsLegacyLicenseCertificateAsync());
+        Assert.IsTrue( await cert.IsLegacyLicenseCertificateAsync());
     }
 
     // Issued by License Authority
