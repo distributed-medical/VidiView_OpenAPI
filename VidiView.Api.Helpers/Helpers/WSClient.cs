@@ -118,16 +118,16 @@ public class WSClient
             }
 
             // Successfully connected
-            _logger.LogInformation("Web socket to {uri} connected and authenticated", uri);
+            _logger.LogDebug("Web socket connection to {uri} connected and authenticated", uri);
 
             _socket = socket;
             StartMessageReader();
 
             return response;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogDebug(ex, "Web socket to {uri} failed", uri);
+            _logger.LogDebug("Web socket connection to {uri} failed", uri);
 
             socket.Dispose();
             throw;
@@ -190,7 +190,7 @@ public class WSClient
                     break;
 
                 default:
-                    _logger.LogInformation("Close web socket requested");
+                    _logger.LogDebug("Close web socket requested");
 
                     // Initiate Close Handshake
                     await _socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
@@ -319,9 +319,9 @@ public class WSClient
         {
             if (_socket?.State != WebSocketState.Open)
             {
-                _logger.LogWarning(ex, "Web socket unexpectedly closed");
+                _logger.LogWarning("Web socket closed: {Error}", ex.Message);
 
-                var ex2 = new E1430_WebSocketClosedException(WebSocketCloseStatus.EndpointUnavailable, null, ex);
+                var ex2 = new E1430_WebSocketClosedException(WebSocketCloseStatus.EndpointUnavailable, ex.Message, ex);
                 _socket = null;
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
                 throw ex2;
@@ -331,7 +331,7 @@ public class WSClient
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Send IWSMessage failed");
+            _logger.LogError("Send IWSMessage failed: {Error}", ex.Message);
             throw;
         }
         finally
@@ -399,12 +399,12 @@ public class WSClient
             if (cancellationToken.IsCancellationRequested)
             {
                 // This is a deliberate Close called from our side
-                _logger.LogDebug(ex, "Web socket closed");
+                _logger.LogDebug("Web socket closed");
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(null));
             }
             else
             {
-                _logger.LogWarning(ex, "Web socket unexpectedly closed");
+                _logger.LogWarning("Web socket unexpectedly closed");
                 ConnectionClosed?.Invoke(this, new ConnectionClosedEventArgs(ex));
             }
 
