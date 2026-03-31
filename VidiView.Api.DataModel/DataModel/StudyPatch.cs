@@ -12,6 +12,11 @@ public record StudyPatch
     public Patch<Guid>? DepartmentId { get; init; }
 
     /// <summary>
+    /// Patient ID
+    /// </summary>
+    public Patch<Guid?>? PatientIdGuid { get; init; }
+
+    /// <summary>
     /// Study description
     /// </summary>
     public Patch<string?>? Description { get; init; }
