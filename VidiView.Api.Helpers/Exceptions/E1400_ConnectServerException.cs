@@ -6,17 +6,23 @@
 public class E1400_ConnectServerException : VidiViewException
 {
     public E1400_ConnectServerException(string message, Exception? innerException)
-        : base(message, innerException)
+        : base(1400, message, innerException)
     {
-        ErrorCode = 1400;
     }
 
     public E1400_ConnectServerException(string message)
-        : base(message)
+        : base(1400, message)
     {
-        ErrorCode = 1400;
     }
 
+    protected E1400_ConnectServerException(int errorCode, string message)
+        : base(errorCode, message)
+    {
+    }
+    protected E1400_ConnectServerException(int errorCode, string message, Exception? innerException)
+        : base(errorCode, message, innerException)
+    {
+    }
 #if WINRT
     /// <summary>
     /// The certificate presented by the host

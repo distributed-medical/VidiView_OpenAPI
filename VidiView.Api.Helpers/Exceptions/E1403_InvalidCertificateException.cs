@@ -8,16 +8,14 @@ namespace VidiView.Api.Exceptions;
 public class E1403_InvalidCertificateException : E1400_ConnectServerException
 {
     public E1403_InvalidCertificateException(string message, Uri requestedUri, Exception? innerException = null)
-        : base(message, innerException)
+        : base(1403, message, innerException)
     {
         RequestedUri = requestedUri;
-        ErrorCode = 1403;
     }
 
     public E1403_InvalidCertificateException(string message)
-        : base(message)
+        : base(1403, message)
     {
-        ErrorCode = 1402;
     }
 
     public X509Certificate2? Certificate { get; set; }

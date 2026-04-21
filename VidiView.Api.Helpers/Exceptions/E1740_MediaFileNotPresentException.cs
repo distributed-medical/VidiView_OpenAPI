@@ -5,7 +5,7 @@ namespace VidiView.Api.Exceptions;
 public class E1740_MediaFileNotPresentException : VidiViewException
 {
     public E1740_MediaFileNotPresentException(string message)
-        : base(message)
+        : base(1740, message)
     {
     }
 

@@ -3,7 +3,7 @@
 public class E1760_DepartmentNotFoundException : E1712_NotFoundException
 {
     public E1760_DepartmentNotFoundException(string message)
-        : base(message)
+        : base(1760, message)
     {
     }
 

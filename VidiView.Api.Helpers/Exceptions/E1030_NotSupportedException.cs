@@ -3,8 +3,7 @@
 public class E1030_NotSupportedException : VidiViewException
 {
     public E1030_NotSupportedException(string message)
-        : base(message)
+        : base(1030, message)
     {
-        ErrorCode = 1030;
     }
 }

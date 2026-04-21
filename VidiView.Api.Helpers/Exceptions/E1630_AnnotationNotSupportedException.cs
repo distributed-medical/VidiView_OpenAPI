@@ -3,7 +3,7 @@
 public class E1630_AnnotationNotSupportedException : VidiViewException
 {
     public E1630_AnnotationNotSupportedException(string message)
-        : base(message)
+        : base(1630, message)
     {
     }
 }

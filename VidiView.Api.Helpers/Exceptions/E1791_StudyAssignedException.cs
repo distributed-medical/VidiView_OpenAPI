@@ -3,7 +3,7 @@
 public class E1791_StudyAssignedException : VidiViewException
 {
     public E1791_StudyAssignedException(string message)
-        : base(message)
+        : base(1791, message)
     {
     }
 }

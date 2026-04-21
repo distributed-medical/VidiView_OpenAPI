@@ -3,9 +3,8 @@
 public class E1005_UnsupportedVersionException : VidiViewException
 {
     public E1005_UnsupportedVersionException(string message)
-        : base(message)
+        : base(1005, message)
     {
-        ErrorCode = 1005;
     }
 
     public string? MinimumSupportedVersion { get; init; }

@@ -3,8 +3,7 @@
 public class E1010_InvalidLicenseException : VidiViewException
 {
     public E1010_InvalidLicenseException(string message)
-        : base(message)
+        : base(1010, message)
     {
-        ErrorCode = 1010;
     }
 }

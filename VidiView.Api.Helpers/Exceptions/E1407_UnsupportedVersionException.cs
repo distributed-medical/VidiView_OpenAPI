@@ -3,8 +3,7 @@
 public class E1407_UnsupportedVersionException : VidiViewException
 {
     public E1407_UnsupportedVersionException(string message)
-        : base(message)
+        : base(1407, message)
     {
-        ErrorCode = 1407;
     }
 }

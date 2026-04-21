@@ -3,7 +3,7 @@
 public class E1735_ImageNotFoundException : E1712_NotFoundException
 {
     public E1735_ImageNotFoundException(string message)
-        : base(message)
+        : base(1735, message)
     {
     }
 

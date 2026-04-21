@@ -59,9 +59,29 @@ public record AuditEvent
     public string? AccessionNumber { get; init; }
 
     /// <summary>
+    /// The study date
+    /// </summary>
+    public DateTimeOffset? StudyDate { get; init; }
+
+    /// <summary>
     /// The department
     /// </summary>
     /// <remarks>Only returned for study interactions requests</remarks>
     public IdAndName? Department { get; init; }
+
+    /// <summary>
+    /// The media file this event applies to, if applicable. 
+    /// </summary>
+    public Guid? MediaFileId { get; init; }
+
+    /// <summary>
+    /// The index of the media file this event applies to, if applicable. 
+    /// </summary>
+    public int? Index { get; init; }
+
+    /// <summary>
+    /// The content type of the media file this event applies to, if applicable. 
+    /// </summary>
+    public string? ContentType { get; init; }
 
 }

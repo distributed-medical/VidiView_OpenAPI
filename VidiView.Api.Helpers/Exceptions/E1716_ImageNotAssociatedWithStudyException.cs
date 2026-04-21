@@ -3,7 +3,7 @@
 public class E1716_ImageNotAssociatedWithStudyException : VidiViewException
 {
     public E1716_ImageNotAssociatedWithStudyException(string message)
-        : base(message)
+        : base(1716, message)
     {
     }
 }

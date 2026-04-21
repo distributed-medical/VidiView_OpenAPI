@@ -3,8 +3,7 @@
 public class E1031_ArgumentException : VidiViewException
 {
     public E1031_ArgumentException(string message)
-        : base(message)
+        : base(1031, message)
     {
-        ErrorCode = 1031;
     }
 }

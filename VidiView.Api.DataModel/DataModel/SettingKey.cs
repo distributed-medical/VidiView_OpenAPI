@@ -7,7 +7,7 @@ public static class SettingKey
 
     public const string ServerApiCorsAllowOrigin = "Server/Api/CorsAllowOrigin";
     public const string ServerEnableRemoteConfiguration = "Server/Service/EnableRemoteConfiguration";
-    
+
     public const string ServerServiceAuthenticationDefaultDomain = "Server/Service/Authentication/AD/DefaultDomain";
     public const string ServerServiceAuthenticationEnableADUsernamePassword = "Server/Service/Authentication/AD/UsernamePassword";
     public const string ServerServiceAuthenticationEnableADSSO = "Server/Service/Authentication/AD/SSO";
@@ -27,17 +27,19 @@ public static class SettingKey
     public const string ServerServiceAuthenticationX509SmartCardReinsertRequirePin = "Server/Service/Authentication/X509/SmartCardReinsertRequirePin";
     public const string ServerServiceAuthenticationX509WindowsUserMapping = "Server/Service/Authentication/X509/WindowsUserMapping";
 
-    public const string ServerServiceAuthorizationSamlTokenLifetime = "Server/Service/Authorization/SamlToken/Lifetime";
+    public const string ServerServiceAuthorizationAccessTokenLifetime = "Server/Service/Authorization/AccessToken/Lifetime";
     public const string ServerServiceAuthorizationRoleProviderPrefix = "Server/Service/Authorization/RoleProvider/";
     public const string ServerServiceAuthorizationRoleProviderEnabled = "Server/Service/Authorization/RoleProvider/Enabled";
     public const string ServerServiceAuthorizationRoleProviderCustomLibraryPath = "Server/Service/Authorization/RoleProvider/CustomLibraryPath";
     public const string ServerServiceAuthorizationRoleProviderLegacyConfiguration = "Server/Service/Authorization/RoleProvider/LegacyConfiguration";
 
     public const string ServerServicePort = "Server/Service/Port";
+    public const string ServerServiceDisableTls13 = "Server/Service/DisableTls13";
+    public const string ServerServiceCertificateHash = "Server/Service/CertificateHash";
     public const string ServerServiceServicePrincipalName = "Server/Service/ServicePrincipalName";
     public const string ServerServiceSniHostName = "Server/Service/SniHostName";
-    public const string ServerServiceEnableCompression = "Server/Service/EnableCompression";
     public const string ServerServiceExternalVisibleName = "Server/Service/ExternalVisibleName";
+    public const string ServerServiceEnableCompression = "Server/Service/EnableCompression";
 
     public const string ServerServiceUnsecureHttpEnabled = "Server/Service/UnsecureHttp/Enabled";
     public const string ServerServiceUnsecureHttpPort = "Server/Service/UnsecureHttp/Port";
@@ -48,18 +50,18 @@ public static class SettingKey
     public const string ServerServiceMaxConcurrentSessions = "Server/Service/MaxConcurrentSessions";
     public const string ServerServiceMaxPlaybackStreams = "Server/Service/MaxPlaybackStreams";
     public const string ServerServiceMaxVideoRequestBlockSize = "Server/Service/MaxVideoRequestBlockSize";
-    
+
     public const string ServerLogFailedAuthenticationToEventLog = "Server/Log/EventLog/FailedAuthentication";
     public const string ServerLogTraceSql = "Server/Log/Trace/TraceRawSql";
     public const string ServerLogTraceDebugToFile = "Server/Log/Trace/WriteDebugToFile";
     public const string ServerLogTraceFileRetentionDays = "Server/Log/Trace/FileRetention";
     public const string ServerLogTraceFileAutoSubmit = "Server/Log/Trace/SubmitLogFilesAutomatically";
-    public const string ServerLogTraceApiCallsToFile = "Server/Log/Trace/WriteApiRequestToFile";
-    public const string ServerLogTraceApiCallsIncludeHeaders = "Server/Log/Trace/WriteApiRequestToFile/IncludeHeaders";
-    public const string ServerLogTraceApiCallsIncludeBody = "Server/Log/Trace/WriteApiRequestToFile/IncludeBody";
+    public const string ServerLogTraceDetailedDicomLog = "Server/Log/Trace/DetailedDicomLog";
 
     public const string ServerLogReturnedExceptions = "Server/Log/Trace/ServiceRequestError";
 
+    public const string ServerLogApiRequestEnabled = "Server/Log/ApiRequest/Enabled";
+    public const string ServerLogApiRequestLogAllRangeRequests = "Server/Log/ApiRequest/LogAllRangeRequests";
     public const string ServerLogAtnaPrefix = "Server/Log/Atna/";
     public const string ServerLogAtnaEnabled = "Server/Log/Atna/Enabled";
     public const string ServerLogAtnaHost = "Server/Log/Atna/Host";
@@ -86,11 +88,18 @@ public static class SettingKey
 
     public const string WorkflowProvisioIntegrationServiceSharedSecret = "Workflow/ProvisioIntegrationService/SharedSecret";
     public const string WorkflowDicomCStoreEnabled = "Workflow/DicomCStoreSCP/Enabled";
+    public const string WorkflowDicomCStoreEnableUnsecure = "Workflow/DicomCStoreSCP/EnableUnsecure";
     public const string WorkflowDicomCStorePort = "Workflow/DicomCStoreSCP/Port";
+    public const string WorkflowDicomCStoreEnableTls = "Workflow/DicomCStoreSCP/EnableTls";
+    public const string WorkflowDicomCStoreTlsPort = "Workflow/DicomCStoreSCP/TlsPort";
     public const string WorkflowDicomCStoreLocalAET = "Workflow/DicomCStoreSCP/LocalAETitle";
     public const string WorkflowDicomCStoreMaxAssociations = "Workflow/DicomCStoreSCP/MaxAssociations";
     public const string WorkflowDicomCStoreAllowOverwrite = "Workflow/DicomCStoreSCP/AllowOverwrite";
     public const string WorkflowDicomCStoreFallbackEncoding = "Workflow/DicomCStoreSCP/FallbackEncoding";
+    public const string WorkflowDicomCStoreSnomedLanguage = "Workflow/DicomCStoreSCP/SnomedLanguage";
+
+    public const string WorkflowIanEnabled = "Workflow/Ian/Enabled";
+    public const string WorkflowIanReceiver = "Workflow/Ian/Receiver";
 
     public const string WorkflowMllpReceiveV1Enabled = "Workflow/MllpTransport/V1/Enabled";
     public const string WorkflowMllpReceiveV1Port = "Workflow/MllpTransport/V1/Port";
@@ -111,12 +120,10 @@ public static class SettingKey
     public const string WorkflowTransferQueueManualAddFromUnassignedStudy = "Workflow/TransferQueue/ManualAddFromUnassignedStudy";
     public const string WorkflowTransferQueueExportImmediatelyWhenAssigned = "Workflow/TransferQueue/ExportImmediatelyWhenAssigned";
 
-    public const string WorkflowTransferQueueConcurentTranscodeTasks = "Workflow/TransferQueue/ConcurentTranscodeTasks";
-    public const string WorkflowTransferQueueMaxQueueLength = "Workflow/TransferQueue/MaxQueueLength";
-
     public const string PatientPdqEnabled = "System/Patient/Pdq/Enabled";
     public const string PatientPdqType = "System/Patient/Pdq/Type";
     public const string PatientPdqServiceHost = "System/Patient/Pdq/ServiceHost";
+    public const string PatientPdqAutoUpdate = "System/Patient/Pdq/AutoUpdate";
     public const string PatientPdqCustomLibraryPath = "System/Patient/Pdq/CustomLibraryPath";
     public const string PatientPdqLegacyConfiguration = "System/Patient/Pdq/LegacyConfiguration";
 
@@ -129,27 +136,8 @@ public static class SettingKey
     public const string PatientIdPresentation = "System/Patient/Formatting/PatientId";
     public const string PatientPseudonymizedIdPresentation = "System/Patient/Formatting/PatientId/Pseudonymized";
 
-    public const string StudyMaxReturnedRecords = "System/Study/MaxReturnRecords";
-    public const string StudyMediaFavouriteMark = "System/Study/Media/FavouriteMark";
-    public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHevcToAvc";
-    public const string StudyMediaConvertUnsupportedPhotoToJpeg = "System/Study/Media/Conversion/ConvertUnsupportedPhotoToJpeg";
-    
-    public const string StudyDeleteIdentifiedAutomaticallyEnabled = "System/Study/Delete/Identified/Automatic/Enabled";
-    public const string StudyDeleteIdentifiedAutomaticallyAfter = "System/Study/Delete/Identified/Automatic/After";
-    public const string StudyDeleteIdentifiedManuallyAllowed = "System/Study/Delete/Identified/Manually";
-    public const string StudyDeleteExportedAutomaticallyEnabled = "System/Study/Delete/Exported/Automatic/Enabled";
-    public const string StudyDeleteExportedAutomaticallyAfter = "System/Study/Delete/Exported/Automatic/After";
-    public const string StudyDeleteUnidentifiedAutomaticallyEnabled = "System/Study/Delete/Unidentified/Automatic/Enabled";
-    public const string StudyDeleteUnidentifiedAutomaticallyAfter = "System/Study/Delete/Unidentified/Automatic/After";
-    public const string StudyDeleteUnidentifiedManuallyAllowed = "System/Study/Delete/Unidentified/Manually";
-    public const string StudyDeleteBlockBookmarked = "System/Study/Delete/BlockDeletionOfBookmarkedStudy";
-
-    public const string SystemFieldsStudyAccessionNumber = "System/Fields/Study/AccessionNumber";
-    public const string SystemFieldsStudyDepartmentId = "System/Fields/Study/DepartmentId";
-
-    public const string WebViewEnable = "WebView/Enable";
-    public const string WebViewUseLicenseCertificate = "WebView/UseDefaultCertificate";
-    public const string WebViewSessionTimeout = "WebView/SessionTimeout";
+    public const string PatientEraseNonReferencedEnabled = "System/Patient/Erase/NonReferenced/Automatic/Enabled";
+    public const string PatientEraseNonReferencedAfter = "System/Patient/Erase/NonReferenced/Automatic/After";
 
     public const string ReportLogotype = "Report/Logotype";
     public const string ReportLogotypeHeight = "Report/LogotypeHeight";
@@ -157,6 +145,35 @@ public static class SettingKey
     public const string ReportRasterDpi = "Report/RasterDpi";
     public const string ReportJpegQuality = "Report/JpegQuality";
     public const string ReportDefaultLanguage = "Report/DefaultLanguage";
+
+    public const string StudyMaxReturnedRecords = "System/Study/MaxReturnRecords";
+    public const string StudyListAnyDepartment = "System/Study/List/AllowAnyDepartment";
+    public const string StudyListAnyDepartmentForPatient = "System/Study/List/AllowAnyDepartmentForPatient";
+
+    public const string StudyAssignAllowConcurrent = "System/Study/Assign/AllowConcurrent";
+    public const string StudyCreateUnscheduled = "System/Study/Create/Unscheduled";
+    public const string StudyMediaFavouriteMark = "System/Study/Media/FavouriteMark";
+    public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHevcToAvc";
+    public const string StudyMediaConvertUnsupportedPhotoToJpeg = "System/Study/Media/Conversion/ConvertUnsupportedPhotoToJpeg";
+
+    public const string StudyDeleteIdentifiedAutomaticallyEnabled = "System/Study/Delete/Identified/Automatic/Enabled";
+    public const string StudyDeleteIdentifiedAutomaticallyAfter = "System/Study/Delete/Identified/Automatic/After";
+    public const string StudyDeleteExportedAutomaticallyEnabled = "System/Study/Delete/Exported/Automatic/Enabled";
+    public const string StudyDeleteExportedAutomaticallyAfter = "System/Study/Delete/Exported/Automatic/After";
+    public const string StudyDeleteUnidentifiedAutomaticallyEnabled = "System/Study/Delete/Unidentified/Automatic/Enabled";
+    public const string StudyDeleteUnidentifiedAutomaticallyAfter = "System/Study/Delete/Unidentified/Automatic/After";
+    public const string StudyDeleteSkipBookmarked = "System/Study/Delete/BlockDeletionOfBookmarkedStudy";
+
+    public const string StudyEraseEmptyEnabled = "System/Study/Erase/Empty/Automatic/Enabled";
+    public const string StudyEraseEmptyAfter = "System/Study/Erase/Empty/Automatic/After";
+
+    public const string SystemFieldsStudyAccessionNumber = "System/Fields/Study/AccessionNumber";
+    public const string SystemFieldsStudyDepartmentId = "System/Fields/Study/DepartmentId";
+    public const string SystemFieldsStudyStudyTypeId = "System/Fields/Study/StudyTypeId";
+
+    public const string WebViewEnable = "WebView/Enable";
+    public const string WebViewUseLicenseCertificate = "WebView/UseDefaultCertificate";
+    public const string WebViewSessionTimeout = "WebView/SessionTimeout";
 
     #region VidiView Controller
     public const string ControllerConferenceRemoteCaptureEnable = "Controller/Conference/RemoteCapture/Enable";
@@ -168,41 +185,35 @@ public static class SettingKey
     public const string CaptureServiceEnable = "Capture/Service/Enable";
     public const string CaptureServicePort = "Capture/Service/Port";
     public const string CaptureServiceDeviceAcceptByDefault = "Capture/Service/Device/AcceptByDefault";
+    public const string CaptureServiceDeviceDefaultDeviceUse = "Capture/Service/Device/DefaultDeviceUse";
     public const string CaptureServiceAllowPin = "Capture/Service/Authentication/AllowPin";
     public const string CaptureServicePinMinLength = "Capture/Service/Authentication/PinMinimumLength";
     public const string CaptureServicePinMaxInvalidAttempts = "Capture/Service/Authentication/PinMaxInvalidAttempts";
 
+    [Obsolete("No longer in use, in Capture R5")]
     public const string CaptureServiceAllowBiometric = "Capture/Service/Authentication/AllowBiometric";
+    [Obsolete("No longer in use, in Capture R5")]
     public const string CaptureServiceBiometricLifetime = "Capture/Service/Authentication/BiometricLifetime";
+    [Obsolete("No longer in use, in Capture R5")]
     public const string CaptureServiceBiometricAutoExtend = "Capture/Service/Authentication/BiometricAutoExtend";
-    public const string CaptureServiceIdleTimeout = "Capture/Service/IdleTimeout";
+
     public const string CaptureServiceActiveSyncEnable = "Capture/Service/ActiveSync/Enable";
     public const string CaptureServiceStudyDeleteEmpty = "Capture/Service/Study/DeleteEmpty";
 
-    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
-    public const string CaptureOptionsAllowLaunchDermalyser = "Capture/Options/AllowLaunchDermalyser";
-    public const string CaptureOptionsAllowTakePhotoWhenRecordingVideo = "Capture/Options/AllowTakePhotoWhenRecordingVideo";
-    public const string CaptureOptionsAllowUploadFromCameraRoll = "Capture/Options/AllowUploadFromCameraRoll";
     public const string CaptureOptionsAnatomicMap = "Capture/Options/AnatomicMap";
     public const string CaptureOptionsAnatomicTagging = "Capture/Options/AnatomicTagging";
     public const string CaptureOptionsContinueStudyAllowed = "Capture/Options/ContinueStudyAllowed";
-    public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
-    public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
-    public const string CaptureOptionsGeoTagMediaFiles = "Capture/Options/Geolocation/TagMediaFiles";
-    public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";
-    public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
-    public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
-    public const string CaptureOptionsScreenSaverAllowDuringActiveStudy = "Capture/Options/ScreenSaver/AllowDuringActiveStudy";
-    public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
-
-    [Obsolete]
     public const string CaptureOptionsSnapshotResolution = "Capture/Options/SnapshotResolution";
     public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
-    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
     public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
-    public const string CaptureOptionsVideoMaxLengthSeconds = "Capture/Options/VideoMaxLengthSeconds";
     public const string CaptureOptionsVideoRecordAudio = "Capture/Options/VideoRecordAudio";
     public const string CaptureOptionsVideoResolution = "Capture/Options/VideoResolution";
+    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
+
+    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
+    public const string CaptureOptionsInactivityTimeout = "Capture/Options/InactivityTimeout";
+    public const string CaptureOptionsInactivityInActiveStudyTimeout = "Capture/Options/InactivityInActiveStudyTimeout";
+    public const string CaptureOptionsInactivityWarning = "Capture/Options/InactivityWarning";
     #endregion
 
     #region VidiView Client
@@ -221,36 +232,21 @@ public static class SettingKey
     public const string ClientFormattingFilenamePdfReport = "Client/Formatting/Filename/PdfReport";
     public const string ClientFormattingFilenamePdfReportPseudonymized = "Client/Formatting/Filename/PdfReport/Pseudonymized";
 
+    public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
+    public const string ClientOptionsInactivityTimeout = "Client/Options/InactivityTimeout";
+    public const string ClientOptionsInactivityWarning = "Client/Options/InactivityWarning";
+
+    public const string ClientFeaturesPatientDemographicSearch = "Client/Options/Features/PatientDemographicSearch";
+    public const string ClientFeaturesPatientPersonalWorklists = "Client/Options/Features/PersonalWorklists";
+    public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
+
+    public const string ClientFeaturesPhotoMeasure = "Client/Options/Features/PhotoMeasure";
+    public const string ClientFeaturesBatchUpdateMediaFile = "Client/Options/Features/BatchUpdateMediaFile";
+
     public const string ClientPreferenceLastActingRole = "Client/Preferences/Login/LastActingRole";
     public const string ClientPreferenceUICulture = "Client/Preferences/UI/Culture";
     public const string ClientPreferenceUIThumbnailWidth = "Client/Preferences/UI/StudyView/ThumbnailPaneWidth";
     public const string ClientPreferenceVideoMinimumRequestSize = "Client/Preferences/Video/MinimumRequestSize";
-
-    public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
-    public const string ClientOptionsIdleLogout = "Client/Options/IdleLogout";
-    public const string ClientOptionsIdleLogoutWarning = "Client/Options/IdleLogoutWarning";
-    public const string ClientFeaturesConference = "Client/Options/Features/Conference";
-    public const string ClientFeaturesLanguages = "Client/Options/Features/Languages";
-    public const string ClientFeaturesPatientDemographicSearch = "Client/Options/Features/PatientDemographicSearch";
-    public const string ClientFeaturesPatientPersonalWorklists = "Client/Options/Features/PersonalWorklists";
-    public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
-    public const string ClientFeaturesScheduledStudies = "Client/Options/Features/ScheduledStudies";
-    public const string ClientFeaturesVoiceCapture = "Client/Options/Features/VoiceCapture";
-    public const string ClientFeaturesCameraCapture = "Client/Options/Features/CameraCapture";
-    public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
-    public const string ClientFeaturesPhotoMeasure = "Client/Options/Features/PhotoMeasure";
-    public const string ClientFeaturesBatchUpdateMediaFile = "Client/Options/Features/BatchUpdateMediaFile";
-
-    public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
-
-    public const string ClientReportDefaultFont = "Client/Report/Default/Font";
-    public const string ClientReportDefaultAnatomicMapWidth = "Client/Report/Default/AnatomicMapWidth";
-    public const string ClientReportDefaultHeaderFontSize = "Client/Report/Default/HeaderFontSize";
-    public const string ClientReportDefaultTextFontSize = "Client/Report/Default/TextFontSize";
-    public const string ClientReportDefaultShowIndex = "Client/Report/Default/ShowIndex";
-
-    public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
-    public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";
 
     #endregion
 

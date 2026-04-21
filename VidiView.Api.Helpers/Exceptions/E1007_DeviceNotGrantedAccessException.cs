@@ -6,9 +6,8 @@ namespace VidiView.Api.Exceptions;
 public class E1007_DeviceNotGrantedAccessException : VidiViewException
 {
     public E1007_DeviceNotGrantedAccessException(string message)
-        : base(message)
+        : base(1007, message)
     {
-        ErrorCode = 1007;
     }
 
     public string? VerificationCode { get; init; }

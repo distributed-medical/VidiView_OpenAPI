@@ -3,8 +3,7 @@
 public class E1311_InsufficientDiskSpaceException : VidiViewException
 {
     public E1311_InsufficientDiskSpaceException(string message)
-        : base(message)
+        : base(1311, message)
     {
-        ErrorCode = 1311;
     }
 }

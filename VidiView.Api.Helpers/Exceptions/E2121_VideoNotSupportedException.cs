@@ -3,7 +3,7 @@
 public class E2121_VideoNotSupportedException : VidiViewException
 {
     public E2121_VideoNotSupportedException(string message)
-        : base(message)
+        : base(2121, message)
     {
     }
 }

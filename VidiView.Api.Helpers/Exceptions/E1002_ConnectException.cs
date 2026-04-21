@@ -4,15 +4,13 @@
 public class E1002_ConnectException : VidiViewException
 {
     public E1002_ConnectException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(1002, message, innerException)
     {
-        ErrorCode = 1002;
     }
 
     public E1002_ConnectException(string message)
-        : base(message)
+        : base(1002, message)
     {
-        ErrorCode = 1002;
     }
 
     /// <summary>

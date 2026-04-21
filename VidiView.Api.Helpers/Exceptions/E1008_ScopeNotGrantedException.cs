@@ -3,8 +3,7 @@
 public class E1008_ScopeNotGrantedException : VidiViewException
 {
     public E1008_ScopeNotGrantedException(string message)
-        : base(message)
+        : base(1008, message)
     {
-        ErrorCode = 1008;
     }
 }

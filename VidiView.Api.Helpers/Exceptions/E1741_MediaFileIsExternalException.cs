@@ -5,7 +5,7 @@ namespace VidiView.Api.Exceptions;
 public class E1741_MediaFileIsExternalException : VidiViewException
 {
     public E1741_MediaFileIsExternalException(string message)
-        : base(message)
+        : base(1741, message)
     {
     }
 }

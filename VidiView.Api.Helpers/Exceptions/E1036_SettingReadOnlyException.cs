@@ -3,7 +3,7 @@
 public class E1036_SettingReadOnlyException : VidiViewException
 {
     public E1036_SettingReadOnlyException(string message)
-        : base(message)
+        : base(1036, message)
     {
     }
 }

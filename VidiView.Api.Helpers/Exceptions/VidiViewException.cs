@@ -80,7 +80,7 @@ public class VidiViewException : Exception
             }
 
             string message = string.IsNullOrWhiteSpace(problem?.Detail) ? $"{(int)httpError} {httpError}" : problem.Detail;
-            return new VidiViewException(message)
+            return new VidiViewException(errorCode, message)
             {
                 ErrorCode = errorCode,
                 HttpStatusCode = httpError,
@@ -146,14 +146,16 @@ public class VidiViewException : Exception
         }
     }
 
-    public VidiViewException(string message)
+    public VidiViewException(int errorCode, string message)
         : base(message)
     {
+        ErrorCode = errorCode;
     }
 
-    protected VidiViewException(string message, Exception? innerException)
+    protected VidiViewException(int errorCode, string message, Exception? innerException)
         : base(message, innerException)
     {
+        ErrorCode = errorCode;
     }
 
     /// <summary>

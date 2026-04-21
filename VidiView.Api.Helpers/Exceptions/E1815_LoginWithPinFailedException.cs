@@ -3,7 +3,7 @@
 public class E1815_LoginWithPinFailedException : VidiViewException
 {
     public E1815_LoginWithPinFailedException(string message)
-        : base(message)
+        : base(1815, message)
     {
     }
 }

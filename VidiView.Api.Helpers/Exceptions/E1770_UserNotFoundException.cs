@@ -3,7 +3,7 @@
 public class E1770_UserNotFoundException : E1712_NotFoundException
 {
     public E1770_UserNotFoundException(string message)
-        : base(message)
+        : base(1770, message)
     {
     }
 

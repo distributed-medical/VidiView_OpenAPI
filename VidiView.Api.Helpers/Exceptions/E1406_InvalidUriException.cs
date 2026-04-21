@@ -3,14 +3,12 @@
 public class E1406_InvalidUriException : VidiViewException
 {
     public E1406_InvalidUriException(Exception innerException)
-    : base("The host address entered is not valid", innerException)
+    : base(1406, "The host address entered is not valid", innerException)
     {
-        ErrorCode = 1406;
     }
 
     public E1406_InvalidUriException(string message)
-        : base(message)
+        : base(1406, message)
     {
-        ErrorCode = 1406;
     }
 }

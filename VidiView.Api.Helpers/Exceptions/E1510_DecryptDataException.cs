@@ -8,13 +8,11 @@ namespace VidiView.Api.Exceptions;
 public class E1510_DecryptDataException : VidiViewException
 {
     public E1510_DecryptDataException(string message)
-        : base(message)
+        : base(1510, message)
     {
-        ErrorCode = 1510;
     }
     public E1510_DecryptDataException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(1510, message, innerException)
     {
-        ErrorCode = 1510;
     }
 }

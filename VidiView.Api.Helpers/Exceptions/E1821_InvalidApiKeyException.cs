@@ -3,7 +3,7 @@
 public class E1821_InvalidApiKeyException : VidiViewException
 {
     public E1821_InvalidApiKeyException(string message)
-        : base(message)
+        : base(1821, message)
     {
     }
 }
