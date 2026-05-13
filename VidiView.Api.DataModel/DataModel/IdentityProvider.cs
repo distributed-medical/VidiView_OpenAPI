@@ -48,9 +48,6 @@ public record IdentityProvider
         return $"{Name} ({Issuer})";
     }
 
-    [Obsolete("Not used anymore", true)]
-    public bool SkipIdPLogout => Flags.HasFlag(IdentityProviderFlags.SkipIdPLogout);
-
     public bool PrivateSession => Flags.HasFlag(IdentityProviderFlags.PrivateSession);
 
 }

@@ -24,11 +24,4 @@ public enum IdentityProviderFlags
     /// cookies etc
     /// </summary>
     PrivateSession = 0x010,
-
-    /// <summary>
-    /// If set, the client should only throw away its access 
-    /// token and not perform IdP logout flow
-    /// </summary>
-    [Obsolete("Not used anymore", true)]
-    SkipIdPLogout = 0x020,
 }

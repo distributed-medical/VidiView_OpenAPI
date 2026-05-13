@@ -8,7 +8,7 @@ public record StudyCreateOptions : Study
     /// Create unidentified study
     /// </summary>
     /// <returns></returns>
-    [Obsolete("Use Unidentified(IdAndName department) instead to specify the department for the study", false)]
+    [Obsolete("Use Unidentified(IdAndName department) instead to specify the department for the study")]
     public static StudyCreateOptions Unidentified()
     {
         return Unidentified(null!);
