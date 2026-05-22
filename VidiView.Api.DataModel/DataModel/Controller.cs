@@ -39,6 +39,11 @@ public record Controller
     public IdAndName AdministrativeDepartment { get; init; }
 
     /// <summary>
+    /// The administrative department this controller belongs to
+    /// </summary>
+    public IdAndName[]? AllowedDepartments { get; init; }
+
+    /// <summary>
     /// Optional notes
     /// </summary>
     public string? Notes { get; init; }
