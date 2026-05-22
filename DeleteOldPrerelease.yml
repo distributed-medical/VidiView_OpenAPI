@@ -1,0 +1,25 @@
+name: Cleanup old prerelease packages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+      - name: Delete old prerelease packages
+        run: |
+          gh api /orgs/distributed-medical/packages/nuget/VidiView_OpenAPI/versions \
+            | jq -r '
+              map(select(.name | contains("-")))
+              | sort_by(.created_at)
+              | reverse
+              | .[5:]
+              | .[]
+              | "\(.created_at) \(.name)"
+            '
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
