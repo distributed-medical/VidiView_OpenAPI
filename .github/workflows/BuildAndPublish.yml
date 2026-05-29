@@ -120,5 +120,5 @@ jobs:
 
     - name: Publish package 
      #   #if: github.ref == 'refs/heads/main'
-      run: dotnet nuget push **\${{ matrix.project }}*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s "dm-vidiview" --skip-duplicate
+      run: dotnet nuget push **\${{ matrix.project }}*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s "dm-vidiview"
 
