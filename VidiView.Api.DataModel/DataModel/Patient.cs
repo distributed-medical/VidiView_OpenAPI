@@ -31,16 +31,19 @@ public record Patient
     /// <summary>
     /// Gender identity string
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? GenderIdentity { get; init; }
 
     /// <summary>
     /// Birth date
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTime? BirthDate { get; init; }
 
     /// <summary>
     /// Age. Calculated from birth date
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Age { get; init; }
 
     /// <summary>
@@ -51,17 +54,20 @@ public record Patient
     /// <summary>
     /// Deceased date, if known
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTimeOffset? DeceasedDate { get; init; }
 
     /// <summary>
     /// The last study date for this patient
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTimeOffset? LastStudyDate { get; init; }
 
     /// <summary>
     /// When performing a patient lookup, this property may contain
     /// additional information that is vital for creating a study.
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? SopInstance { get; init; }
 
     /// <summary>

@@ -38,6 +38,7 @@ public record Study
     /// Permissions granted to this study
     /// </summary>
     /// <remarks>Cast to <see cref="DepartmentPermissions"/> to check specific permissions</remarks>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public long? Permissions { get; init; }
 
     /// <summary>
@@ -59,6 +60,7 @@ public record Study
     /// <summary>
     /// The number of images present in this study
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? ImageCount { get; init; }
 
     /// <summary>
@@ -79,6 +81,7 @@ public record Study
     /// <summary>
     /// The Controller that has started this study
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Guid? ControllerId { get; init; }
 
     /// <summary>
@@ -110,6 +113,7 @@ public record Study
     /// Procedure codes
     /// </summary>
     /// <remarks>Stored as XML for backward compatibility for the time being</remarks>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public CodedValue[]? ProcedureCodes { get; init; }
 
     /// <summary>
@@ -120,11 +124,13 @@ public record Study
     /// <summary>
     /// Worklist assignment for this study
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public WorklistAssignment[]? WorklistAssignment { get; init; }
 
     /// <summary>
     /// Any active study assignment
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Assignment[]? Assignment { get; init; }
 
     /// <summary>
@@ -135,6 +141,7 @@ public record Study
     /// <summary>
     /// If this is set, the study is deleted
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public DateTimeOffset? DeletedDate { get; init; }
 
     /// <summary>
@@ -147,6 +154,7 @@ public record Study
     /// True if the study is assigned to the current user
     /// </summary>
     /// <remarks>This is only set when retrieving the recently used studies</remarks>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? IsAssigned { get; init; }
 
     /// <summary>

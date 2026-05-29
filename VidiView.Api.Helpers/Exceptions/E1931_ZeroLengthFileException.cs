@@ -6,4 +6,12 @@ public class E1931_ZeroLengthFileException : VidiViewException
         : base(1931, message)
     {
     }
+
+    public E1931_ZeroLengthFileException(string message, string? fileName)
+        : base(1931, message)
+    {
+        FileName = fileName;
+    }
+
+    public string? FileName { get; init; }
 }

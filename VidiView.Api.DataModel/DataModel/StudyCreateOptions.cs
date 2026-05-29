@@ -100,20 +100,24 @@ public record StudyCreateOptions : Study
     /// <summary>
     /// The SOP Instance this study is to be based on
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? SopInstance { get; init; }
 
     /// <summary>
     /// Specify the patient to create this study for
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Guid? PatientIdGuid { get; init; }
 
     /// <summary>
     /// Set to true to assign the newly created study to the current user
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? AssignToSelf { get; init; }
 
     /// <summary>
     /// Used to create a study on behalf of a different user
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Guid? CreateOnBehalfOf { get; init; }
 }
