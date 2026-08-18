@@ -1,0 +1,119 @@
+# Copyright (c) 2024-2026 Distributed Medical AB. All rights reserved.
+
+name: Build and publish
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - '*.*.*' # Run when a version tag is pushed
+  workflow_dispatch:
+
+env:
+  # ── Locked build-tool versions (MDR configuration management) ─────────────
+  # Update these values only after validation against the qualified build environment.
+  Windows_Runner_Image: 'windows-2025'    # GitHub-hosted runner OS image label
+  # ──────────────────────────────────────────────────────────────────────────
+  
+  SOLUTION: VidiView.Api.slnx
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: 
+        - Release
+        project:
+        - 'VidiView.Api.DataModel'
+        - 'VidiView.Api.Helpers'
+
+    runs-on: windows-2025
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v7
+      with:
+       fetch-depth: 0
+    
+    - name: Log build environment versions
+      run: |
+        $osVersion = (Get-CimInstance Win32_OperatingSystem).Caption
+        $msbuildVersion = (dotnet msbuild --version | Select-Object -Last 1)
+        "### Build Environment" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| Component | Version |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| --- | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| Windows runner | ${{ env.Windows_Runner_Image }} ($osVersion) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| .NET SDK | $(dotnet --version) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| MSBuild | $msbuildVersion |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+    # Configure NuGet source credentials for this run
+    - name: Authenticate private NuGet feed
+      run: |
+        dotnet nuget remove source dm-vidiview 2>$null
+        dotnet nuget add source "https://nuget.pkg.github.com/distributed-medical/index.json" --name "dm-vidiview" --username "github_action" --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v4
+      with:
+        versionSpec: '6.x'
+
+    - name: Determine Version
+      id: version_step # step id used as reference for output values
+      uses: gittools/actions/gitversion/execute@v4
+      with:
+        configFilePath: gitVersion.yml
+
+    - name: Update project file
+      uses: gittools/actions/gitversion/command@v4
+      with:
+        arguments: '/updateprojectfiles /updateassemblyinfo'
+    
+    - name: Build and test
+      run: |
+          dotnet build ${{ matrix.project }} --configuration ${{ matrix.configuration }}
+          dotnet test ${{ matrix.project }}.Test --configuration ${{ matrix.configuration }}
+    
+    - name: Sign application package using Azure Artifact Signing
+      uses: azure/artifact-signing-action@v1
+      with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://weu.codesigning.azure.net/ # Western Europe
+          signing-account-name: DMCodesigning
+          certificate-profile-name: DMCodesigning
+          files-folder: ${{ matrix.project }}\bin\Release\net8.0\
+          files-folder-filter: dll
+          files-folder-recurse: false
+          file-digest: SHA256
+          generate-page-hashes: true
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
+    - name: Pack
+      run: dotnet pack ${{ matrix.project }} --configuration ${{ matrix.configuration }} --no-build --no-restore
+
+    # - name: Sign NuGet package
+    #   uses: azure/trusted-signing-action@v0.5.1
+    #   with:
+    #       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    #       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    #       azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+    #       endpoint: https://weu.codesigning.azure.net/ # Western Europe
+    #       trusted-signing-account-name: DMCodesigning
+    #       certificate-profile-name: DMCodesigning
+    #       files-folder: ${{ matrix.project }}\bin\Release\
+    #       files-folder-filter: nupkg
+    #       file-digest: SHA256
+    #       timestamp-rfc3161: http://timestamp.acs.microsoft.com
+    #       timestamp-digest: SHA256
+
+    - name: Publish package 
+     #   #if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push **\${{ matrix.project }}*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s "dm-vidiview"
+

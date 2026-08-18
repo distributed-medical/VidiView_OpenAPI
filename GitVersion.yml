@@ -1,8 +1,12 @@
 workflow: GitHubFlow/v1
+commit-message-incrementing: Enabled
+increment: Patch # Default increment when no +semver: tag is present
 branches:
   main:
     label: ''
   feature:
+    label: ''
     mode: ContinuousDelivery
   unknown:
+    label: ''
     mode: ContinuousDelivery

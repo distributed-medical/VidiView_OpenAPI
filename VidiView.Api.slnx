@@ -6,7 +6,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Solution Items/">
-    <File Path=".github/workflows/BuildAndPublish.yml" />
+    <File Path=".github/workflows/Build.yml" />
     <File Path=".gitignore" />
     <File Path="GitVersion.yml" />
     <File Path="README.md" />

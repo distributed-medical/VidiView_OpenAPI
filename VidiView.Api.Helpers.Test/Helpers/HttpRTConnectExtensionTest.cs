@@ -48,7 +48,6 @@ public class HttpRTConnectExtensionTest
     {
         var http = CreateHttpClient();
 
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
         await Assert.ThrowsAsync<E1402_NoVidiViewServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
@@ -58,7 +57,6 @@ public class HttpRTConnectExtensionTest
     {
         var http = CreateHttpClient();
 
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
         await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
