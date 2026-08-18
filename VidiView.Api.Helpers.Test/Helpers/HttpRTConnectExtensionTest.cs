@@ -13,21 +13,19 @@ public class HttpRTConnectExtensionTest
     [DataRow("revoked.badssl.com")]
     [DataRow("sha1-intermediate.badssl.com")]
     [DataRow("sha1-2017.badssl.com")]
-    [ExpectedException(typeof(E1403_InvalidCertificateException))]
     public async Task VerifyInvalidCertificateException(string hostName)
     {
         var http = CreateHttpClient();
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1403_InvalidCertificateException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]
     [DataRow("self-signed.badssl.com")]
     [DataRow("untrusted-root.badssl.com")]
-    [ExpectedException(typeof(E1400_ConnectServerException), AllowDerivedTypes = true)] // Since we are using a custom validator, the correct certificate exception is lost
     public async Task VerifyInvalidCertificateException2(string hostName)
     {
         var http = CreateHttpClient();
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]
@@ -37,32 +35,31 @@ public class HttpRTConnectExtensionTest
     [DataRow("dh480.badssl.com")]
     [DataRow("dh-small-subgroup.badssl.com")]
     [DataRow("https://tls-v1-0.badssl.com:1010")]
-    [ExpectedException(typeof(E1400_ConnectServerException))]
     public async Task VerifyConnectFailException(string hostName)
     {
         var http = CreateHttpClient();
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
 
     [TestMethod]
     [DataRow("www.google.com")]
-    [ExpectedException(typeof(E1402_NoVidiViewServerException))]
     public async Task VerifyNoVidiViewServerException(string hostName)
     {
         var http = CreateHttpClient();
 
         var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1402_NoVidiViewServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]
     [DataRow("non.existent.host.com")]
-    [ExpectedException(typeof(E1400_ConnectServerException))]
     public async Task VerifyHostNotFoundException(string hostName)
     {
         var http = CreateHttpClient();
 
         var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]

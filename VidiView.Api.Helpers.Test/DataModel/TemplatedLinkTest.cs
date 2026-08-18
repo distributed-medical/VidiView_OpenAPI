@@ -32,11 +32,10 @@ public class TemplatedLinkTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void Missing_Path_Parameter_Throws()
     {
         var tl = new TemplatedLink("https://demo.vidiview.com/{id}/{?ignore,format}");
-        tl.ToUrl();
+        Assert.Throws<ArgumentException>(() => tl.ToUrl());
     }
 
     [TestMethod]

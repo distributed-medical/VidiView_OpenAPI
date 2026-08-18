@@ -16,31 +16,21 @@ public static partial class TestConfig
     public const string PatientId = "196302010001";
 
     public static readonly Guid ExternalAppId = new Guid("A6FC1192-B803-4200-B64E-7D8403D399EC");
-    public static Guid ApplicationId
-    {
-        get
-        {
-            // This construct is used to read the value from a file that is
-            // not part of the public solution
-            var tc = typeof(TestConfig);
-            var appIdField = tc.GetField("_appId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
-                ?? throw new NotImplementedException("You need to contact Distributed Medical to get an API key");
-            return (Guid) appIdField.GetValue(null)!;
-        }
-    }
 
-    public static byte[] SecretKey
-    {
-        get
-        {
-            // This construct is used to read the value from a file that is
-            // not part of the public solution
-            var tc = typeof(TestConfig);
-            var appIdField = tc.GetField("_secretKey", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
-                ?? throw new NotImplementedException("You need to contact Distributed Medical to get an API key");
-            return (byte[])appIdField.GetValue(null)!;
-        }
-    }
+    /* 
+     * Note! You need to define these fields to run the example 
+     * Create a file named TestConfig.localsecret.cs in the same 
+     * folder as this file, and declare the partiel class:
+     * 
+     namespace VidiView.Example;
+     public static partial class TestConfig
+     {
+        private static Guid _applicationId => new Guid("Your application ID");
+        private static byte[] _secretKey => new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+     }
+     */
+    public static Guid ApplicationId => _applicationId;
+    public static byte[] SecretKey => _secretKey;
 
     public static ApiKeyHeader ApiKey()
     {

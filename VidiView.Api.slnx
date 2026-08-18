@@ -1,0 +1,33 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/BuildAndPublish.yml" />
+    <File Path=".gitignore" />
+    <File Path="GitVersion.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Example/Example.csproj" />
+  <Project Path="VidiView.Api.Configuration/VidiView.Api.Configuration.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="VidiView.Api.DataModel.Test/VidiView.Api.DataModel.Test.csproj" />
+  <Project Path="VidiView.Api.DataModel/VidiView.Api.DataModel.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="VidiView.Api.Helpers.Test.ReverseProxy/VidiView.Api.Helpers.Test.ReverseProxy.csproj">
+    <Platform Solution="*|Any CPU" Project="x64" />
+    <Platform Solution="*|ARM64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Deploy />
+  </Project>
+  <Project Path="VidiView.Api.Helpers.Test/VidiView.Api.Helpers.Test.csproj" />
+  <Project Path="VidiView.Api.Helpers/VidiView.Api.Helpers.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+</Solution>

@@ -96,7 +96,6 @@ public class E4_FindPatient
     }
 
     [TestMethod]
-    [ExpectedException(typeof(E1745_PatientNotFoundException))]
     public async Task Get_Non_Existing()
     {
         var start = await _http.HomeAsync();
@@ -105,7 +104,6 @@ public class E4_FindPatient
         link.TrySetParameterValue("patientIdGuid", Guid.NewGuid().ToString());
 
         var result = await _http.GetAsync(link.ToUrl());
-        await result.AssertSuccessAsync();
+        await Assert.ThrowsAsync<E1745_PatientNotFoundException>(async () => await result.AssertSuccessAsync());
     }
-
 }

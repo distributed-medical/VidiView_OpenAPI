@@ -42,11 +42,11 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="17.14.0" />
+    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="18.9.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.9.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.9.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.3.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.3.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VidiView.Api.DataModel\VidiView.Api.DataModel.csproj" />

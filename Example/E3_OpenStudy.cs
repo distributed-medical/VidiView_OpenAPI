@@ -144,7 +144,6 @@ public class E3_OpenStudy
     /// </summary>
     /// <returns></returns>
     [TestMethod]
-    [ExpectedException(typeof(E1738_StudyNotFoundException))]
     public async Task Open_NonExistingStudy_Throws()
     {
         var start = await _http.HomeAsync();
@@ -153,7 +152,7 @@ public class E3_OpenStudy
         var tl = start.Links.GetRequired(Rel.Study).AsTemplatedLink();
 
         tl.TrySetParameterValue("studyId", "1.2.3.4.5.6.1111.2222");
-        var study = await _http.GetAsync<Study>(tl);
+        await Assert.ThrowsAsync<E1738_StudyNotFoundException>(async () => await _http.GetAsync<Study>(tl));
     }
 
 }

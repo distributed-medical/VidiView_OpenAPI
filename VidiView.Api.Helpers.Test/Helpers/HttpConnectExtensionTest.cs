@@ -23,32 +23,28 @@ public class HttpConnectExtensionTest
 
     // Why does the client accept TLS 1.0??
     [DataRow("https://tls-v1-0.badssl.com:1010")]
-
-    [ExpectedException(typeof(E1400_ConnectServerException), AllowDerivedTypes = true)]
     public async Task VerifyInvalidCertificateException(string hostName)
     {
         var http = CreateHttpClient(true);
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]
     [DataRow("www.google.com")]
-    [ExpectedException(typeof(E1402_NoVidiViewServerException))]
     public async Task VerifyNoVidiViewServerException(string hostName)
     {
         var http = CreateHttpClient(true);
 
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1402_NoVidiViewServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]
     [DataRow("non.existent.host.com")]
-    [ExpectedException(typeof(E1400_ConnectServerException))]
     public async Task VerifyHostNotFoundException(string hostName)
     {
         var http = CreateHttpClient(true);
 
-        var result = await http.ConnectAsync(hostName, CancellationToken.None);
+        await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
     }
 
     [TestMethod]

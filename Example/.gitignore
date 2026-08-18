@@ -1,2 +1,2 @@
 # Ignore local secret
-TestConfigLocalSecret.cs
+TestConfig.localsecret.cs
