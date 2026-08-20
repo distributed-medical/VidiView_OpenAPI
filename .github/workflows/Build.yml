@@ -5,19 +5,11 @@ name: Build and publish
 on:
   push:
     branches:
-      - 'main'
+      - 'dev-*'
     tags:
       - '*.*.*' # Run when a version tag is pushed
   workflow_dispatch:
-
-env:
-  # ── Locked build-tool versions (MDR configuration management) ─────────────
-  # Update these values only after validation against the qualified build environment.
-  Windows_Runner_Image: 'windows-2025'    # GitHub-hosted runner OS image label
-  # ──────────────────────────────────────────────────────────────────────────
   
-  SOLUTION: VidiView.Api.slnx
-
 jobs:
   build:
     strategy:
@@ -47,7 +39,7 @@ jobs:
         "### Build Environment" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
         "| Component | Version |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
         "| --- | --- |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-        "| Windows runner | ${{ env.Windows_Runner_Image }} ($osVersion) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+        "| Windows runner | $osVersion |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
         "| .NET SDK | $(dotnet --version) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
         "| MSBuild | $msbuildVersion |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
@@ -98,22 +90,6 @@ jobs:
     - name: Pack
       run: dotnet pack ${{ matrix.project }} --configuration ${{ matrix.configuration }} --no-build --no-restore
 
-    # - name: Sign NuGet package
-    #   uses: azure/trusted-signing-action@v0.5.1
-    #   with:
-    #       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-    #       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-    #       azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-    #       endpoint: https://weu.codesigning.azure.net/ # Western Europe
-    #       trusted-signing-account-name: DMCodesigning
-    #       certificate-profile-name: DMCodesigning
-    #       files-folder: ${{ matrix.project }}\bin\Release\
-    #       files-folder-filter: nupkg
-    #       file-digest: SHA256
-    #       timestamp-rfc3161: http://timestamp.acs.microsoft.com
-    #       timestamp-digest: SHA256
-
     - name: Publish package 
-     #   #if: github.ref == 'refs/heads/main'
       run: dotnet nuget push **\${{ matrix.project }}*.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s "dm-vidiview"
 

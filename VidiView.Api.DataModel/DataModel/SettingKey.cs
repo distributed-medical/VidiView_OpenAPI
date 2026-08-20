@@ -38,7 +38,6 @@ public static class SettingKey
     public const string ServerServiceCertificateHash = "Server/Service/CertificateHash";
     public const string ServerServiceServicePrincipalName = "Server/Service/ServicePrincipalName";
     public const string ServerServiceSniHostName = "Server/Service/SniHostName";
-    public const string ServerServiceExternalVisibleName = "Server/Service/ExternalVisibleName";
     public const string ServerServiceEnableCompression = "Server/Service/EnableCompression";
 
     public const string ServerServiceUnsecureHttpEnabled = "Server/Service/UnsecureHttp/Enabled";
@@ -128,6 +127,7 @@ public static class SettingKey
     public const string PatientPdqLegacyConfiguration = "System/Patient/Pdq/LegacyConfiguration";
 
     public const string PatientMaxReturnedRecords = "System/Patient/MaxReturnRecords";
+    public const string PatientAlternativeSuggestions = "System/Patient/AlternativeSuggestions";
 
     public const string PatientManualCreate = "System/Patient/ManualCreate/Enabled";
     public const string PatientAssigningAuthorityId = "System/Patient/ManualCreate/AssigningAuthorityId";
@@ -155,6 +155,7 @@ public static class SettingKey
     public const string StudyMediaFavouriteMark = "System/Study/Media/FavouriteMark";
     public const string StudyMediaConvertHevcToAvc = "System/Study/Media/Conversion/ConvertHevcToAvc";
     public const string StudyMediaConvertUnsupportedPhotoToJpeg = "System/Study/Media/Conversion/ConvertUnsupportedPhotoToJpeg";
+    public const string StudyMediaAllowDeleteExported = "System/Study/Media/Export/AllowDelete";
 
     public const string StudyDeleteIdentifiedAutomaticallyEnabled = "System/Study/Delete/Identified/Automatic/Enabled";
     public const string StudyDeleteIdentifiedAutomaticallyAfter = "System/Study/Delete/Identified/Automatic/After";
@@ -181,11 +182,12 @@ public static class SettingKey
 
     #endregion
 
-    #region VidiView Capture
+    #region VidiView Mobile Capture
     public const string CaptureServiceEnable = "Capture/Service/Enable";
     public const string CaptureServicePort = "Capture/Service/Port";
     public const string CaptureServiceDeviceAcceptByDefault = "Capture/Service/Device/AcceptByDefault";
     public const string CaptureServiceDeviceDefaultDeviceUse = "Capture/Service/Device/DefaultDeviceUse";
+    public const string CaptureOptionsDisplayLastLogin = "Capture/Options/DisplayLastLogin";
     public const string CaptureServiceAllowPin = "Capture/Service/Authentication/AllowPin";
     public const string CaptureServicePinMinLength = "Capture/Service/Authentication/PinMinimumLength";
     public const string CaptureServicePinMaxInvalidAttempts = "Capture/Service/Authentication/PinMaxInvalidAttempts";
@@ -196,24 +198,46 @@ public static class SettingKey
     public const string CaptureServiceBiometricLifetime = "Capture/Service/Authentication/BiometricLifetime";
     [Obsolete("No longer in use, in Capture R5")]
     public const string CaptureServiceBiometricAutoExtend = "Capture/Service/Authentication/BiometricAutoExtend";
-
+    [Obsolete("No longer in use, in Capture R5")]
     public const string CaptureServiceActiveSyncEnable = "Capture/Service/ActiveSync/Enable";
-    public const string CaptureServiceStudyDeleteEmpty = "Capture/Service/Study/DeleteEmpty";
 
+    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
+    public const string CaptureOptionsAllowLaunchDermalyser = "Capture/Options/AllowLaunchDermalyser";
+    public const string CaptureOptionsAllowUploadFromCameraRoll = "Capture/Options/AllowUploadFromCameraRoll";
+    public const string CaptureOptionsInactivityTimeout = "Capture/Options/InactivityTimeout";
+    public const string CaptureOptionsInactivityTimeoutSeconds = "Capture/Options/InactivityTimeoutSeconds";
+    public const string CaptureOptionsInactivityInActiveStudyTimeout = "Capture/Options/InactivityInActiveStudyTimeout";
+    public const string CaptureOptionsInactivityInActiveStudyTimeoutSeconds = "Capture/Options/InactivityInActiveStudyTimeoutSeconds";
+    public const string CaptureOptionsInactivityWarning = "Capture/Options/InactivityWarning";
+    public const string CaptureOptionsInactivityWarningSeconds = "Capture/Options/InactivityWarningSeconds";
+    public const string CaptureOptionsLimitUploadRequestSize = "Capture/Options/LimitUploadRequestSize";
+    public const string CaptureOptionsEmergencyStartAllowed = "Capture/Options/EmergencyStartAllowed";
+    public const string CaptureOptionsScreenSaverAllowDuringActiveStudy = "Capture/Options/ScreenSaver/AllowDuringActiveStudy";
+    public const string CaptureOptionsScreenSaverAllowDuringRecording = "Capture/Options/ScreenSaver/AllowDuringRecording";
+    public const string CaptureServiceStudyDeleteEmpty = "Capture/Service/Study/DeleteEmpty";
     public const string CaptureOptionsAnatomicMap = "Capture/Options/AnatomicMap";
     public const string CaptureOptionsAnatomicTagging = "Capture/Options/AnatomicTagging";
     public const string CaptureOptionsContinueStudyAllowed = "Capture/Options/ContinueStudyAllowed";
-    public const string CaptureOptionsSnapshotResolution = "Capture/Options/SnapshotResolution";
-    public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
-    public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
-    public const string CaptureOptionsVideoRecordAudio = "Capture/Options/VideoRecordAudio";
-    public const string CaptureOptionsVideoResolution = "Capture/Options/VideoResolution";
-    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
+    public const string CaptureOptionsGeoTagMediaFiles = "Capture/Options/Geolocation/TagMediaFiles";
+    public const string CaptureOptionsPhotoResolution = "Capture/Options/SnapshotResolution";
+    //public const string CaptureOptionsPhotoResolution = "Capture/Options/Photo/DesiredResolution";
+    public const string CaptureOptionsPhotoAllowDuringRecording = "Capture/Options/AllowTakePhotoWhenRecordingVideo";
+    //public const string CaptureOptionsPhotoAllowDuringRecording = "Capture/Options/Photo/AllowDuringRecording";
+    public const string CaptureOptionsPhotoQuality = "Capture/Options/Photo/Quality";
 
-    public const string CaptureOptionsAllowBiometricCredentials = "Capture/Options/AllowBiometricCredentials";
-    public const string CaptureOptionsInactivityTimeout = "Capture/Options/InactivityTimeout";
-    public const string CaptureOptionsInactivityInActiveStudyTimeout = "Capture/Options/InactivityInActiveStudyTimeout";
-    public const string CaptureOptionsInactivityWarning = "Capture/Options/InactivityWarning";
+    public const string CaptureOptionsVideoAllowed = "Capture/Options/VideoAllowed";
+    //public const string CaptureOptionsVideoAllowed = "Capture/Options/Video/Allowed"; 
+    public const string CaptureOptionsVideoMaxLength = "Capture/Options/VideoMaxLength";
+    public const string CaptureOptionsVideoMaxLengthSeconds = "Capture/Options/VideoMaxLengthSeconds";
+    //public const string CaptureOptionsVideoMaxLength = "Capture/Options/Video/MaxLength";
+    //public const string CaptureOptionsVideoMaxLengthSeconds = "Capture/Options/Video/MaxLengthSeconds";
+    public const string CaptureOptionsVideoRecordAudio = "Capture/Options/VideoRecordAudio";
+    //public const string CaptureOptionsVideoRecordAudio = "Capture/Options/Video/RecordAudio";
+    public const string CaptureOptionsVideoResolution = "Capture/Options/VideoResolution";
+    //public const string CaptureOptionsVideoResolution = "Capture/Options/Video/DesiredResolution";
+    public const string CaptureOptionsVideoCodec = "Capture/Options/VideoCodec";
+    //public const string CaptureOptionsVideoCodec = "Capture/Options/Video/Codec";
+
     #endregion
 
     #region VidiView Client
@@ -231,6 +255,8 @@ public static class SettingKey
     public const string ClientFormattingFilenameSaveImagePseudonymized = "Client/Formatting/Filename/SaveImage/Pseudonymized";
     public const string ClientFormattingFilenamePdfReport = "Client/Formatting/Filename/PdfReport";
     public const string ClientFormattingFilenamePdfReportPseudonymized = "Client/Formatting/Filename/PdfReport/Pseudonymized";
+
+    public const string ClientOptionsMaxUploadRequestSize = "Client/Options/MaxUploadRequestSize";
 
     public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
     public const string ClientOptionsInactivityTimeout = "Client/Options/InactivityTimeout";
