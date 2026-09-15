@@ -13,16 +13,9 @@ public class HttpRTConnectExtensionTest
     [DataRow("revoked.badssl.com")]
     [DataRow("sha1-intermediate.badssl.com")]
     [DataRow("sha1-2017.badssl.com")]
-    public async Task VerifyInvalidCertificateException(string hostName)
-    {
-        var http = CreateHttpClient();
-        await Assert.ThrowsAsync<E1403_InvalidCertificateException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));
-    }
-
-    [TestMethod]
     [DataRow("self-signed.badssl.com")]
     [DataRow("untrusted-root.badssl.com")]
-    public async Task VerifyInvalidCertificateException2(string hostName)
+    public async Task VerifyInvalidCertificateException(string hostName)
     {
         var http = CreateHttpClient();
         await Assert.ThrowsAsync<E1400_ConnectServerException>(async () => await http.ConnectAsync(hostName, CancellationToken.None));

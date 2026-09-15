@@ -1,4 +1,6 @@
-﻿namespace VidiView.Api.DataModel;
+﻿using System.Text.Json;
+
+namespace VidiView.Api.DataModel;
 
 /// <summary>
 /// The MediaFile contains data for a specific media file (image/video/audio etc)
@@ -215,10 +217,11 @@ public record MediaFile
     public double? GeoAccuracy { get; init; }
 
     /// <summary>
-    /// Data specific to the media type. This is a JSON string, 
-    /// which can be parsed into a specific object depending on the media type
+    /// Data specific to the media type. This is intended to contain data that is not part of the standard MediaFile model.
     /// </summary>
-    public string? TypeSpecifics { get; init; }
+    /// <see cref="MicrophoneSoundPressureLevelCalibrationSpecifics"/>
+    /// <see cref="VoiceRecordingSpecifics"/>
+    public JsonElement? TypeSpecifics { get; init; }
 
     /// <summary>
     /// Any HAL Rest links associated with this object
