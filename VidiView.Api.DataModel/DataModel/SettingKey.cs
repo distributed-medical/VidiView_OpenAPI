@@ -243,36 +243,58 @@ public static class SettingKey
     #region VidiView Client
     public const string ClientSettingFilter = "Client/"; // Settings that will be returned to the VidiView Client
 
+    // Desktop sync
     public const string ClientDesktopSyncMode = "Client/DesktopSync/Mode";
     public const string ClientDesktopSyncSectraLevel = "Client/DesktopSync/Sectra/Level";
     public const string ClientDesktopSyncSectraAssigningAuthorityId = "Client/DesktopSync/Sectra/AssigningAuthorityId";
     public const string ClientDesktopSyncSectraAccessionNumberGroupId = "Client/DesktopSync/Sectra/AccessionNumberGroupId";
     public const string ClientDesktopSyncSectraExaminationMapping = "Client/DesktopSync/Sectra/ExaminationMapping";
-    public const string ClientUIPopupConfirmPatientRelationOnOpenPatient = "Client/UI/Popup/ConfirmPatientRelationOnOpenPatient";
-    public const string ClientUIPopupConfirmPatientRelationOnChangeDepartment = "Client/UI/Popup/ConfirmPatientRelationOnChangeDepartment";
 
+    // Formatting
     public const string ClientFormattingFilenameSaveImage = "Client/Formatting/Filename/SaveImage";
     public const string ClientFormattingFilenameSaveImagePseudonymized = "Client/Formatting/Filename/SaveImage/Pseudonymized";
     public const string ClientFormattingFilenamePdfReport = "Client/Formatting/Filename/PdfReport";
     public const string ClientFormattingFilenamePdfReportPseudonymized = "Client/Formatting/Filename/PdfReport/Pseudonymized";
 
-    public const string ClientOptionsMaxUploadRequestSize = "Client/Options/MaxUploadRequestSize";
-
     public const string ClientOptionsDisplayLastLogin = "Client/Options/DisplayLastLogin";
-    public const string ClientOptionsInactivityTimeout = "Client/Options/InactivityTimeout";
-    public const string ClientOptionsInactivityWarning = "Client/Options/InactivityWarning";
 
+    // Features
+    public const string ClientFeaturesBatchUpdateMediaFile = "Client/Options/Features/BatchUpdateMediaFile";
+    public const string ClientFeaturesCameraCapture = "Client/Options/Features/CameraCapture";
+    public const string ClientFeaturesConference = "Client/Options/Features/Conference";
+    public const string ClientFeaturesLanguages = "Client/Options/Features/Languages";
     public const string ClientFeaturesPatientDemographicSearch = "Client/Options/Features/PatientDemographicSearch";
     public const string ClientFeaturesPatientPersonalWorklists = "Client/Options/Features/PersonalWorklists";
-    public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
-
     public const string ClientFeaturesPhotoMeasure = "Client/Options/Features/PhotoMeasure";
-    public const string ClientFeaturesBatchUpdateMediaFile = "Client/Options/Features/BatchUpdateMediaFile";
+    public const string ClientFeaturesPatientRecentHistory = "Client/Options/Features/RecentHistory";
+    public const string ClientFeaturesReporting = "Client/Options/Features/Reporting";
+    public const string ClientFeaturesScheduledStudies = "Client/Options/Features/ScheduledStudies";
+    public const string ClientFeaturesVoiceCapture = "Client/Options/Features/VoiceCapture";
 
+    public const string ClientOptionsIdleLogout = "Client/Options/IdleLogout";
+    public const string ClientOptionsIdleLogoutWarning = "Client/Options/IdleLogoutWarning";
+
+
+    // Preferences
     public const string ClientPreferenceLastActingRole = "Client/Preferences/Login/LastActingRole";
     public const string ClientPreferenceUICulture = "Client/Preferences/UI/Culture";
     public const string ClientPreferenceUIThumbnailWidth = "Client/Preferences/UI/StudyView/ThumbnailPaneWidth";
     public const string ClientPreferenceVideoMinimumRequestSize = "Client/Preferences/Video/MinimumRequestSize";
+
+
+    // Reporting
+    public const string ClientReportDefaultAnatomicMapWidth = "Client/Report/Default/AnatomicMapWidth";
+    public const string ClientReportDefaultFont = "Client/Report/Default/Font";
+    public const string ClientReportDefaultHeaderFontSize = "Client/Report/Default/HeaderFontSize";
+    public const string ClientReportDefaultShowIndex = "Client/Report/Default/ShowIndex";
+    public const string ClientReportDefaultTextFontSize = "Client/Report/Default/TextFontSize";
+
+    public const string ClientUICuePatientId = "Client/UI/Cue/PatientId";
+    public const string ClientUIPopupConfirmPatientRelationOnChangeDepartment = "Client/UI/Popup/ConfirmPatientRelationOnChangeDepartment";
+    public const string ClientUIPopupConfirmPatientRelationOnOpenPatient = "Client/UI/Popup/ConfirmPatientRelationOnOpenPatient";
+
+    public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
+    public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";
 
     #endregion
 
