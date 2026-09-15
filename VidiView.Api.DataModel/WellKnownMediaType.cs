@@ -16,4 +16,14 @@ public static class WellKnownMediaType
     /// </summary>
     public static readonly Guid ForensicOdontologyAnteMortem = new Guid("088457AB-5C54-444F-8ACD-FDE3E7CFE0A2");
 
+    /// <summary>
+    /// This media is a voice recording, which can be used for speech and language assessment
+    /// </summary>
+    public static readonly Guid VoiceRecording = new Guid("9B0A8563-CED4-46D8-A803-D184927BC589");
+
+    /// <summary>
+    /// This media is a microphone sound pressure level calibration
+    /// </summary>
+    public static readonly Guid MicrophoneSoundPressureLevelCalibration = new Guid("A769B55B-ACD7-421E-A800-B5143959F23D");
+
 }

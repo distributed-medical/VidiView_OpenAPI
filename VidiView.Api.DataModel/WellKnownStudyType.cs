@@ -16,4 +16,10 @@ public static class WellKnownStudyType
     /// </summary>
     public static readonly Guid MoleMapping = new Guid("FE71542A-B959-4107-8168-3B049BE3C1C1");
 
+    /// <summary>
+    /// Speech and language assessment study type
+    /// </summary>
+    public static readonly Guid SpeechAndLanguageAssessment = new Guid("BAD4423B-1706-4487-9BA4-13CE8494CFDE");
+
+
 }

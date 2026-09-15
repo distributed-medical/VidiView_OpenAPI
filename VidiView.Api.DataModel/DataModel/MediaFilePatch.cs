@@ -14,7 +14,7 @@ public record MediaFilePatch
     public Patch<string?>? Description { get; init; }
 
     /// <summary>
-    /// File modality type (Dicom compliant)
+    /// File modality type (DICOM compliant)
     /// </summary>
     public Patch<string?>? Modality { get; init; }
 
