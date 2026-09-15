@@ -48,6 +48,7 @@ public static class SettingKey
     public const string ServerServiceMaxConcurrentCalls = "Server/Service/MaxConcurrentCalls";
     public const string ServerServiceMaxConcurrentSessions = "Server/Service/MaxConcurrentSessions";
     public const string ServerServiceMaxPlaybackStreams = "Server/Service/MaxPlaybackStreams";
+    public const string ServerServiceMaxUploadRequestSize = "Server/Service/MaxUploadRequestSize";
     public const string ServerServiceMaxVideoRequestBlockSize = "Server/Service/MaxVideoRequestBlockSize";
 
     public const string ServerLogFailedAuthenticationToEventLog = "Server/Log/EventLog/FailedAuthentication";
@@ -279,8 +280,8 @@ public static class SettingKey
     public const string ClientPreferenceLastActingRole = "Client/Preferences/Login/LastActingRole";
     public const string ClientPreferenceUICulture = "Client/Preferences/UI/Culture";
     public const string ClientPreferenceUIThumbnailWidth = "Client/Preferences/UI/StudyView/ThumbnailPaneWidth";
+    public const string ClientPreferenceVideoMaximumBufferSize = "Client/Preferences/Video/MaximumBufferSize";
     public const string ClientPreferenceVideoMinimumRequestSize = "Client/Preferences/Video/MinimumRequestSize";
-
 
     // Reporting
     public const string ClientReportDefaultAnatomicMapWidth = "Client/Report/Default/AnatomicMapWidth";
