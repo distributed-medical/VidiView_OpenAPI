@@ -1,5 +1,6 @@
 ﻿namespace VidiView.Api.DataModel;
 
+[JsonConverter(typeof(StringEnumConverterEx<MimeTypeFlags>))]
 [Flags]
 public enum MimeTypeFlags : long
 {
