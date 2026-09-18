@@ -9,6 +9,7 @@ public record VoiceRecordingSpecifics
     /// <summary>
     /// This is the intended media type for this specific data, i.e. the media type that should be used when storing this data in a media file
     /// </summary>
+    [JsonIgnore]
     public static Guid IntendedMediaType => WellKnownMediaType.VoiceRecording;
 
     /// <summary>
@@ -17,7 +18,12 @@ public record VoiceRecordingSpecifics
     public Guid CalibrationId { get; init; }
 
     /// <summary>
-    /// Microphone sensitivity, in mV/Pa
+    /// The time when the microphone was calibrated, in UTC
+    /// </summary>
+    public DateTimeOffset CalibrationTime { get; init; }
+
+    /// <summary>
+    /// Microphone sensitivity, in FS/Pa (full-scale/Pascal)
     /// </summary>
     public double Sensitivity { get; init; }
 }
