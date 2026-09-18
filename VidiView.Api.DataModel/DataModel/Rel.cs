@@ -5,6 +5,7 @@ public static class Rel
 {
     public const string ActiveSessions = "active-sessions";
     public const string ActiveSync = "active-sync";
+    public const string Add = "add";
     public const string AddAnnotation = "add-annotation";
     public const string AddFileToExportQueue = "add-for-export";
     public const string AddStudy = "add-study";
@@ -77,6 +78,7 @@ public static class Rel
     public const string LeaveAudioLegacy = "leave-av-legacy";
     public const string Load = "load";
     public const string LookupPatient = "lookup-patient";
+    public const string MediaTypes = "media-types";
     public const string Merge = "merge";
     public const string MergeHistory = "merge-history";
     public const string MimeTypes = "mime-types";
@@ -85,6 +87,7 @@ public static class Rel
     public const string MyActiveStudies = "active-sync";
     public const string ParseSnomed = "parse-snomed";
     public const string Patient = "patient";
+    public const string Permissions = "permissions";
     public const string Preferences = "preferences";
     public const string RecordVideo = "record-video";
     public const string Recover = "recover";
@@ -93,6 +96,7 @@ public static class Rel
 
     [Obsolete("Not to be used anymore", true)]
     public const string ReleaseStudy = "release-study";
+    public const string Remove = "remove";
     public const string RemoveStudy = "remove-study";
     public const string RequestToken = "request-token";
 
@@ -110,6 +114,7 @@ public static class Rel
     public const string Studies = "studies";
     public const string Study = "study";
     public const string StudyLock = "study-lock";
+    public const string StudyTypes = "study-types";
     public const string SubscribeLegacy = "subscribe-legacy";
     public const string Thumbnail = "thumbnail";
     public const string Trackable = "trackable";
