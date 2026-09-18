@@ -37,4 +37,23 @@ public record ObjectAccess
     {
         return (Effective & requiredPermission) == requiredPermission; // We can accept or:ing permissions together with this construct
     }
+
+    public virtual bool Equals(ObjectAccess? other)
+    {
+        if (ReferenceEquals(null, other))
+            return false;
+
+        if (ReferenceEquals(this, other))
+            return true;
+
+        return GuidComparer.IsEitherNullOrEqual(UserId, other.UserId) &&
+               EqualityComparer<IdAndName?>.Default.Equals(Department, other.Department)
+               && Granted == other.Granted
+               && Denied == other.Denied;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(UserId, Department?.Id, Granted, Denied);
+    }
 }

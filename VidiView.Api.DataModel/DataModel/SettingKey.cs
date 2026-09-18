@@ -296,6 +296,8 @@ public static class SettingKey
 
     public const string ClientVoiceCaptureAllowFft = "Client/VoiceCapture/AllowFft";
     public const string ClientVoiceCaptureAllowPraat = "Client/VoiceCapture/AllowPraat";
+    public const string ClientVoiceCaptureCalibrationAge = "Client/VoiceCapture/MaximumCalibrationAge";
+    public const string ClientVoiceCaptureRequireCalibration = "Client/VoiceCapture/RequireCalibration";
 
     #endregion
 

@@ -4,17 +4,26 @@ using System.Net.Http;
 
 namespace VidiView.Api.Configuration;
 
+/// <summary>
+/// This is a helper class to manage the configuration of a VidiView server
+/// </summary>
 public class VidiViewConfigurator
 {
     readonly HttpClient _http;
 
+    /// <summary>
+    /// Create a new instance of the configurator
+    /// </summary>
+    /// <param name="http">The HttpClient to use for API requests</param>
     public VidiViewConfigurator(HttpClient http)
     {
         _http = http;
     }
 
     /// <summary>
-    /// Initialize the configurator
+    /// Initialize the configurator. Ensure the HttpClient is authenticated before calling 
+    /// this method. This method will retrieve the API home document and initialize the 
+    /// various managers.
     /// </summary>
     /// <returns></returns>
     public async Task InitializeAsync()
@@ -23,10 +32,11 @@ public class VidiViewConfigurator
         var link = api.Links.GetRequired(Rel.Configuration);
         Home = await _http.GetAsync<ApiHome>(link);
 
-        DeviceRegistration = new DeviceRegistration(_http, Home);
+        DeviceRegistration = new DeviceManager(_http, Home);
+        Departments = new DepartmentManager(_http, Home);   
         Settings = new SettingsRepository(_http, Home);
         ServiceHosts = new ServiceHosts(_http, Home);
-        Users = new UserManager(_http, Home);
+        UserAccounts = new UserAccountManager(_http, Home);
     }
 
     public HttpClient Http => _http;
@@ -39,7 +49,12 @@ public class VidiViewConfigurator
     /// <summary>
     /// Device registration 
     /// </summary>
-    public DeviceRegistration DeviceRegistration { get; private set; }
+    public DeviceManager DeviceRegistration { get; private set; }
+
+    /// <summary>
+    /// Department configuration
+    /// </summary>
+    public DepartmentManager Departments { get; private set; }
 
     /// <summary>
     /// Settings repository
@@ -54,5 +69,5 @@ public class VidiViewConfigurator
     /// <summary>
     /// Users
     /// </summary>
-    public UserManager Users { get; private set; }
+    public UserAccountManager UserAccounts { get; private set; }
 }

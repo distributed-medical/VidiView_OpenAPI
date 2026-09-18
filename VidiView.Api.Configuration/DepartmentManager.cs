@@ -3,13 +3,13 @@ using VidiView.Api.DataModel;
 using VidiView.Api.Helpers;
 
 namespace VidiView.Api.Configuration;
-public class UserManager
+public class DepartmentManager
 {
     readonly HttpClient _http;
     readonly ApiHome _api;
     LinkCollection? _links;
 
-    public UserManager(HttpClient http, ApiHome api)
+    public DepartmentManager(HttpClient http, ApiHome api)
     {
         _http = http;
         _api = api;
@@ -19,10 +19,10 @@ public class UserManager
     /// List all users in the system
     /// </summary>
     /// <returns></returns>
-    public async Task<UserCollection> ListAsync()
+    public async Task<DepartmentCollection> ListAsync()
     {
-        var link = _api.Links.GetRequired(Rel.Users);
-        var result = await _http.GetAsync<UserCollection>(link).ConfigureAwait(false);
+        var link = _api.Links.GetRequired(Rel.Departments);
+        var result = await _http.GetAsync<DepartmentCollection>(link).ConfigureAwait(false);
         _links = result.Links;
         return result;
     }

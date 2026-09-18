@@ -58,12 +58,24 @@ public record Department
 
     public string? SupportContactPhone { get; init; }
 
+    public IdAndName? WorklistProvider { get; init; }
+
     public WorklistType WorklistType { get; init; } = WorklistType.None;
 
     /// <summary>
     /// The study types supported by this department
     /// </summary>
     public StudyType[]? StudyTypes { get; init; }
+
+    /// <summary>
+    /// Export destinations for this department
+    /// </summary>
+    public IdAndName[]? ExportQueues { get; init; }
+
+    /// <summary>
+    /// Storage paths assigned to this department
+    /// </summary>
+    public Guid[]? StoragePaths { get; init; }
 
     /// <summary>
     /// The permissions granted to the current user for this department

@@ -4,12 +4,12 @@ using System.Net.Http;
 
 namespace VidiView.Api.Configuration;
 
-public class DeviceRegistration
+public class DeviceManager
 {
     readonly HttpClient _http;
     readonly ApiHome _api;
     
-    internal DeviceRegistration(HttpClient http, ApiHome api)
+    internal DeviceManager(HttpClient http, ApiHome api)
     {
         _http = http;
         _api = api;
@@ -30,7 +30,6 @@ public class DeviceRegistration
 
         var response = await _http.PutAsync(link, null);
         await response.AssertSuccessAsync();
-
     }
 
     /// <summary>

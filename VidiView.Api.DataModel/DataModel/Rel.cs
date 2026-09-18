@@ -81,6 +81,7 @@ public static class Rel
     public const string MediaTypes = "media-types";
     public const string Merge = "merge";
     public const string MergeHistory = "merge-history";
+    public const string MicrophoneCalibration = "microphone-calibration";
     public const string MimeTypes = "mime-types";
     public const string MyPersonalWorklists = "personal-worklists";
     public const string MyRecentStudies = "recent-studies";
