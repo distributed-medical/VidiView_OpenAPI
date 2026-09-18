@@ -20,10 +20,15 @@ public record VoiceRecordingSpecifics
     /// <summary>
     /// The time when the microphone was calibrated, in UTC
     /// </summary>
-    public DateTimeOffset CalibrationTime { get; init; }
+    public DateTimeOffset CalibrationDate { get; init; }
 
     /// <summary>
-    /// Microphone sensitivity, in FS/Pa (full-scale/Pascal)
+    /// The calibration factor (C) to convert measured level (Lm) to sound pressure level (Lspl), Lspl = Lm ​+ C
+    /// </summary>
+    public double CalibrationFactor { get; init; }
+
+    /// <summary>
+    /// The sensitivity of the microphone in Pa/FS (Pascal relative to full scale)
     /// </summary>
     public double Sensitivity { get; init; }
 }

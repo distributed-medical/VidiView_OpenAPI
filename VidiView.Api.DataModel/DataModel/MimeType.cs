@@ -12,6 +12,8 @@ public record MimeType
 
     public string? Description { get; init; }
 
+    public MimeTypeFlags Flags { get; init; }
+
     public bool AllowUpload { get; init; }
 
     public override string ToString() => Type;
