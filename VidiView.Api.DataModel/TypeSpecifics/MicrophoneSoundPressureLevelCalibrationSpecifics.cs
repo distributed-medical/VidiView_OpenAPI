@@ -38,9 +38,9 @@ public record MicrophoneSoundPressureLevelCalibrationSpecifics
     public double VolumeLevel { get; init; }
 
     /// <summary>
-    /// The offset from the start of the media file where the calibration measurement starts.
+    /// The offset from the start of the media file where the calibration signal starts.
     /// </summary>
-    public TimeSpan Offset { get; init; }
+    public TimeSpan SignalOffset { get; init; }
 
     /// <summary>
     /// The duration of the calibration measurement
@@ -48,7 +48,12 @@ public record MicrophoneSoundPressureLevelCalibrationSpecifics
     public TimeSpan Duration { get; init; }
 
     /// <summary>
-    /// The calculated sensitivity of the microphone, in FS/Pa (full-scale/Pascal)
+    /// The calibration factor (C) to convert measured level (Lm) to sound pressure level (Lspl), Lspl = Lm ​+ C
+    /// </summary>
+    public double CalibrationFactor { get; init; }
+
+    /// <summary>
+    /// The sensitivity of the microphone in Pa/FS (Pascal relative to full scale)
     /// </summary>
     public double Sensitivity { get; init; }
 }
