@@ -27,55 +27,61 @@ public class VidiViewException : Exception
         {
             if (!int.TryParse(problem.ErrorCode, out int errorCode))
             {
-                errorCode = -1;
+                errorCode = (int)httpError;
             }
 
-            var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
-            var type = Type.GetType(typeName, false, true);
+            bool isVidiViewException = problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri);
+            bool isGenericException = problem.Type.StartsWith(ProblemDetails.GenericExceptionUri);
 
             IReadOnlyDictionary<string, JsonElement> props = DeserializeProperties(problem.RawResponse);
 
-            // Check if we have a local definition of this exception
-            if (type != null)
+            if (isVidiViewException)
             {
-                var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var constructor = type.GetConstructor(flags, new[] { typeof(string) });
-                Debug.Assert(constructor != null, "Our exceptions are always supposed to have a constructor accepting a string");
+                var typeName = problem.Type.Replace(ProblemDetails.VidiViewExceptionUri, "VidiView.Api.Exceptions.");
+                var type = Type.GetType(typeName, false, true);
 
-                if (constructor != null)
+                // Check if we have a local definition of this exception
+                if (type != null)
                 {
-                    var exc = (Exception)constructor.Invoke(new[] { problem.Detail });
-                    type.GetProperty(nameof(ErrorCode))?
-                        .SetValue(exc, errorCode);
-                    type.GetProperty(nameof(HttpStatusCode))?
-                        .SetValue(exc, httpError);
-                    type.GetProperty(nameof(Problem))?
-                        .SetValue(exc, problem);
-                    type.GetProperty(nameof(RequestedUri))?
-                        .SetValue(exc, requestedUri);
-                    type.GetProperty(nameof(ThrownServerSide))?
-                        .SetValue(exc, true);
-                    type.GetProperty(nameof(Properties))?
-                        .SetValue(exc, props);
+                    var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                    var constructor = type.GetConstructor(flags, new[] { typeof(string) });
+                    Debug.Assert(constructor != null, "Our exceptions are always supposed to have a constructor accepting a string");
 
-                    // Set all properties we can find
-                    var additionalProps = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
-                    foreach (var prop in additionalProps)
+                    if (constructor != null)
                     {
-                        if (problem.TryGetPropertyValue(prop.PropertyType, prop.Name, VidiViewJson.DefaultOptions, out var value))
+                        var exc = (Exception)constructor.Invoke(new[] { problem.Detail });
+                        type.GetProperty(nameof(ErrorCode))?
+                            .SetValue(exc, errorCode);
+                        type.GetProperty(nameof(HttpStatusCode))?
+                            .SetValue(exc, httpError);
+                        type.GetProperty(nameof(Problem))?
+                            .SetValue(exc, problem);
+                        type.GetProperty(nameof(RequestedUri))?
+                            .SetValue(exc, requestedUri);
+                        type.GetProperty(nameof(ThrownServerSide))?
+                            .SetValue(exc, true);
+                        type.GetProperty(nameof(Properties))?
+                            .SetValue(exc, props);
+
+                        // Set all properties we can find
+                        var additionalProps = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+                        foreach (var prop in additionalProps)
                         {
-                            try
+                            if (problem.TryGetPropertyValue(prop.PropertyType, prop.Name, VidiViewJson.DefaultOptions, out var value))
                             {
-                                prop.SetValue(exc, value);
-                            }
-                            catch
-                            {
-                                Debug.Assert(false, $"Failed to set property {prop.Name} of type {prop.PropertyType}");
+                                try
+                                {
+                                    prop.SetValue(exc, value);
+                                }
+                                catch
+                                {
+                                    Debug.Assert(false, $"Failed to set property {prop.Name} of type {prop.PropertyType}");
+                                }
                             }
                         }
-                    }
 
-                    return exc;
+                        return exc;
+                    }
                 }
             }
 

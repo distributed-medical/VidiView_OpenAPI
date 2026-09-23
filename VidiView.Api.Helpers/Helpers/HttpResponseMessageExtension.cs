@@ -112,12 +112,7 @@ public static class HttpResponseMessageExtension
                 };
             }
 
-            if (problem.Type.StartsWith(ProblemDetails.VidiViewExceptionUri))
-            {
-                throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, requestedUri);
-            }
-
-            throw new Exception(problem.Detail);
+            throw VidiViewException.Factory((System.Net.HttpStatusCode)(int)response.StatusCode, problem, requestedUri);
         }
     }
 
