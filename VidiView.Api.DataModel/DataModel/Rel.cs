@@ -5,6 +5,8 @@ public static class Rel
 {
     public const string ActiveSessions = "active-sessions";
     public const string ActiveSync = "active-sync";
+    public const string ADDomain = "active-directory-domain";
+    public const string ADAccount = "active-directory-account";
     public const string Add = "add";
     public const string AddAnnotation = "add-annotation";
     public const string AddFileToExportQueue = "add-for-export";
@@ -63,6 +65,7 @@ public static class Rel
     public const string Files = "files";
     public const string FindPatient = "find-patient";
     public const string FindStudy = "find-study";
+    public const string FindUserCandidates = "find-user-candidates";
     public const string ForceRelease = "force-release";
     public const string GrantDevice = "grant-device";
     public const string IdentifyStudy = "identify";

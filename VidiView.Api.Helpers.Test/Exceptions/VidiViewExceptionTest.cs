@@ -33,7 +33,7 @@ public class VidiViewExceptionTest
         var exc = VidiViewException.Factory(System.Net.HttpStatusCode.Conflict, null!, null);
 
         Assert.IsInstanceOfType<VidiViewException>(exc);
-        Assert.AreEqual(-1, ((VidiViewException)exc).ErrorCode);
+        Assert.AreEqual(409, ((VidiViewException)exc).ErrorCode);
         Assert.AreEqual("409 Conflict", exc.Message);
     }
 

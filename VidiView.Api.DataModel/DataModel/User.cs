@@ -98,6 +98,11 @@ public record User
     public int InvalidLoginAttempts { get; init; }
 
     /// <summary>
+    /// Set this string to a new password to reset the user's password when saving the entity
+    /// </summary>
+    public string? ResetPassword { get; set; }
+
+    /// <summary>
     /// Any role membership the user has.
     /// </summary>
     [JsonPropertyName("_embedded")]
