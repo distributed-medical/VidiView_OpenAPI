@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net10.0-windows10.0.18362.0</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
 
 	  <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 	  
@@ -15,7 +15,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VidiView.Api.Helpers" Version="5.4.3-18" />
+	  <PackageReference Include="VidiView.Api.Helpers" Version="5.4.3-19" />
 	</ItemGroup>
 
 </Project>

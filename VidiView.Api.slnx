@@ -12,9 +12,6 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="Example/Example.csproj" />
-  <Project Path="VidiView.Api.Configuration/VidiView.Api.Configuration.csproj">
-    <Platform Solution="*|x64" Project="x64" />
-  </Project>
   <Project Path="VidiView.Api.DataModel.Test/VidiView.Api.DataModel.Test.csproj" />
   <Project Path="VidiView.Api.DataModel/VidiView.Api.DataModel.csproj">
     <Platform Solution="*|x64" Project="x64" />
