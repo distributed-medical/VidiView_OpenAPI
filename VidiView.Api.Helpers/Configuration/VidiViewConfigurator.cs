@@ -33,7 +33,8 @@ public class VidiViewConfigurator
         Home = await _http.GetAsync<ApiHome>(link);
 
         DeviceRegistration = new DeviceManager(_http, Home);
-        Departments = new DepartmentManager(_http, Home);   
+        Departments = new DepartmentManager(_http, Home);
+        Equipment = new EquipmentManager(_http, Home);
         Settings = new SettingsRepository(_http, Home);
         ServiceHosts = new ServiceHosts(_http, Home);
         UserAccounts = new UserAccountManager(_http, Home);
@@ -56,6 +57,11 @@ public class VidiViewConfigurator
     /// Department configuration
     /// </summary>
     public DepartmentManager Departments { get; private set; } = null!;
+
+    /// <summary>
+    /// Equipment management
+    /// </summary>
+    public EquipmentManager Equipment { get; private set; } = null!;
 
     /// <summary>
     /// Settings repository
