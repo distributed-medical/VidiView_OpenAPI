@@ -37,6 +37,7 @@ public class VidiViewConfigurator
         Settings = new SettingsRepository(_http, Home);
         ServiceHosts = new ServiceHosts(_http, Home);
         UserAccounts = new UserAccountManager(_http, Home);
+        AuditLog = new AuditLogQuery(_http, Home);
     }
 
     public HttpClient Http => _http;
@@ -70,4 +71,9 @@ public class VidiViewConfigurator
     /// Users
     /// </summary>
     public UserAccountManager UserAccounts { get; private set; } = null!;
+
+    /// <summary>
+    /// Audit log query helper
+    /// </summary>
+    public AuditLogQuery AuditLog { get; private set; } = null!;
 }

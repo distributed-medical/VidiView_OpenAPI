@@ -33,6 +33,7 @@ public static class Rel
     public const string BiometricLoginToken = "biometric-login-token";
     public const string CameraCommand = "camera-command";
     public const string CapturePhoto = "capture-photo";
+    public const string ClientDevices = "client-devices";
     public const string ClientDeviceRegistration = "device-registration";
     public const string Clear = "clear";
     public const string Close = "close";

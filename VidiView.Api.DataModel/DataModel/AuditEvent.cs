@@ -9,15 +9,19 @@ public record AuditEvent
     public DateTimeOffset Time { get; init; }
 
     /// <summary>
+    /// The acting user causing the event to be logged
+    /// </summary>
+    public IdAndName User { get; init; }
+
+    /// <summary>
     /// Event id
     /// </summary>
-    /// <remarks>Either this, or Events array will be set</remarks>
     public int? Event { get; init; }
 
     /// <summary>
     /// Event id's
     /// </summary>
-    /// <remarks>Either this, or Event property will be set</remarks>
+    /// <remarks>This is set when multiple events are grouped together</remarks>
     public int[]? Events { get; init; }
 
     /// <summary>
@@ -37,16 +41,6 @@ public record AuditEvent
     public PersonName? PatientName { get; init; }
 
     /// <summary>
-    /// The acting user causing the event to be logged
-    /// </summary>
-    public IdAndName User { get; init; }
-
-    /// <summary>
-    /// Additional event data
-    /// </summary>
-    public string? Data { get; init; }
-
-    /// <summary>
     /// The study ID
     /// </summary>
     /// <remarks>Only returned for study interactions requests</remarks>
@@ -61,6 +55,7 @@ public record AuditEvent
     /// <summary>
     /// The study date
     /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
     public DateTimeOffset? StudyDate { get; init; }
 
     /// <summary>
@@ -72,16 +67,24 @@ public record AuditEvent
     /// <summary>
     /// The media file this event applies to, if applicable. 
     /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
     public Guid? MediaFileId { get; init; }
 
     /// <summary>
     /// The index of the media file this event applies to, if applicable. 
     /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
     public int? Index { get; init; }
 
     /// <summary>
     /// The content type of the media file this event applies to, if applicable. 
     /// </summary>
+    /// <remarks>Only returned for study interactions requests</remarks>
     public string? ContentType { get; init; }
+
+    /// <summary>
+    /// Additional event data
+    /// </summary>
+    public string? Data { get; init; }
 
 }

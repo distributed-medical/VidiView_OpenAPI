@@ -4,6 +4,10 @@ using VidiView.Api.Helpers;
 
 namespace VidiView.Api.Configuration;
 
+/// <summary>
+/// This is a helper class to manage user accounts in the VidiView system. It provides methods to search, list, create, update, and delete user accounts, 
+/// as well as to interact with Active Directory for user and group account management.
+/// </summary>
 public class UserAccountManager
 {
     readonly HttpClient _http;
