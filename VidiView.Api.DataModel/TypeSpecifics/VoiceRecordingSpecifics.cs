@@ -13,22 +13,41 @@ public record VoiceRecordingSpecifics
     public static Guid IntendedMediaType => WellKnownMediaType.VoiceRecording;
 
     /// <summary>
-    /// The media file id that contains the microphone calibration data
+    /// The media file id that contains the microphone calibration data 
     /// </summary>
-    public Guid CalibrationId { get; init; }
+    /// <remarks>Only set if the microphone is calibrated</remarks>
+    public Guid? CalibrationId { get; init; }
 
     /// <summary>
     /// The time when the microphone was calibrated, in UTC
     /// </summary>
-    public DateTimeOffset CalibrationDate { get; init; }
+    /// <remarks>Only set if the microphone is calibrated</remarks>
+    public DateTimeOffset? CalibrationDate { get; init; }
 
     /// <summary>
     /// The calibration factor (C) to convert measured level (Lm) to sound pressure level (Lspl), Lspl = Lm ​+ C
     /// </summary>
-    public double CalibrationFactor { get; init; }
+    /// <remarks>Only set if the microphone is calibrated</remarks>
+    public double? CalibrationFactor { get; init; }
 
     /// <summary>
     /// The sensitivity of the microphone in Pa/FS (Pascal relative to full scale)
     /// </summary>
-    public double Sensitivity { get; init; }
+    /// <remarks>Only set if the microphone is calibrated</remarks>
+    public double? Sensitivity { get; init; }
+
+    /// <summary>
+    /// The distance from the subject to the microphone, in centimeters. 
+    /// </summary>
+    public double? SubjectDistanceToMicrophone { get; init; }
+
+    /// <summary>
+    /// Voice pitch range from, Hz
+    /// </summary>
+    public int? PitchRangeFrom { get; init; }
+
+    /// <summary>
+    /// Voice pitch range to, Hz
+    /// </summary>
+    public int? PitchRangeTo { get; init; }
 }
