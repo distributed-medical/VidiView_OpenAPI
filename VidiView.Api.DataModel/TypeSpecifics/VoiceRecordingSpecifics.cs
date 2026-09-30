@@ -31,4 +31,9 @@ public record VoiceRecordingSpecifics
     /// The sensitivity of the microphone in Pa/FS (Pascal relative to full scale)
     /// </summary>
     public double Sensitivity { get; init; }
+
+    /// <summary>
+    /// The distance from the subject to the microphone, in centimeters. 
+    /// </summary>
+    public double? SubjectDistanceToMicrophone { get; init; }
 }
