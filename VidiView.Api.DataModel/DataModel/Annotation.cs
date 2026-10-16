@@ -48,14 +48,17 @@ public record Annotation
     /// </summary>
     public string? Text { get; init; }
 
+    /// <summary>
+    /// Optional font size
+    /// </summary>
     public int? FontSize { get; init; }
-
-    public IdAndName UpdatedBy { get; init; } = null!;
 
     /// <summary>
     /// Annotation offset from beginning of media file
     /// </summary>
     public TimeSpan? Offset { get; init; }
+
+    public IdAndName UpdatedBy { get; init; } = null!;
 
     /// <summary>
     /// Any HAL Rest links associated with this object

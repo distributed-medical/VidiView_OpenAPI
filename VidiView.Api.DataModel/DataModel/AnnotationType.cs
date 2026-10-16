@@ -16,4 +16,5 @@ public enum AnnotationType
     Calibration,
     Ruler,
     MeasuredArea,
+    RecordingPause,
 }
