@@ -61,7 +61,7 @@ public static class HttpMethodExtensions
 
         try
         {
-            var response = await http.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken ?? CancellationToken.None);
+            var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken ?? CancellationToken.None);
             await response.AssertNotMaintenanceModeAsync(http).ConfigureAwait(false);
             await response.AssertSuccessAsync();
             return await HttpContentStream.CreateFromResponse(http, response);
